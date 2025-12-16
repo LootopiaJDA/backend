@@ -1,0 +1,20 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copie package.json pour les installs
+COPY package*.json ./
+
+# Installe TOUTES les dépendances (y compris dev)
+RUN npm install
+
+# Copie le reste du code
+COPY . .
+
+# Active le mode dev
+ENV NODE_ENV=development
+
+# Port Nest.js
+EXPOSE 3000
+
+CMD ["npm", "run", "start:dev"]
