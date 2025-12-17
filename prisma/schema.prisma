@@ -20,11 +20,26 @@ enum Role {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
+  id_user     Int      @id @default(autoincrement())
   username    String 
   role        Role[] 
   password    String 
-  email     String   @unique
+  email       String   @unique
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now())
+
+  partenaire Partenaire?
+}
+
+model Partenaire {
+  id_partenaire Int      @id @default(autoincrement())
+  statut        String 
+  siret         String   @unique
+  company_name  String
+  adresse       String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id_user])
+  userId Int @unique
 }
