@@ -63,4 +63,18 @@ model Chasse {
 
   partenaire Partenaire @relation(fields: [idPartenaire], references: [id_partenaire])
   idPartenaire Int @unique
+  indices Indice[]
+}
+
+model Indice {
+  id           Int     @id @default(autoincrement())
+  chasse_id    Int     
+  name         String
+  lat          String
+  long         String
+  address      String
+  description  String
+  created_at   DateTime @default(now())
+
+  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])
 }
