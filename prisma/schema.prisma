@@ -19,6 +19,12 @@ enum Role {
   JOUEUR
 }
 
+enum Statut {
+  VERIFICATION
+  ACTIVE
+  INACTIVE
+}
+
 model User {
   id_user     Int      @id @default(autoincrement())
   username    String 
@@ -33,23 +39,28 @@ model User {
 
 model Partenaire {
   id_partenaire Int      @id @default(autoincrement())
-  statut        String 
+  statut        Statut  @default(VERIFICATION) 
   siret         String   @unique
   company_name  String
-  adresse       String?
+  adresse       String?   
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id_user])
   userId Int @unique
+
+  chasses Chasse[]
 }
 
 model Chasse {
-  id           Int [primary key]
+  id_chasse    Int     @id @default(autoincrement())
   name         String
   localisation String
-  id_partenaire Int [not null]
-  lat          String [not null]
-  long         String [not null]
+  id_partenaire Int 
+  lat          String 
+  long         String 
   created_at   DateTime @default(now())
+
+  partenaire Partenaire @relation(fields: [idPartenaire], references: [id_partenaire])
+  idPartenaire Int @unique
 }
