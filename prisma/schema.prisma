@@ -13,6 +13,7 @@ datasource db {
   provider = "postgresql"
 }
 
+// ENUMERATION POUR LA BASE DE DONNEES
 enum Role {
   ADMIN
   PARTENAIRE
@@ -25,16 +26,31 @@ enum Statut {
   INACTIVE
 }
 
+enum StatutChasse {
+  PENDING
+  ACTIVE
+  COMPLETED
+}
+
+enum StatutUserChasse {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+// ENTITE DE BASE DE DONNEES
 model User {
   id_user     Int      @id @default(autoincrement())
   username    String 
-  role        Role[] 
+  role        Role     @default(JOUEUR) 
   password    String 
   email       String   @unique
   created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
-
-  partenaire Partenaire?
+  updated_at  DateTime 
+  partener Partenaire? @relation(fields: [partenerId], references: [id_partenaire])
+  partenerId  Int?
+  
+  userchasses UserChasse[]
 }
 
 model Partenaire {
@@ -44,37 +60,97 @@ model Partenaire {
   company_name  String
   adresse       String?   
   created_at    DateTime @default(now())
-  updated_at    DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id_user])
-  userId Int @unique
-
+  updated_at    DateTime 
+  
+  users User[]
   chasses Chasse[]
 }
 
 model Chasse {
   id_chasse    Int     @id @default(autoincrement())
   name         String
+  image        String
   localisation String
-  id_partenaire Int 
-  lat          String 
-  long         String 
+  etat         StatutChasse  @default(PENDING)
   created_at   DateTime @default(now())
 
   partenaire Partenaire @relation(fields: [idPartenaire], references: [id_partenaire])
-  idPartenaire Int @unique
-  indices Indice[]
+  idPartenaire Int 
+
+  occurence Occurence[]
+  etape  Etape[]
+  userchasses UserChasse[]
 }
 
-model Indice {
-  id           Int     @id @default(autoincrement())
-  chasse_id    Int     
-  name         String
-  lat          String
-  long         String
-  address      String
-  description  String
+model Occurence{
+  id_occurence Int     @id @default(autoincrement())
+  date_start  DateTime 
+  date_end    DateTime
+  limit_user Int @default(0)
   created_at   DateTime @default(now())
 
   chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])
+  chasse_id Int
+}
+
+model Etape {
+  id           Int     @id @default(autoincrement())   
+  name         String
+  lat          Float
+  long         Float
+  address      String
+  description  String
+  rayon        Int
+  rank          Int
+  created_at   DateTime @default(now())
+
+  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])
+  chasse_id    Int  
+
+  UserChasseEtape UserChasseEtape[]
+
+  @@index([chasse_id])
+
+}
+
+model Message{
+  id_message   Int     @id @default(autoincrement())
+  content      String
+  created_at   DateTime @default(now())
+}
+
+// TABLE DE JOINTURE POUR LES CHASSES DES UTILISATEURS
+model UserChasse {
+  id_userchasse Int     @id @default(autoincrement())
+  id_user       Int     
+  id_chasse     Int     
+  started_at    DateTime @default(now())
+  completed_at  DateTime?
+  statut StatutUserChasse @default(IN_PROGRESS)
+  user User @relation(fields: [id_user], references: [id_user])
+  chasse Chasse @relation(fields: [id_chasse], references: [id_chasse])
+
+  @@unique([id_user, id_chasse])
+
+  UserChasseEtape UserChasseEtape[]
+
+  @@index([id_user])
+  @@index([id_chasse])
+
+}
+
+model UserChasseEtape {
+  id_userchasseetape Int     @id @default(autoincrement())
+  id_userchasse      Int     
+  id_etape           Int     
+  reached_at         DateTime @default(now())
+
+  userchasse UserChasse @relation(fields: [id_userchasse], references: [id_userchasse])
+  etape Etape @relation(fields: [id_etape], references: [id])
+  
+  @@unique([id_userchasse, id_etape])
+
+  @@index([id_userchasse])
+  @@index([id_etape])
+
 }
