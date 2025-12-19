@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+ provider = "prisma-client-js"
 }
 
 datasource db {
@@ -46,7 +45,7 @@ model User {
   password    String 
   email       String   @unique
   created_at  DateTime @default(now())
-  updated_at  DateTime 
+  updated_at  DateTime @updatedAt
   partener Partenaire? @relation(fields: [partenerId], references: [id_partenaire])
   partenerId  Int?
   

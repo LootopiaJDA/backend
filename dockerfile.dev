@@ -17,4 +17,6 @@ ENV NODE_ENV=development
 # Port Nest.js
 EXPOSE 3000
 
+RUN npx prisma generate
+
 CMD ["npm", "run", "start:dev"]

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
-const app_module_1 = require("./app.module");
+const app_module_1 = require("./module/app.module");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
@@ -17,7 +17,7 @@ async function bootstrap() {
     const url = await app.getUrl();
     const swaggerUrl = `${url}/api`;
     const pgAdminUrl = `http://localhost:5050`;
-    const postgresUrl = `postgresql://admin:admin@localhost:5433/lootopia`;
+    const postgresUrl = `postgresql://admin:admin@localhost:5432/lootopia`;
     const prismaStudio = "http://localhost:5555";
     console.log(`
 -----------------------------------------------------

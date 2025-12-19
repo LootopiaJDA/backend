@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { AppModule } from "./module/app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 async function bootstrap() {
@@ -20,7 +20,7 @@ async function bootstrap() {
   const url = await app.getUrl();
   const swaggerUrl = `${url}/api`;
   const pgAdminUrl = `http://localhost:5050`;
-  const postgresUrl = `postgresql://admin:admin@localhost:5433/lootopia`;
+  const postgresUrl = `postgresql://admin:admin@localhost:5432/lootopia`;
   const prismaStudio = "http://localhost:5555";
 
   console.log(`

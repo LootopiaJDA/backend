@@ -13,7 +13,9 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL_DOCKER}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
     networks:
       - lootopia-network
 
@@ -22,15 +24,20 @@ services:
     container_name: lootopia-postgres
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRE_DB}
-      POSTGRES_USER: ${POSTGRE_USER}
-      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - lootopia-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   pgadmin:
     image: dpage/pgadmin4
