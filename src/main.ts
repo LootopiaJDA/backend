@@ -10,6 +10,17 @@ async function bootstrap() {
     .setDescription("End point test fort Lootopia API")
     .setVersion("1.0")
     .addTag("Lootopia")
+    .addBearerAuth(
+    {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'Authorization',
+      description: 'Enter JWT token',
+      in: 'header',
+    },
+    'access-token', 
+  )
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
