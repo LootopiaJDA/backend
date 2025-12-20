@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './user.service';
 import { decryptText } from './crypto.service';
@@ -12,17 +12,20 @@ import { decryptText } from './crypto.service';
             const user = await this.usersService.findOne(data.email);
             
             if(!user) {
-                throw new UnauthorizedException();
+                throw new HttpException('Password or email incorrect', HttpStatus.FORBIDDEN);
             }
             
             if (await decryptText(user?.password!) !== data.password) {
-                throw new UnauthorizedException();
+                throw new HttpException('Password or email incorrect', HttpStatus.FORBIDDEN);
             }
 
             const payload = { sub: user?.id_user, username: user?.username, role: user?.role };
 
             return {
-                access_token: await this.jwtService.signAsync(payload),
+                access_token: await this.jwtService.signAsync(payload, {
+                    secret: process.env.JWT_SECRET,
+                    expiresIn: '1h',
+                }),
             };
         }
     }
