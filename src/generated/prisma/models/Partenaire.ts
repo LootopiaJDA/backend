@@ -198,7 +198,7 @@ export type PartenaireGroupByOutputType = {
   company_name: string
   adresse: string | null
   created_at: Date
-  updated_at: Date
+  updated_at: Date | null
   _count: PartenaireCountAggregateOutputType | null
   _avg: PartenaireAvgAggregateOutputType | null
   _sum: PartenaireSumAggregateOutputType | null
@@ -231,7 +231,7 @@ export type PartenaireWhereInput = {
   company_name?: Prisma.StringFilter<"Partenaire"> | string
   adresse?: Prisma.StringNullableFilter<"Partenaire"> | string | null
   created_at?: Prisma.DateTimeFilter<"Partenaire"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Partenaire"> | Date | string
+  updated_at?: Prisma.DateTimeNullableFilter<"Partenaire"> | Date | string | null
   users?: Prisma.UserListRelationFilter
   chasses?: Prisma.ChasseListRelationFilter
 }
@@ -243,7 +243,7 @@ export type PartenaireOrderByWithRelationInput = {
   company_name?: Prisma.SortOrder
   adresse?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
   chasses?: Prisma.ChasseOrderByRelationAggregateInput
 }
@@ -258,7 +258,7 @@ export type PartenaireWhereUniqueInput = Prisma.AtLeast<{
   company_name?: Prisma.StringFilter<"Partenaire"> | string
   adresse?: Prisma.StringNullableFilter<"Partenaire"> | string | null
   created_at?: Prisma.DateTimeFilter<"Partenaire"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Partenaire"> | Date | string
+  updated_at?: Prisma.DateTimeNullableFilter<"Partenaire"> | Date | string | null
   users?: Prisma.UserListRelationFilter
   chasses?: Prisma.ChasseListRelationFilter
 }, "id_partenaire" | "siret">
@@ -270,7 +270,7 @@ export type PartenaireOrderByWithAggregationInput = {
   company_name?: Prisma.SortOrder
   adresse?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PartenaireCountOrderByAggregateInput
   _avg?: Prisma.PartenaireAvgOrderByAggregateInput
   _max?: Prisma.PartenaireMaxOrderByAggregateInput
@@ -288,7 +288,7 @@ export type PartenaireScalarWhereWithAggregatesInput = {
   company_name?: Prisma.StringWithAggregatesFilter<"Partenaire"> | string
   adresse?: Prisma.StringNullableWithAggregatesFilter<"Partenaire"> | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Partenaire"> | Date | string
-  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Partenaire"> | Date | string
+  updated_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Partenaire"> | Date | string | null
 }
 
 export type PartenaireCreateInput = {
@@ -297,7 +297,7 @@ export type PartenaireCreateInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutPartenerInput
   chasses?: Prisma.ChasseCreateNestedManyWithoutPartenaireInput
 }
@@ -309,7 +309,7 @@ export type PartenaireUncheckedCreateInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPartenerInput
   chasses?: Prisma.ChasseUncheckedCreateNestedManyWithoutPartenaireInput
 }
@@ -320,7 +320,7 @@ export type PartenaireUpdateInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutPartenerNestedInput
   chasses?: Prisma.ChasseUpdateManyWithoutPartenaireNestedInput
 }
@@ -332,7 +332,7 @@ export type PartenaireUncheckedUpdateInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutPartenerNestedInput
   chasses?: Prisma.ChasseUncheckedUpdateManyWithoutPartenaireNestedInput
 }
@@ -344,7 +344,7 @@ export type PartenaireCreateManyInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
 }
 
 export type PartenaireUpdateManyMutationInput = {
@@ -353,7 +353,7 @@ export type PartenaireUpdateManyMutationInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PartenaireUncheckedUpdateManyInput = {
@@ -363,7 +363,7 @@ export type PartenaireUncheckedUpdateManyInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PartenaireNullableScalarRelationFilter = {
@@ -438,6 +438,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type PartenaireCreateNestedOneWithoutChassesInput = {
   create?: Prisma.XOR<Prisma.PartenaireCreateWithoutChassesInput, Prisma.PartenaireUncheckedCreateWithoutChassesInput>
   connectOrCreate?: Prisma.PartenaireCreateOrConnectWithoutChassesInput
@@ -458,7 +462,7 @@ export type PartenaireCreateWithoutUsersInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   chasses?: Prisma.ChasseCreateNestedManyWithoutPartenaireInput
 }
 
@@ -469,7 +473,7 @@ export type PartenaireUncheckedCreateWithoutUsersInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   chasses?: Prisma.ChasseUncheckedCreateNestedManyWithoutPartenaireInput
 }
 
@@ -495,7 +499,7 @@ export type PartenaireUpdateWithoutUsersInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chasses?: Prisma.ChasseUpdateManyWithoutPartenaireNestedInput
 }
 
@@ -506,7 +510,7 @@ export type PartenaireUncheckedUpdateWithoutUsersInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   chasses?: Prisma.ChasseUncheckedUpdateManyWithoutPartenaireNestedInput
 }
 
@@ -516,7 +520,7 @@ export type PartenaireCreateWithoutChassesInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   users?: Prisma.UserCreateNestedManyWithoutPartenerInput
 }
 
@@ -527,7 +531,7 @@ export type PartenaireUncheckedCreateWithoutChassesInput = {
   company_name: string
   adresse?: string | null
   created_at?: Date | string
-  updated_at: Date | string
+  updated_at?: Date | string | null
   users?: Prisma.UserUncheckedCreateNestedManyWithoutPartenerInput
 }
 
@@ -553,7 +557,7 @@ export type PartenaireUpdateWithoutChassesInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUpdateManyWithoutPartenerNestedInput
 }
 
@@ -564,7 +568,7 @@ export type PartenaireUncheckedUpdateWithoutChassesInput = {
   company_name?: Prisma.StringFieldUpdateOperationsInput | string
   adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   users?: Prisma.UserUncheckedUpdateManyWithoutPartenerNestedInput
 }
 
@@ -673,7 +677,7 @@ export type $PartenairePayload<ExtArgs extends runtime.Types.Extensions.Internal
     company_name: string
     adresse: string | null
     created_at: Date
-    updated_at: Date
+    updated_at: Date | null
   }, ExtArgs["result"]["partenaire"]>
   composites: {}
 }

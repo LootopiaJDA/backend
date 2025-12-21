@@ -16,3 +16,14 @@ export class CreateUserDto {
   })
   role: 'ADMIN' | 'PARTENAIRE' | 'JOUEUR';
 }
+
+export class UpdateUserDto{
+  @ApiProperty({ example: 'john_doe', required: false })
+  username?: string;
+
+  @ApiProperty({ example: 'john@mail.com', required: false })
+  email?: string;
+
+  @ApiProperty({ example: 'StrongPassword123!', required: false })
+  password?: string;
+}

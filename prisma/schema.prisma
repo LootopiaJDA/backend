@@ -60,7 +60,7 @@ model Partenaire {
   company_name  String
   adresse       String?   
   created_at    DateTime @default(now())
-  updated_at    DateTime 
+  updated_at    DateTime @updatedAt
   
   users User[]
   chasses Chasse[]

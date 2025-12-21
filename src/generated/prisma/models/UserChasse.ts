@@ -496,10 +496,6 @@ export type UserChasseUncheckedUpdateManyWithoutChasseNestedInput = {
   deleteMany?: Prisma.UserChasseScalarWhereInput | Prisma.UserChasseScalarWhereInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type EnumStatutUserChasseFieldUpdateOperationsInput = {
   set?: $Enums.StatutUserChasse
 }
