@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Statut } from "@prisma/client";
+import { Statut } from "../generated/prisma/client";
 
 class CreatePartenaireDto {
   @ApiProperty({ example: '123 Main St, Cityville', required: false })
