@@ -15,6 +15,8 @@ export class CreateUserDto {
     example: 'JOUEUR',
   })
   role: 'ADMIN' | 'PARTENAIRE' | 'JOUEUR';
+
+  partenerId?: number | null;
 }
 
 export class UpdateUserDto{

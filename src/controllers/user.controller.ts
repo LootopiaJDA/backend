@@ -9,7 +9,14 @@ import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 import { CreateUserPartenairDto } from "src/dto/partenair.dto";
 
-
+interface User {
+    id_user: number;
+    username: string;
+    email: string;
+    password: string;
+    role: Role;
+    partenerId: number | null;
+}
 
 @ApiTags('User')
 @Controller('user')
@@ -25,13 +32,13 @@ export class UserController {
      */
     @Post()
     @ApiBody({ type: CreateUserDto })
-    async createUser(@Body() body: any, @Res() response: Response): Promise<void> {
+    async createUser(@Body() body: Omit<User, 'id_user' | 'created_at' | 'updated_at'>, @Res() response: Response): Promise<void> {
         try {
             // Encrypt the password before storing
             body.password = await encryptText(body.password as string);
             const user = await this.userService.createUser(body);
             response.status(201).send(user);
-        } catch (error: any) {
+        } catch (error) {
             response.status(500).send(error.message);
         }
     }
@@ -39,8 +46,8 @@ export class UserController {
     /**
      * Administrator can check all users.
      *
-     * @param {Request} request - Request object.
-     * @param {Response} response - Response object.
+     * @param {Request} request - Montant HT.
+     * @param {Response} response - Taux de TVA (ex: 0.20).
      */
     @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, RolesGuard)
@@ -50,7 +57,7 @@ export class UserController {
         try {
             const users = await this.userService.getAllUsers();
             response.status(200).send(users);
-        } catch (error: any) {
+        } catch (error) {
             response.status(500).send(error.message);
         }
     }
@@ -67,9 +74,9 @@ export class UserController {
     @ApiBody({ type: UpdateUserDto })
     @ApiParam({ name: 'id', type: Number, description: 'User ID' })
     @Put(':id')
-    async updateUser(@Param() params: any, @Body() body: any, @Res() response: Response): Promise<void> {
+    async updateUser(@Param() params: { id: number }, @Body() body: User, @Res() response: Response): Promise<void> {
         try {
-            const userId = params.id;
+            const userId = Number(params.id);
             const userData = body;
             if (userData.password) {
                 userData.password = await encryptText(userData.password as string);
@@ -77,7 +84,7 @@ export class UserController {
             await this.userService.updateUser(userId, userData);
             // Implementation for updating a user goes here
             response.status(200).send({ message: 'User updated successfully' });
-        } catch (error: any) {
+        } catch (error) {
             response.status(500).send(error.message);
         }
     }
@@ -90,13 +97,13 @@ export class UserController {
      */
     @Post('partenaire')
     @ApiBody({ type: CreateUserPartenairDto })
-    async createPartenaireUser(@Body() body: any, @Res() response: Response): Promise<void> {
+    async createPartenaireUser(@Body() body: CreateUserPartenairDto, @Res() response: Response): Promise<void> {
         try {
             // Encrypt the password before storing
             body.password = await encryptText(body.password as string);
             const user = await this.userService.createPartenaire(body);
             response.status(201).send(user);
-        } catch (error: any) {
+        } catch (error) {
             response.status(500).send(error.message);
         }
     }

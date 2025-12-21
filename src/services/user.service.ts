@@ -59,7 +59,7 @@ export class UserService {
   }
 
   async createPartenaire(
-    data: CreatePartenaireUserDto
+    data: Omit<CreatePartenaireUserDto, 'updated_at' | 'created_at'>
   ): Promise<UserWithPartenaire> {
     return this.prisma.user.create({
       data: {
@@ -73,8 +73,6 @@ export class UserService {
             siret: data.partenaire.siret,
             company_name: data.partenaire.company_name,
             statut: Statut.VERIFICATION,
-            updated_at: data.partenaire.updated_at ?? new Date(),
-            created_at: data.partenaire.created_at ?? new Date(),
           },
         },
       },
