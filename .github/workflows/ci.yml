@@ -26,6 +26,8 @@ jobs:
         run: npm ci
 
       # 4. Lancement des tests (modifie selon ton projet)
+      - name: Prisma generate
+        run : npx prisma generate
       - name: Run tests
         run: npm test
 
