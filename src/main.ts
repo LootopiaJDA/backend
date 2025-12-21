@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { AppModule } from "./module/app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 async function bootstrap() {
@@ -10,6 +10,17 @@ async function bootstrap() {
     .setDescription("End point test fort Lootopia API")
     .setVersion("1.0")
     .addTag("Lootopia")
+    .addBearerAuth(
+    {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'Authorization',
+      description: 'Enter JWT token',
+      in: 'header',
+    },
+    'access-token', 
+  )
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
@@ -20,7 +31,7 @@ async function bootstrap() {
   const url = await app.getUrl();
   const swaggerUrl = `${url}/api`;
   const pgAdminUrl = `http://localhost:5050`;
-  const postgresUrl = `postgresql://admin:admin@localhost:5433/lootopia`;
+  const postgresUrl = `postgresql://admin:admin@localhost:5432/lootopia`;
   const prismaStudio = "http://localhost:5555";
 
   console.log(`
