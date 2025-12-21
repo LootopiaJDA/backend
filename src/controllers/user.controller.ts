@@ -39,8 +39,8 @@ export class UserController {
     /**
      * Administrator can check all users.
      *
-     * @param {Request} request - Montant HT.
-     * @param {Response} response - Taux de TVA (ex: 0.20).
+     * @param {Request} request - Request object.
+     * @param {Response} response - Response object.
      */
     @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, RolesGuard)

@@ -29,3 +29,11 @@ export class AuthController {
         }
     }
 }
+
+@ApiTags('Deconnexion utilisateur')
+@Controller('deconnexion')
+export class LogoutController {
+    constructor(private readonly authService: AuthService) { 
+        
+    }
+}
