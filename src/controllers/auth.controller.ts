@@ -19,11 +19,11 @@ export class AuthController {
      */
     @Post()
     @ApiBody({ type: ConnexionDto })
-    async login(@Body() body: any, @Res() response: Response): Promise<void> {
+    async login(@Body() body: ConnexionDto, @Res() response: Response): Promise<void> {
         try {
             const jwt = await this.authService.login(body);
             response.status(200).send(jwt);
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
             response.status(500).send(error.message);
         }
