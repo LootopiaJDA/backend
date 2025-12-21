@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { Prisma } from '@prisma/client';
+import {
+  User,
+  Partenaire,
+  Statut,
+} from '../generated/prisma/client';
 
-type User = Prisma.UserGetPayload<{}>;
-type UserWithPartenaire = Prisma.UserGetPayload<{
-  include: { partener: true };
-}>;
+type UserWithPartenaire = User & {
+  partener: Partenaire | null;
+};
 
 interface UserUpdateData {
   username?: string;
@@ -26,15 +29,18 @@ interface CreatePartenaireUserDto {
   };
 }
 
+
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOne(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  async createUser(data: Omit<User, 'id_user' | 'created_at' | 'updated_at'>): Promise<User> {
     return this.prisma.user.create({ data });
   }
 
@@ -42,9 +48,12 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  async updateUser(userId: number, data: UserUpdateData): Promise<User> {
+  async updateUser(
+    userId: number,
+    data: UserUpdateData
+  ): Promise<User> {
     return this.prisma.user.update({
-      where: { id_user: Number(userId) },
+      where: { id_user: userId },
       data,
     });
   }
@@ -60,15 +69,18 @@ export class UserService {
         role: 'PARTENAIRE',
         partener: {
           create: {
-            adresse: data.partenaire.adresse || undefined,
+            adresse: data.partenaire.adresse,
             siret: data.partenaire.siret,
             company_name: data.partenaire.company_name,
-            updated_at: data.partenaire.updated_at || new Date(),
-            created_at: data.partenaire.created_at || new Date(),
+            statut: Statut.VERIFICATION,
+            updated_at: data.partenaire.updated_at ?? new Date(),
+            created_at: data.partenaire.created_at ?? new Date(),
           },
         },
       },
-      include: { partener: true },
+      include: {
+        partener: true,
+      },
     });
   }
 }
