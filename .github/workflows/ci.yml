@@ -27,11 +27,16 @@ jobs:
 
       # 4. Lancement des tests (modifie selon ton projet)
       - name: Prisma generate
-        run : npx prisma generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          npx prisma generate
+
       - name: Run tests
         run: npm test
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
       # 5. Build Docker (vérifie que ton Dockerfile fonctionne)
       - name: Build Docker image
