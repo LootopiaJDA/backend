@@ -90,7 +90,7 @@ export class UserController {
     }
 
     /**
-     * Create a new user.
+     * Create a new partenaire.
      *
      * @param {Request} body - Body's request.
      * @param {Response} response - Response object.

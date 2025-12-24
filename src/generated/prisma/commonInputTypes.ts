@@ -198,11 +198,28 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type BytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
 export type EnumStatutChasseFilter<$PrismaModel = never> = {
   equals?: $Enums.StatutChasse | Prisma.EnumStatutChasseFieldRefInput<$PrismaModel>
   in?: $Enums.StatutChasse[] | Prisma.ListEnumStatutChasseFieldRefInput<$PrismaModel>
   notIn?: $Enums.StatutChasse[] | Prisma.ListEnumStatutChasseFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumStatutChasseFilter<$PrismaModel> | $Enums.StatutChasse
+}
+
+export type BytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
 }
 
 export type EnumStatutChasseWithAggregatesFilter<$PrismaModel = never> = {
@@ -481,11 +498,28 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type NestedBytesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesFilter<$PrismaModel> | runtime.Bytes
+}
+
 export type NestedEnumStatutChasseFilter<$PrismaModel = never> = {
   equals?: $Enums.StatutChasse | Prisma.EnumStatutChasseFieldRefInput<$PrismaModel>
   in?: $Enums.StatutChasse[] | Prisma.ListEnumStatutChasseFieldRefInput<$PrismaModel>
   notIn?: $Enums.StatutChasse[] | Prisma.ListEnumStatutChasseFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumStatutChasseFilter<$PrismaModel> | $Enums.StatutChasse
+}
+
+export type NestedBytesWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: runtime.Bytes | Prisma.BytesFieldRefInput<$PrismaModel>
+  in?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  notIn?: runtime.Bytes[] | Prisma.ListBytesFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBytesWithAggregatesFilter<$PrismaModel> | runtime.Bytes
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBytesFilter<$PrismaModel>
+  _max?: Prisma.NestedBytesFilter<$PrismaModel>
 }
 
 export type NestedEnumStatutChasseWithAggregatesFilter<$PrismaModel = never> = {
