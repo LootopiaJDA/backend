@@ -48,10 +48,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  async updateUser(
-    userId: number,
-    data: UserUpdateData
-  ): Promise<User> {
+  async updateUser(userId: number, data: UserUpdateData): Promise<User> {
     return this.prisma.user.update({
       where: { id_user: userId },
       data,
