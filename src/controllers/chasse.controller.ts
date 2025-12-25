@@ -10,30 +10,39 @@ import { JwtService } from "@nestjs/jwt";
 import { ChasseService } from "src/services/chasse.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Multer } from 'multer';
+import { Statuts } from "src/decorators/statut-partenaire.decorator";
+import { StatutGuard } from "src/guards/partenaire.guard";
+import { Statut } from "src/generated/prisma/browser";
 
 
 @ApiTags('Chasse')
 @Controller('chasse')
-@UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.PARTENAIRE)
+@Statuts(Statut.ACTIVE)
+@UseGuards(AuthGuard, RolesGuard, StatutGuard)
 export class ChasseController {
+    // Must inject services to access them
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly chasseService: ChasseService
     ) { }
 
+    // Need token in the header
     @ApiBearerAuth('access-token')
+    // Post method to create a chasse
     @Post()
+    // Specify multipart/form-data consumption for image integration
     @ApiConsumes('multipart/form-data')
+    // Use FileInterceptor to handle file upload
     @UseInterceptors(FileInterceptor('image'))
+    // Define the request body schema for Swagger documentation
     @ApiBody({
         schema: {
             type: 'object',
             properties: {
                 name: { type: 'string' },
                 localisation: { type: 'string' },
-                idPartenaire: { type: 'number' },
                 etat: { type: 'string', enum: ['PENDING', 'ACTIVE'] },
                 image: {
                     type: 'string',
@@ -43,20 +52,31 @@ export class ChasseController {
             required: ['name', 'localisation', 'etat', 'image'],
         },
     })
+    /**
+     * Create a new chasse.
+     * @param {ChasseDto} body - Corps de la requête contenant les informations de la chasse.
+     * @param {Multer.File} image - Fichier image uploadé.
+     * @param {Request} req - Objet de la requête Express.
+     * @param {Response} response - Objet de réponse Express.
+     * @returns {void}.
+     */
     async createChasse(
         @Body() body: ChasseDto,
         @UploadedFile() image: Multer.File,
         @Req() req: Request,
         @Res() res: Response,
     ) {
+        // Extract token from Authorization header
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
             return res.status(401).send({ message: 'Unauthorized' });
         }
 
+        // Verify token and get user info
         const userInfo = await this.jwtService.verifyAsync(token);
         const user = await this.userService.getUser(userInfo.sub);
 
+        // Create the chasse using the ChasseService, including the image as a Buffer and linking to the partenaire
         await this.chasseService.createChasse({
             name: body.name,
             localisation: body.localisation,
@@ -68,8 +88,6 @@ export class ChasseController {
                 },
             },
         });
-
-
         return res.status(201).send({ message: 'Chasse created' });
     }
 

@@ -24,11 +24,8 @@ export class AuthGuard implements CanActivate {
       if (!secret) {
         throw new Error('JWT_SECRET is not defined');
       }
-      const decoded = this.jwtService.decode(token);
-
-      console.log('TOKEN exp:', new Date(decoded.exp * 1000));
-      console.log('NOW      :', new Date());
       const payload = await this.jwtService.verifyAsync(token);
+      
       request['user'] = payload;
 
     } catch {
