@@ -5,7 +5,7 @@ import { STATUT_KEY } from 'src/decorators/statut-partenaire.decorator';
 import { Statut } from 'src/generated/prisma/enums';
 
 @Injectable()
-export class StatutGuard implements CanActivate {
+export class StatutPartenerGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {

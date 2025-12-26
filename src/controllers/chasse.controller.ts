@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete } from "@nestjs/common";
 import type { Request, Response } from 'express';
-import { ApiTags, ApiBody, ApiBearerAuth, ApiParam, ApiConsumes } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
 import { Role, Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -11,15 +11,17 @@ import { ChasseService } from "src/services/chasse.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Multer } from 'multer';
 import { Statuts } from "src/decorators/statut-partenaire.decorator";
-import { StatutGuard } from "src/guards/partenaire.guard";
+import { StatutPartenerGuard } from "src/guards/partenaire.guard";
 import { Statut } from "src/generated/prisma/browser";
+import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 
 
 @ApiTags('Chasse')
+@ApiBearerAuth('access-token')
 @Controller('chasse')
 @Roles(Role.PARTENAIRE)
 @Statuts(Statut.ACTIVE)
-@UseGuards(AuthGuard, RolesGuard, StatutGuard)
+@UseGuards(AuthGuard, RolesGuard, StatutPartenerGuard)
 export class ChasseController {
     // Must inject services to access them
     constructor(
@@ -27,6 +29,40 @@ export class ChasseController {
         private readonly jwtService: JwtService,
         private readonly chasseService: ChasseService
     ) { }
+
+    @UseGuards(ChasseOwnershipGuard)
+    @Get('/:id')
+    async getChasseById(@Param('id') id: string, @Res() res: Response): Promise<Response> {
+        try {
+            const chasse = await this.chasseService.getChasseById(Number(id));
+
+            if (!chasse) {
+                return res.status(404).send({ message: 'Chasse not found' });
+            }
+            return res.status(200).send({
+                nom: chasse.name,
+                localisation: chasse.localisation,
+                etat: chasse.etat,
+            });
+        } catch (error) {
+            return res.status(500).send({ message: 'Error retrieving chasse', error });
+        }
+    }
+
+    @Get('/image/:id')
+    async getChasseImageById(@Param('id') id: string, @Res() res: Response): Promise<Response> {
+        try {
+            const chasse = await this.chasseService.getChasseById(Number(id));
+
+            if (!chasse) {
+                return res.status(404).send({ message: 'Chasse not found' });
+            }
+            res.setHeader('Content-Type', 'image/jpeg');
+            return res.status(200).send(Buffer.from(chasse.image));
+        } catch (error) {
+            return res.status(500).send({ message: 'Error retrieving chasse', error });
+        }
+    }
 
     // Need token in the header
     @ApiBearerAuth('access-token')
@@ -91,4 +127,33 @@ export class ChasseController {
         return res.status(201).send({ message: 'Chasse created' });
     }
 
+    @ApiBearerAuth('access-token')
+    @ApiConsumes('application/json')
+    @UseGuards(ChasseOwnershipGuard)
+    @ApiBody({ type: ChasseDto })
+    @Patch('update/:id')
+    async updateChasse(@Param('id') id: string, @Body() body: ChasseDto, @Res() res: Response): Promise<Response> {
+        try {
+            await this.chasseService.updateChasse(Number(id), {
+                name: body.name,
+                localisation: body.localisation,
+                etat: body.etat
+            });
+            return res.status(200).send({ message: 'Chasse updated' });
+        } catch (error) {
+            return res.status(500).send({ message: 'Error updating chasse', error });
+        }
+    }
+
+    @ApiBearerAuth('access-token')
+    @UseGuards(ChasseOwnershipGuard)
+    @Delete('delete/:id')
+    async deleteChasse(@Param('id') id: string, @Res() res: Response): Promise<Response> {
+        try {
+            await this.chasseService.deleteChasse(Number(id));
+            return res.status(200).send({ message: 'Chasse deleted' });
+        } catch (error) {
+            return res.status(500).send({ message: 'Error deleting chasse', error });
+        }
+    }
 }
