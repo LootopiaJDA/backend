@@ -116,13 +116,11 @@ export class ChasseController {
     const user = await this.userService.getUser(userInfo.sub);
 
     try {
-        // ✅ Convertir le buffer en Data URI base64
         const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
 
-        // ✅ Upload vers Cloudinary
         const uploadResult = await cloudinary.uploader.upload(base64Image, {
             public_id: 'chasse_' + Date.now(),
-            folder: 'chasses', // Optionnel : organiser dans un dossier
+            folder: 'chasses', 
         });
 
         const optimizeUrl = cloudinary.url(uploadResult.public_id, {

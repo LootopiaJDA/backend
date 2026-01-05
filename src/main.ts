@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { v2 as cloudinary } from 'cloudinary';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors: false});
 
   const config = new DocumentBuilder()
     .setTitle("Swagger Lootopia")
