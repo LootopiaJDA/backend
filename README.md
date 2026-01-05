@@ -1,3 +1,3 @@
 # backend
-Here is repository for backend of Lootopia app
-Test
+docker logs -f lootopia-backend
+test

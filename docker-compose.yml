@@ -11,9 +11,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: "postgresql://admin:admin@postgres:5432/lootopia?schema=public"
+      DATABASE_URL: ${DATABASE_URL_DOCKER}
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
     networks:
       - lootopia-network
 
@@ -22,15 +27,20 @@ services:
     container_name: lootopia-postgres
     restart: always
     environment:
-      POSTGRES_DB: lootopia
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - lootopia-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   pgadmin:
     image: dpage/pgadmin4
@@ -39,8 +49,8 @@ services:
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     depends_on:
       - postgres
     networks:
@@ -55,7 +65,7 @@ services:
     ports:
       - "5555:5555"
     environment:
-      DATABASE_URL: "postgresql://admin:admin@postgres:5432/lootopia?schema=public"
+      DATABASE_URL: ${DATABASE_URL_DOCKER}
     command: sh -c "npm install && npx prisma studio --browser none --port 5555"
     depends_on:
       - postgres
