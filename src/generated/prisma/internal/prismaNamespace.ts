@@ -1242,20 +1242,6 @@ export type ListEnumStatutFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 
 
 /**
- * Reference to a field of type 'Bytes'
- */
-export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
-    
-
-
-/**
- * Reference to a field of type 'Bytes[]'
- */
-export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
-    
-
-
-/**
  * Reference to a field of type 'StatutChasse'
  */
 export type EnumStatutChasseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutChasse'>

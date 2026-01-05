@@ -69,7 +69,7 @@ model Partenaire {
 model Chasse {
   id_chasse    Int     @id @default(autoincrement())
   name         String
-  image        Bytes
+  image        String
   localisation String
   etat         StatutChasse  @default(PENDING)
   created_at   DateTime @default(now())

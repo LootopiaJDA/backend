@@ -14,6 +14,9 @@ import { Statuts } from "src/decorators/statut-partenaire.decorator";
 import { StatutPartenerGuard } from "src/guards/partenaire.guard";
 import { Statut } from "src/generated/prisma/browser";
 import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
+import { v2 as cloudinary } from 'cloudinary';
+
+
 
 
 @ApiTags('Chasse')
@@ -96,36 +99,65 @@ export class ChasseController {
      * @param {Response} response - Objet de réponse Express.
      * @returns {void}.
      */
-    async createChasse(
-        @Body() body: ChasseDto,
-        @UploadedFile() image: Multer.File,
-        @Req() req: Request,
-        @Res() res: Response,
-    ) {
-        // Extract token from Authorization header
-        const token = req.headers.authorization?.split(' ')[1];
-        if (!token) {
-            return res.status(401).send({ message: 'Unauthorized' });
-        }
+   async createChasse(
+    @Body() body: ChasseDto,
+    @UploadedFile() image: Multer.File,
+    @Req() req: Request,
+    @Res() res: Response,
+) {
+    // Extract token from Authorization header
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).send({ message: 'Unauthorized' });
+    }
 
-        // Verify token and get user info
-        const userInfo = await this.jwtService.verifyAsync(token);
-        const user = await this.userService.getUser(userInfo.sub);
+    // Verify token and get user info
+    const userInfo = await this.jwtService.verifyAsync(token);
+    const user = await this.userService.getUser(userInfo.sub);
 
-        // Create the chasse using the ChasseService, including the image as a Buffer and linking to the partenaire
+    try {
+        // ✅ Convertir le buffer en Data URI base64
+        const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
+
+        // ✅ Upload vers Cloudinary
+        const uploadResult = await cloudinary.uploader.upload(base64Image, {
+            public_id: 'chasse_' + Date.now(),
+            folder: 'chasses', // Optionnel : organiser dans un dossier
+        });
+
+        const optimizeUrl = cloudinary.url(uploadResult.public_id, {
+            fetch_format: 'auto',
+            quality: 'auto'
+        });
+
+        console.log('Upload réussi:', uploadResult.secure_url);
+        console.log(optimizeUrl);
+
+        // Create the chasse using the ChasseService
         await this.chasseService.createChasse({
             name: body.name,
             localisation: body.localisation,
             etat: body.etat,
-            image: Buffer.from(image.buffer),
+            image:  uploadResult.secure_url, // ou imageUrl: uploadResult.secure_url
             partenaire: {
                 connect: {
                     id_partenaire: Number(user!.partenerId),
                 },
             },
         });
-        return res.status(201).send({ message: 'Chasse created' });
+
+        return res.status(201).send({ 
+            message: 'Chasse created',
+            imageUrl: uploadResult.secure_url // URL Cloudinary
+        });
+    } catch (error) {
+        console.error('Erreur Cloudinary:', error);
+        return res.status(500).send({ 
+            message: 'Erreur lors de l\'upload', 
+            error: error.message 
+        });
     }
+}
 
     @ApiBearerAuth('access-token')
     @ApiConsumes('application/json')

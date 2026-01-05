@@ -39,7 +39,7 @@ export type ChasseSumAggregateOutputType = {
 export type ChasseMinAggregateOutputType = {
   id_chasse: number | null
   name: string | null
-  image: runtime.Bytes | null
+  image: string | null
   localisation: string | null
   etat: $Enums.StatutChasse | null
   created_at: Date | null
@@ -49,7 +49,7 @@ export type ChasseMinAggregateOutputType = {
 export type ChasseMaxAggregateOutputType = {
   id_chasse: number | null
   name: string | null
-  image: runtime.Bytes | null
+  image: string | null
   localisation: string | null
   etat: $Enums.StatutChasse | null
   created_at: Date | null
@@ -198,7 +198,7 @@ export type ChasseGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type ChasseGroupByOutputType = {
   id_chasse: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat: $Enums.StatutChasse
   created_at: Date
@@ -231,7 +231,7 @@ export type ChasseWhereInput = {
   NOT?: Prisma.ChasseWhereInput | Prisma.ChasseWhereInput[]
   id_chasse?: Prisma.IntFilter<"Chasse"> | number
   name?: Prisma.StringFilter<"Chasse"> | string
-  image?: Prisma.BytesFilter<"Chasse"> | runtime.Bytes
+  image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
@@ -262,7 +262,7 @@ export type ChasseWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ChasseWhereInput[]
   NOT?: Prisma.ChasseWhereInput | Prisma.ChasseWhereInput[]
   name?: Prisma.StringFilter<"Chasse"> | string
-  image?: Prisma.BytesFilter<"Chasse"> | runtime.Bytes
+  image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
@@ -294,7 +294,7 @@ export type ChasseScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ChasseScalarWhereWithAggregatesInput | Prisma.ChasseScalarWhereWithAggregatesInput[]
   id_chasse?: Prisma.IntWithAggregatesFilter<"Chasse"> | number
   name?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
-  image?: Prisma.BytesWithAggregatesFilter<"Chasse"> | runtime.Bytes
+  image?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
   localisation?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
   etat?: Prisma.EnumStatutChasseWithAggregatesFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Chasse"> | Date | string
@@ -303,7 +303,7 @@ export type ChasseScalarWhereWithAggregatesInput = {
 
 export type ChasseCreateInput = {
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -316,7 +316,7 @@ export type ChasseCreateInput = {
 export type ChasseUncheckedCreateInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -328,7 +328,7 @@ export type ChasseUncheckedCreateInput = {
 
 export type ChasseUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -341,7 +341,7 @@ export type ChasseUpdateInput = {
 export type ChasseUncheckedUpdateInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -354,7 +354,7 @@ export type ChasseUncheckedUpdateInput = {
 export type ChasseCreateManyInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -363,7 +363,7 @@ export type ChasseCreateManyInput = {
 
 export type ChasseUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -372,7 +372,7 @@ export type ChasseUpdateManyMutationInput = {
 export type ChasseUncheckedUpdateManyInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,10 +476,6 @@ export type ChasseUncheckedUpdateManyWithoutPartenaireNestedInput = {
   deleteMany?: Prisma.ChasseScalarWhereInput | Prisma.ChasseScalarWhereInput[]
 }
 
-export type BytesFieldUpdateOperationsInput = {
-  set?: runtime.Bytes
-}
-
 export type EnumStatutChasseFieldUpdateOperationsInput = {
   set?: $Enums.StatutChasse
 }
@@ -528,7 +524,7 @@ export type ChasseUpdateOneRequiredWithoutUserchassesNestedInput = {
 
 export type ChasseCreateWithoutPartenaireInput = {
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -540,7 +536,7 @@ export type ChasseCreateWithoutPartenaireInput = {
 export type ChasseUncheckedCreateWithoutPartenaireInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -581,7 +577,7 @@ export type ChasseScalarWhereInput = {
   NOT?: Prisma.ChasseScalarWhereInput | Prisma.ChasseScalarWhereInput[]
   id_chasse?: Prisma.IntFilter<"Chasse"> | number
   name?: Prisma.StringFilter<"Chasse"> | string
-  image?: Prisma.BytesFilter<"Chasse"> | runtime.Bytes
+  image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
@@ -590,7 +586,7 @@ export type ChasseScalarWhereInput = {
 
 export type ChasseCreateWithoutOccurenceInput = {
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -602,7 +598,7 @@ export type ChasseCreateWithoutOccurenceInput = {
 export type ChasseUncheckedCreateWithoutOccurenceInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -629,7 +625,7 @@ export type ChasseUpdateToOneWithWhereWithoutOccurenceInput = {
 
 export type ChasseUpdateWithoutOccurenceInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -641,7 +637,7 @@ export type ChasseUpdateWithoutOccurenceInput = {
 export type ChasseUncheckedUpdateWithoutOccurenceInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -652,7 +648,7 @@ export type ChasseUncheckedUpdateWithoutOccurenceInput = {
 
 export type ChasseCreateWithoutEtapeInput = {
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -664,7 +660,7 @@ export type ChasseCreateWithoutEtapeInput = {
 export type ChasseUncheckedCreateWithoutEtapeInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -691,7 +687,7 @@ export type ChasseUpdateToOneWithWhereWithoutEtapeInput = {
 
 export type ChasseUpdateWithoutEtapeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -703,7 +699,7 @@ export type ChasseUpdateWithoutEtapeInput = {
 export type ChasseUncheckedUpdateWithoutEtapeInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -714,7 +710,7 @@ export type ChasseUncheckedUpdateWithoutEtapeInput = {
 
 export type ChasseCreateWithoutUserchassesInput = {
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -726,7 +722,7 @@ export type ChasseCreateWithoutUserchassesInput = {
 export type ChasseUncheckedCreateWithoutUserchassesInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -753,7 +749,7 @@ export type ChasseUpdateToOneWithWhereWithoutUserchassesInput = {
 
 export type ChasseUpdateWithoutUserchassesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -765,7 +761,7 @@ export type ChasseUpdateWithoutUserchassesInput = {
 export type ChasseUncheckedUpdateWithoutUserchassesInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -777,7 +773,7 @@ export type ChasseUncheckedUpdateWithoutUserchassesInput = {
 export type ChasseCreateManyPartenaireInput = {
   id_chasse?: number
   name: string
-  image: runtime.Bytes
+  image: string
   localisation: string
   etat?: $Enums.StatutChasse
   created_at?: Date | string
@@ -785,7 +781,7 @@ export type ChasseCreateManyPartenaireInput = {
 
 export type ChasseUpdateWithoutPartenaireInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -797,7 +793,7 @@ export type ChasseUpdateWithoutPartenaireInput = {
 export type ChasseUncheckedUpdateWithoutPartenaireInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,7 +805,7 @@ export type ChasseUncheckedUpdateWithoutPartenaireInput = {
 export type ChasseUncheckedUpdateManyWithoutPartenaireInput = {
   id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  image?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -937,7 +933,7 @@ export type $ChassePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_chasse: number
     name: string
-    image: runtime.Bytes
+    image: string
     localisation: string
     etat: $Enums.StatutChasse
     created_at: Date
@@ -1371,7 +1367,7 @@ export interface Prisma__ChasseClient<T, Null = never, ExtArgs extends runtime.T
 export interface ChasseFieldRefs {
   readonly id_chasse: Prisma.FieldRef<"Chasse", 'Int'>
   readonly name: Prisma.FieldRef<"Chasse", 'String'>
-  readonly image: Prisma.FieldRef<"Chasse", 'Bytes'>
+  readonly image: Prisma.FieldRef<"Chasse", 'String'>
   readonly localisation: Prisma.FieldRef<"Chasse", 'String'>
   readonly etat: Prisma.FieldRef<"Chasse", 'StatutChasse'>
   readonly created_at: Prisma.FieldRef<"Chasse", 'DateTime'>

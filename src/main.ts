@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./module/app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { v2 as cloudinary } from 'cloudinary';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,16 +12,16 @@ async function bootstrap() {
     .setVersion("1.0")
     .addTag("Lootopia")
     .addBearerAuth(
-    {
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      name: 'Authorization',
-      description: 'Enter JWT token',
-      in: 'header',
-    },
-    'access-token', 
-  )
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
@@ -46,5 +47,11 @@ async function bootstrap() {
 
 -----------------------------------------------------
   `);
+
+  cloudinary.config({
+    cloud_name: 'dedqcxfgq',
+    api_key: '694879155165255',
+    api_secret: process.env.API_KEY_CLOUDINARY 
+  });
 }
 void bootstrap();

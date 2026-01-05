@@ -14,6 +14,7 @@ services:
       DATABASE_URL: ${DATABASE_URL_DOCKER}
       ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
     depends_on:
       postgres:
         condition: service_healthy
