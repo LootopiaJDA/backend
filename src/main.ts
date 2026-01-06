@@ -4,7 +4,17 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { v2 as cloudinary } from 'cloudinary';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {cors: false});
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: true, // This allows all origins dynamically
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+      exposedHeaders: ['Authorization'],
+      preflightContinue: false,
+      optionsSuccessStatus: 204
+    }
+  });
 
   const config = new DocumentBuilder()
     .setTitle("Swagger Lootopia")
@@ -51,7 +61,7 @@ async function bootstrap() {
   cloudinary.config({
     cloud_name: 'dedqcxfgq',
     api_key: '694879155165255',
-    api_secret: process.env.API_KEY_CLOUDINARY 
+    api_secret: process.env.API_KEY_CLOUDINARY
   });
 }
 void bootstrap();
