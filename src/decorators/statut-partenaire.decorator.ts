@@ -4,5 +4,4 @@ import { Statut } from 'src/generated/prisma/enums';
 
 export const STATUT_KEY = 'statut';
 
-export const Statuts = (...statuts: Statut[]) =>
-  SetMetadata(STATUT_KEY, statuts);
+export const Statuts = (...statuts: Statut[]) => SetMetadata(STATUT_KEY, statuts);

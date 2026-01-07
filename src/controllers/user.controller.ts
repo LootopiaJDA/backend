@@ -1,13 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Header, Param, Post, Put, Req, Res, UseGuards } from "@nestjs/common";
 import { UserService } from "../services/user.service";
 import type { Request, Response } from 'express';
 import { CreateUserDto, UpdateUserDto } from "../dto/user.tdo";
 import { ApiTags, ApiBody, ApiBearerAuth, ApiParam } from "@nestjs/swagger";
 import { encryptText } from "src/services/crypto.service";
-import { Role, Roles } from "src/decorators/role.decorator";
+import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 import { CreateUserPartenairDto } from "src/dto/partenair.dto";
+import { Role } from "src/generated/prisma/enums";
+
 
 interface User {
     id_user: number;
@@ -18,11 +20,25 @@ interface User {
     partenerId: number | null;
 }
 
+type userData = Omit<User, 'password'>
+
 @ApiTags('User')
 @Controller('user')
 export class UserController {
     // Get userService to access its methods via dependency injection
     constructor(private readonly userService: UserService) { }
+
+    /**
+ * Get personnal info of user.
+ */
+    @ApiBearerAuth('access-token')
+    @UseGuards(AuthGuard)
+    @Get("/personnalData")
+    async getProtectedData(@Req() req): Promise<userData | null> {
+        const userId = req.user.sub;
+        const dataUser = await this.userService.getUser(Number(userId));
+        return dataUser; 
+    }
 
     /**
      * Create a new user.

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete } from "@nestjs/common";
 import type { Request, Response } from 'express';
 import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
-import { Role, Roles } from "src/decorators/role.decorator";
+import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 import { ChasseDto } from "src/dto/chasse.dto";
@@ -15,8 +15,19 @@ import { StatutPartenerGuard } from "src/guards/partenaire.guard";
 import { Statut } from "src/generated/prisma/browser";
 import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 import { v2 as cloudinary } from 'cloudinary';
+import { Role } from "src/generated/prisma/enums";
 
-
+interface RequestWithUser extends Request {
+  user: {
+    sub: number;
+    username: string;
+    role: string;
+    partenaire?: {
+      id_partenaire: number;
+      statut: string;
+    };
+  };
+}
 
 
 @ApiTags('Chasse')
@@ -46,29 +57,13 @@ export class ChasseController {
                 nom: chasse.name,
                 localisation: chasse.localisation,
                 etat: chasse.etat,
+                image: chasse.image
             });
         } catch (error) {
             return res.status(500).send({ message: 'Error retrieving chasse', error });
         }
     }
 
-    @Get('/image/:id')
-    async getChasseImageById(@Param('id') id: string, @Res() res: Response): Promise<Response> {
-        try {
-            const chasse = await this.chasseService.getChasseById(Number(id));
-
-            if (!chasse) {
-                return res.status(404).send({ message: 'Chasse not found' });
-            }
-            res.setHeader('Content-Type', 'image/jpeg');
-            return res.status(200).send(Buffer.from(chasse.image));
-        } catch (error) {
-            return res.status(500).send({ message: 'Error retrieving chasse', error });
-        }
-    }
-
-    // Need token in the header
-    @ApiBearerAuth('access-token')
     // Post method to create a chasse
     @Post()
     // Specify multipart/form-data consumption for image integration
@@ -102,18 +97,16 @@ export class ChasseController {
    async createChasse(
     @Body() body: ChasseDto,
     @UploadedFile() image: Multer.File,
-    @Req() req: Request,
+    @Req() req: RequestWithUser,
     @Res() res: Response,
-) {
-    // Extract token from Authorization header
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).send({ message: 'Unauthorized' });
-    }
+): Promise<any> {
+    
+    // Get user info
+    const user = req.user;
 
-    // Verify token and get user info
-    const userInfo = await this.jwtService.verifyAsync(token);
-    const user = await this.userService.getUser(userInfo.sub);
+    if (!user.partenaire) {
+        return res.status(400).send({ message: 'User partenaire information is missing' });
+    }
 
     try {
         const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
@@ -139,7 +132,7 @@ export class ChasseController {
             image:  uploadResult.secure_url, // ou imageUrl: uploadResult.secure_url
             partenaire: {
                 connect: {
-                    id_partenaire: Number(user!.partenerId),
+                    id_partenaire: Number(user.partenaire.id_partenaire),
                 },
             },
         });

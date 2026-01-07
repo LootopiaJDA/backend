@@ -15,6 +15,7 @@ services:
       ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
+      NODE_ENV: ${NODE_ENV}
     depends_on:
       postgres:
         condition: service_healthy

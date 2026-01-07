@@ -29,6 +29,8 @@ interface CreatePartenaireUserDto {
   };
 }
 
+type UserData = Omit<User, 'password' | 'updated_at' | 'created_at'>
+
 
 @Injectable()
 export class UserService {
@@ -79,9 +81,19 @@ export class UserService {
     });
   }
 
-  async getUser(userId: number): Promise<User | null> {
+  async getUser(userId: number): Promise<UserData | null> {
     return this.prisma.user.findUnique({
       where: { id_user: userId },
+      select: {
+        id_user: true,
+        username: true,
+        email: true,
+        partenerId: true,
+        role: true,
+        password: false,
+        created_at: false,
+        updated_at: false,
+      },
     });
   }
 }

@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import type { Response } from 'express';
 import { ApiTags } from "@nestjs/swagger";
 import { ConnexionDto } from "../dto/connexion.tdo";
 import { ApiBody } from "@nestjs/swagger";
+import { AuthGuard } from "src/guards/auth.guard";
 
 
 @ApiTags('Connexion utilisateur')
@@ -19,21 +20,38 @@ export class AuthController {
      */
     @Post()
     @ApiBody({ type: ConnexionDto })
-    async login(@Body() body: ConnexionDto, @Res() response: Response): Promise<void> {
+    async login(
+        @Body() body: ConnexionDto,
+        @Res({ passthrough: true }) response: Response
+    ): Promise<{ message: string }> {
         try {
             const jwt = await this.authService.login(body);
-            response.status(200).send(jwt);
+
+            response.cookie('access_token', jwt.access_token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 3600000,
+                path: '/'
+            });
+
+
+            return { message: 'Connexion réussie' };
         } catch (error) {
             console.log(error);
-            response.status(500).send(error.message);
+            throw new HttpException(
+                error.message || 'Erreur lors de la connexion',
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
+    }
+
+    @Get('logout')
+    @UseGuards(AuthGuard)
+    async logout(@Res({ passthrough: true }) res: Response): Promise<{message: String}> {
+        res.clearCookie('access_token');
+        return {message: 'Déconnexion réussie'}
     }
 }
 
-@ApiTags('Deconnexion utilisateur')
-@Controller('deconnexion')
-export class LogoutController {
-    constructor(private readonly authService: AuthService) { 
-        
-    }
-}
+

@@ -2,11 +2,12 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./module/app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { v2 as cloudinary } from 'cloudinary';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: true, // This allows all origins dynamically
+      origin: true,
       methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
@@ -15,6 +16,7 @@ async function bootstrap() {
       optionsSuccessStatus: 204
     }
   });
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle("Swagger Lootopia")
