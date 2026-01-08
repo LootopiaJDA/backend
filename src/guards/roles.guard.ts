@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/role.decorator';
-import { Role } from '@prisma/client'; // ✅ Importer Role depuis Prisma
+import { Role } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -19,7 +19,6 @@ export class RolesGuard implements CanActivate {
     
     const { user } = context.switchToHttp().getRequest();
     
-    // ✅ Correction : user.role est un seul Role, pas un tableau
     return requiredRoles.includes(user.role);
   }
 }

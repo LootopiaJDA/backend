@@ -28,8 +28,6 @@ export type AggregateEtape = {
 
 export type EtapeAvgAggregateOutputType = {
   id: number | null
-  lat: number | null
-  long: number | null
   rayon: number | null
   rank: number | null
   chasse_id: number | null
@@ -37,8 +35,6 @@ export type EtapeAvgAggregateOutputType = {
 
 export type EtapeSumAggregateOutputType = {
   id: number | null
-  lat: number | null
-  long: number | null
   rayon: number | null
   rank: number | null
   chasse_id: number | null
@@ -47,8 +43,8 @@ export type EtapeSumAggregateOutputType = {
 export type EtapeMinAggregateOutputType = {
   id: number | null
   name: string | null
-  lat: number | null
-  long: number | null
+  lat: string | null
+  long: string | null
   address: string | null
   description: string | null
   rayon: number | null
@@ -60,8 +56,8 @@ export type EtapeMinAggregateOutputType = {
 export type EtapeMaxAggregateOutputType = {
   id: number | null
   name: string | null
-  lat: number | null
-  long: number | null
+  lat: string | null
+  long: string | null
   address: string | null
   description: string | null
   rayon: number | null
@@ -87,8 +83,6 @@ export type EtapeCountAggregateOutputType = {
 
 export type EtapeAvgAggregateInputType = {
   id?: true
-  lat?: true
-  long?: true
   rayon?: true
   rank?: true
   chasse_id?: true
@@ -96,8 +90,6 @@ export type EtapeAvgAggregateInputType = {
 
 export type EtapeSumAggregateInputType = {
   id?: true
-  lat?: true
-  long?: true
   rayon?: true
   rank?: true
   chasse_id?: true
@@ -232,8 +224,8 @@ export type EtapeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type EtapeGroupByOutputType = {
   id: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -268,8 +260,8 @@ export type EtapeWhereInput = {
   NOT?: Prisma.EtapeWhereInput | Prisma.EtapeWhereInput[]
   id?: Prisma.IntFilter<"Etape"> | number
   name?: Prisma.StringFilter<"Etape"> | string
-  lat?: Prisma.FloatFilter<"Etape"> | number
-  long?: Prisma.FloatFilter<"Etape"> | number
+  lat?: Prisma.StringFilter<"Etape"> | string
+  long?: Prisma.StringFilter<"Etape"> | string
   address?: Prisma.StringFilter<"Etape"> | string
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
@@ -301,8 +293,8 @@ export type EtapeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.EtapeWhereInput[]
   NOT?: Prisma.EtapeWhereInput | Prisma.EtapeWhereInput[]
   name?: Prisma.StringFilter<"Etape"> | string
-  lat?: Prisma.FloatFilter<"Etape"> | number
-  long?: Prisma.FloatFilter<"Etape"> | number
+  lat?: Prisma.StringFilter<"Etape"> | string
+  long?: Prisma.StringFilter<"Etape"> | string
   address?: Prisma.StringFilter<"Etape"> | string
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
@@ -337,8 +329,8 @@ export type EtapeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.EtapeScalarWhereWithAggregatesInput | Prisma.EtapeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Etape"> | number
   name?: Prisma.StringWithAggregatesFilter<"Etape"> | string
-  lat?: Prisma.FloatWithAggregatesFilter<"Etape"> | number
-  long?: Prisma.FloatWithAggregatesFilter<"Etape"> | number
+  lat?: Prisma.StringWithAggregatesFilter<"Etape"> | string
+  long?: Prisma.StringWithAggregatesFilter<"Etape"> | string
   address?: Prisma.StringWithAggregatesFilter<"Etape"> | string
   description?: Prisma.StringWithAggregatesFilter<"Etape"> | string
   rayon?: Prisma.IntWithAggregatesFilter<"Etape"> | number
@@ -349,8 +341,8 @@ export type EtapeScalarWhereWithAggregatesInput = {
 
 export type EtapeCreateInput = {
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -363,8 +355,8 @@ export type EtapeCreateInput = {
 export type EtapeUncheckedCreateInput = {
   id?: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -376,8 +368,8 @@ export type EtapeUncheckedCreateInput = {
 
 export type EtapeUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -390,8 +382,8 @@ export type EtapeUpdateInput = {
 export type EtapeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -404,8 +396,8 @@ export type EtapeUncheckedUpdateInput = {
 export type EtapeCreateManyInput = {
   id?: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -416,8 +408,8 @@ export type EtapeCreateManyInput = {
 
 export type EtapeUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -428,8 +420,8 @@ export type EtapeUpdateManyMutationInput = {
 export type EtapeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -463,8 +455,6 @@ export type EtapeCountOrderByAggregateInput = {
 
 export type EtapeAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  lat?: Prisma.SortOrder
-  long?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
@@ -498,8 +488,6 @@ export type EtapeMinOrderByAggregateInput = {
 
 export type EtapeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  lat?: Prisma.SortOrder
-  long?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
@@ -552,14 +540,6 @@ export type EtapeUncheckedUpdateManyWithoutChasseNestedInput = {
   deleteMany?: Prisma.EtapeScalarWhereInput | Prisma.EtapeScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EtapeCreateNestedOneWithoutUserChasseEtapeInput = {
   create?: Prisma.XOR<Prisma.EtapeCreateWithoutUserChasseEtapeInput, Prisma.EtapeUncheckedCreateWithoutUserChasseEtapeInput>
   connectOrCreate?: Prisma.EtapeCreateOrConnectWithoutUserChasseEtapeInput
@@ -576,8 +556,8 @@ export type EtapeUpdateOneRequiredWithoutUserChasseEtapeNestedInput = {
 
 export type EtapeCreateWithoutChasseInput = {
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -589,8 +569,8 @@ export type EtapeCreateWithoutChasseInput = {
 export type EtapeUncheckedCreateWithoutChasseInput = {
   id?: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -631,8 +611,8 @@ export type EtapeScalarWhereInput = {
   NOT?: Prisma.EtapeScalarWhereInput | Prisma.EtapeScalarWhereInput[]
   id?: Prisma.IntFilter<"Etape"> | number
   name?: Prisma.StringFilter<"Etape"> | string
-  lat?: Prisma.FloatFilter<"Etape"> | number
-  long?: Prisma.FloatFilter<"Etape"> | number
+  lat?: Prisma.StringFilter<"Etape"> | string
+  long?: Prisma.StringFilter<"Etape"> | string
   address?: Prisma.StringFilter<"Etape"> | string
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
@@ -643,8 +623,8 @@ export type EtapeScalarWhereInput = {
 
 export type EtapeCreateWithoutUserChasseEtapeInput = {
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -656,8 +636,8 @@ export type EtapeCreateWithoutUserChasseEtapeInput = {
 export type EtapeUncheckedCreateWithoutUserChasseEtapeInput = {
   id?: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -684,8 +664,8 @@ export type EtapeUpdateToOneWithWhereWithoutUserChasseEtapeInput = {
 
 export type EtapeUpdateWithoutUserChasseEtapeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -697,8 +677,8 @@ export type EtapeUpdateWithoutUserChasseEtapeInput = {
 export type EtapeUncheckedUpdateWithoutUserChasseEtapeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -710,8 +690,8 @@ export type EtapeUncheckedUpdateWithoutUserChasseEtapeInput = {
 export type EtapeCreateManyChasseInput = {
   id?: number
   name: string
-  lat: number
-  long: number
+  lat: string
+  long: string
   address: string
   description: string
   rayon: number
@@ -721,8 +701,8 @@ export type EtapeCreateManyChasseInput = {
 
 export type EtapeUpdateWithoutChasseInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -734,8 +714,8 @@ export type EtapeUpdateWithoutChasseInput = {
 export type EtapeUncheckedUpdateWithoutChasseInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -747,8 +727,8 @@ export type EtapeUncheckedUpdateWithoutChasseInput = {
 export type EtapeUncheckedUpdateManyWithoutChasseInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  lat?: Prisma.FloatFieldUpdateOperationsInput | number
-  long?: Prisma.FloatFieldUpdateOperationsInput | number
+  lat?: Prisma.StringFieldUpdateOperationsInput | string
+  long?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
@@ -866,8 +846,8 @@ export type $EtapePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
-    lat: number
-    long: number
+    lat: string
+    long: string
     address: string
     description: string
     rayon: number
@@ -1301,8 +1281,8 @@ export interface Prisma__EtapeClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface EtapeFieldRefs {
   readonly id: Prisma.FieldRef<"Etape", 'Int'>
   readonly name: Prisma.FieldRef<"Etape", 'String'>
-  readonly lat: Prisma.FieldRef<"Etape", 'Float'>
-  readonly long: Prisma.FieldRef<"Etape", 'Float'>
+  readonly lat: Prisma.FieldRef<"Etape", 'String'>
+  readonly long: Prisma.FieldRef<"Etape", 'String'>
   readonly address: Prisma.FieldRef<"Etape", 'String'>
   readonly description: Prisma.FieldRef<"Etape", 'String'>
   readonly rayon: Prisma.FieldRef<"Etape", 'Int'>

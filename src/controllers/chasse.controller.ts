@@ -16,18 +16,8 @@ import { Statut } from "src/generated/prisma/browser";
 import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 import { v2 as cloudinary } from 'cloudinary';
 import { Role } from "src/generated/prisma/enums";
+import { RequestWithUser } from "../interface/user.interface";
 
-interface RequestWithUser extends Request {
-  user: {
-    sub: number;
-    username: string;
-    role: string;
-    partenaire?: {
-      id_partenaire: number;
-      statut: string;
-    };
-  };
-}
 
 
 @ApiTags('Chasse')

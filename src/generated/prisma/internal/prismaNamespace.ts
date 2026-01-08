@@ -1256,20 +1256,6 @@ export type ListEnumStatutChasseFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
  * Reference to a field of type 'StatutUserChasse'
  */
 export type EnumStatutUserChasseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutUserChasse'>
@@ -1280,6 +1266,20 @@ export type EnumStatutUserChasseFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'StatutUserChasse[]'
  */
 export type ListEnumStatutUserChasseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutUserChasse[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**

@@ -96,8 +96,8 @@ model Occurence{
 model Etape {
   id           Int     @id @default(autoincrement())   
   name         String
-  lat          Float
-  long         Float
+  lat          String
+  long         String
   address      String
   description  String
   rayon        Int
