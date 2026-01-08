@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete } from "@nestjs/common";
 import type { Response } from 'express';
-import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -92,7 +92,7 @@ export class ChasseController {
     @UploadedFile() image: Multer.File,
     @Req() req: RequestWithUser,
     @Res() res: Response,
-): Promise<any> {
+): Promise<Response> {
     
     // Get user info
     const user = req.user;

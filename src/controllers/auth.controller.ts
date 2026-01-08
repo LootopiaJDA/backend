@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import type { Response } from 'express';
 import { ApiTags } from "@nestjs/swagger";
@@ -48,7 +48,7 @@ export class AuthController {
 
     @Get('logout')
     @UseGuards(AuthGuard)
-    async logout(@Res({ passthrough: true }) res: Response): Promise<{message: String}> {
+    async logout(@Res({ passthrough: true }) res: Response): Promise<{message: string}> {
         res.clearCookie('access_token');
         return {message: 'Déconnexion réussie'}
     }
