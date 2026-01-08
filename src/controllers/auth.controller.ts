@@ -4,7 +4,7 @@ import type { Response } from 'express';
 import { ApiTags } from "@nestjs/swagger";
 import { ConnexionDto } from "../dto/connexion.tdo";
 import { ApiBody } from "@nestjs/swagger";
-import { AuthGuard } from "src/guards/auth.guard";
+import { AuthGuard } from "../guards/auth.guard";
 
 
 @ApiTags('Connexion utilisateur')

@@ -8,6 +8,6 @@ import { UserService } from "src/services/user.service";
   imports: [],
   controllers: [ChasseController],
   providers: [PrismaService, ChasseService, UserService],
-  exports: []
+  exports: [ChasseService]
 })
 export class ChasseModule {}
