@@ -1,12 +1,10 @@
 import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete } from "@nestjs/common";
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 import { ChasseDto } from "src/dto/chasse.dto";
-import { UserService } from "src/services/user.service";
-import { JwtService } from "@nestjs/jwt";
 import { ChasseService } from "src/services/chasse.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Multer } from 'multer';
@@ -21,20 +19,21 @@ import { RequestWithUser } from "../interface/user.interface";
 
 
 @ApiTags('Chasse')
-@ApiBearerAuth('access-token')
 @Controller('chasse')
-@Roles(Role.PARTENAIRE)
 @Statuts(Statut.ACTIVE)
-@UseGuards(AuthGuard, RolesGuard, StatutPartenerGuard)
+@UseGuards(AuthGuard)
 export class ChasseController {
     // Must inject services to access them
     constructor(
-        private readonly userService: UserService,
-        private readonly jwtService: JwtService,
         private readonly chasseService: ChasseService
     ) { }
 
-    @UseGuards(ChasseOwnershipGuard)
+    @Get("/all")
+    async getAllChasse(@Res() res: Response): Promise<Response> {
+        const allChasse = await this.chasseService.getAllChasse();
+       return res.status(200).json({allChasse})
+    }
+
     @Get('/:id')
     async getChasseById(@Param('id') id: string, @Res() res: Response): Promise<Response> {
         try {
@@ -54,13 +53,15 @@ export class ChasseController {
         }
     }
 
-    // Post method to create a chasse
+    @Get("/partenaire/:idPartenaire")
+    async getChasseByPartenairId(@Param('idPartenaire') id: string, @Res() res: Response): Promise<Response> {
+        const chasse = await this.chasseService.getChasseByPartenair(Number(id))
+        return res.status(200).json({chasse})
+    }
+
     @Post()
-    // Specify multipart/form-data consumption for image integration
     @ApiConsumes('multipart/form-data')
-    // Use FileInterceptor to handle file upload
     @UseInterceptors(FileInterceptor('image'))
-    // Define the request body schema for Swagger documentation
     @ApiBody({
         schema: {
             type: 'object',
@@ -76,6 +77,8 @@ export class ChasseController {
             required: ['name', 'localisation', 'etat', 'image'],
         },
     })
+    @Roles(Role.PARTENAIRE)
+    @UseGuards(StatutPartenerGuard, RolesGuard)
     /**
      * Create a new chasse.
      * @param {ChasseDto} body - Corps de la requête contenant les informations de la chasse.
@@ -140,9 +143,9 @@ export class ChasseController {
     }
 }
 
-    @ApiBearerAuth('access-token')
     @ApiConsumes('application/json')
-    @UseGuards(ChasseOwnershipGuard)
+    @Roles(Role.PARTENAIRE)
+    @UseGuards(RolesGuard,ChasseOwnershipGuard, StatutPartenerGuard)
     @ApiBody({ type: ChasseDto })
     @Patch('update/:id')
     async updateChasse(@Param('id') id: string, @Body() body: ChasseDto, @Res() res: Response): Promise<Response> {
@@ -158,8 +161,8 @@ export class ChasseController {
         }
     }
 
-    @ApiBearerAuth('access-token')
-    @UseGuards(ChasseOwnershipGuard)
+    @Roles(Role.PARTENAIRE)
+    @UseGuards(RolesGuard,ChasseOwnershipGuard, StatutPartenerGuard)
     @Delete('delete/:id')
     async deleteChasse(@Param('id') id: string, @Res() res: Response): Promise<Response> {
         try {

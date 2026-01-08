@@ -22,6 +22,14 @@ export class ChasseService {
     return await this.prisma.chasse.findUnique({ where: { id_chasse: id } });
   }
 
+  async getAllChasse(): Promise<Chasse[] | null> {
+    return await this.prisma.chasse.findMany({where:{etat: "ACTIVE"}})
+  }
+
+  async getChasseByPartenair(id: number): Promise<Chasse[] | null> {
+    return await this.prisma.chasse.findMany({where: {idPartenaire: id}})
+  }
+
   async deleteChasse(id: number): Promise<void> {
     await this.prisma.chasse.delete({ where: { id_chasse: id } });
   }
