@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete, Query } from "@nestjs/common";
 import type { Response } from 'express';
-import { ApiTags, ApiBody, ApiConsumes, ApiQuery, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
