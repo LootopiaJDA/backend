@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Get, Post, Patch, Req, Res, UploadedFile, UseGuards, UseInterceptors, Param, Delete, Query } from "@nestjs/common";
 import type { Response } from 'express';
-import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiConsumes, ApiQuery, ApiPropertyOptional } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -28,10 +28,16 @@ export class ChasseController {
         private readonly chasseService: ChasseService
     ) { }
 
-    @Get("/all")
-    async getAllChasse(@Res() res: Response): Promise<Response> {
-        const allChasse = await this.chasseService.getAllChasse();
-       return res.status(200).json({allChasse})
+    @Get("/getAll")
+    @ApiQuery({name: 'partenaire', required: false})
+    async getAllChasse(@Query('partenaire') part: number, @Res() res: Response): Promise<Response> {
+        if (part) {
+            const chasseByPart = await this.chasseService.getChasseByPartenair(Number(part))
+            return res.status(200).json({ chasseByPart })
+        } else {
+            const allChasse = await this.chasseService.getAllChasse();
+            return res.status(200).json({ allChasse })
+        }
     }
 
     @Get('/:id')
@@ -51,12 +57,6 @@ export class ChasseController {
         } catch (error) {
             return res.status(500).send({ message: 'Error retrieving chasse', error });
         }
-    }
-
-    @Get("/partenaire/:idPartenaire")
-    async getChasseByPartenairId(@Param('idPartenaire') id: string, @Res() res: Response): Promise<Response> {
-        const chasse = await this.chasseService.getChasseByPartenair(Number(id))
-        return res.status(200).json({chasse})
     }
 
     @Post()
@@ -87,65 +87,65 @@ export class ChasseController {
      * @param {Response} response - Objet de réponse Express.
      * @returns {void}.
      */
-   async createChasse(
-    @Body() body: ChasseDto,
-    @UploadedFile() image: Multer.File,
-    @Req() req: RequestWithUser,
-    @Res() res: Response,
-): Promise<Response> {
-    
-    // Get user info
-    const user = req.user;
+    async createChasse(
+        @Body() body: ChasseDto,
+        @UploadedFile() image: Multer.File,
+        @Req() req: RequestWithUser,
+        @Res() res: Response,
+    ): Promise<Response> {
 
-    if (!user.partenaire) {
-        return res.status(400).send({ message: 'User partenaire information is missing' });
-    }
+        // Get user info
+        const user = req.user;
 
-    try {
-        const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
+        if (!user.partenaire) {
+            return res.status(400).send({ message: 'User partenaire information is missing' });
+        }
 
-        const uploadResult = await cloudinary.uploader.upload(base64Image, {
-            public_id: 'chasse_' + Date.now(),
-            folder: 'chasses', 
-        });
+        try {
+            const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
 
-        const optimizeUrl = cloudinary.url(uploadResult.public_id, {
-            fetch_format: 'auto',
-            quality: 'auto'
-        });
+            const uploadResult = await cloudinary.uploader.upload(base64Image, {
+                public_id: 'chasse_' + Date.now(),
+                folder: 'chasses',
+            });
 
-        console.log('Upload réussi:', uploadResult.secure_url);
-        console.log(optimizeUrl);
+            const optimizeUrl = cloudinary.url(uploadResult.public_id, {
+                fetch_format: 'auto',
+                quality: 'auto'
+            });
 
-        // Create the chasse using the ChasseService
-        await this.chasseService.createChasse({
-            name: body.name,
-            localisation: body.localisation,
-            etat: body.etat,
-            image:  uploadResult.secure_url, // ou imageUrl: uploadResult.secure_url
-            partenaire: {
-                connect: {
-                    id_partenaire: Number(user.partenaire.id_partenaire),
+            console.log('Upload réussi:', uploadResult.secure_url);
+            console.log(optimizeUrl);
+
+            // Create the chasse using the ChasseService
+            await this.chasseService.createChasse({
+                name: body.name,
+                localisation: body.localisation,
+                etat: body.etat,
+                image: uploadResult.secure_url, // ou imageUrl: uploadResult.secure_url
+                partenaire: {
+                    connect: {
+                        id_partenaire: Number(user.partenaire.id_partenaire),
+                    },
                 },
-            },
-        });
+            });
 
-        return res.status(201).send({ 
-            message: 'Chasse created',
-            imageUrl: uploadResult.secure_url // URL Cloudinary
-        });
-    } catch (error) {
-        console.error('Erreur Cloudinary:', error);
-        return res.status(500).send({ 
-            message: 'Erreur lors de l\'upload', 
-            error: error.message 
-        });
+            return res.status(201).send({
+                message: 'Chasse created',
+                imageUrl: uploadResult.secure_url // URL Cloudinary
+            });
+        } catch (error) {
+            console.error('Erreur Cloudinary:', error);
+            return res.status(500).send({
+                message: 'Erreur lors de l\'upload',
+                error: error.message
+            });
+        }
     }
-}
 
     @ApiConsumes('application/json')
     @Roles(Role.PARTENAIRE)
-    @UseGuards(RolesGuard,ChasseOwnershipGuard, StatutPartenerGuard)
+    @UseGuards(RolesGuard, ChasseOwnershipGuard, StatutPartenerGuard)
     @ApiBody({ type: ChasseDto })
     @Patch('update/:id')
     async updateChasse(@Param('id') id: string, @Body() body: ChasseDto, @Res() res: Response): Promise<Response> {
@@ -162,7 +162,7 @@ export class ChasseController {
     }
 
     @Roles(Role.PARTENAIRE)
-    @UseGuards(RolesGuard,ChasseOwnershipGuard, StatutPartenerGuard)
+    @UseGuards(RolesGuard, ChasseOwnershipGuard, StatutPartenerGuard)
     @Delete('delete/:id')
     async deleteChasse(@Param('id') id: string, @Res() res: Response): Promise<Response> {
         try {
