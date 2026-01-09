@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBase64, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 
 export class EtapeDto {
@@ -44,6 +44,6 @@ export class EtapeDto {
     format: 'binary',
     description: 'Image de l\'étape'
   })
-  image: any
+  image: string
 }
 

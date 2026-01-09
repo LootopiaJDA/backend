@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, UsePipes, ValidationPipe, Delete, ParseIntPipe, HttpException, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, Delete, ParseIntPipe, HttpException, HttpStatus } from "@nestjs/common";
 import { Response } from "express";
-import { ApiBody, ApiConsumes, ApiTags, getSchemaPath } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/auth.guard";
 import { EtapeService } from "../services/etape.service";
-import { Etape } from "src/generated/prisma/client";
 import { Roles } from "src/decorators/role.decorator";
 import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 import { EtapeDto } from "src/dto/etape.dto";
