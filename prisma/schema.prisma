@@ -101,7 +101,8 @@ model Etape {
   address      String
   description  String
   rayon        Int
-  rank          Int
+  rank         Int
+  image        String
   created_at   DateTime @default(now())
 
   chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])

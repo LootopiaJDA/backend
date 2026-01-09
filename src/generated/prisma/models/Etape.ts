@@ -49,6 +49,7 @@ export type EtapeMinAggregateOutputType = {
   description: string | null
   rayon: number | null
   rank: number | null
+  image: string | null
   created_at: Date | null
   chasse_id: number | null
 }
@@ -62,6 +63,7 @@ export type EtapeMaxAggregateOutputType = {
   description: string | null
   rayon: number | null
   rank: number | null
+  image: string | null
   created_at: Date | null
   chasse_id: number | null
 }
@@ -75,6 +77,7 @@ export type EtapeCountAggregateOutputType = {
   description: number
   rayon: number
   rank: number
+  image: number
   created_at: number
   chasse_id: number
   _all: number
@@ -104,6 +107,7 @@ export type EtapeMinAggregateInputType = {
   description?: true
   rayon?: true
   rank?: true
+  image?: true
   created_at?: true
   chasse_id?: true
 }
@@ -117,6 +121,7 @@ export type EtapeMaxAggregateInputType = {
   description?: true
   rayon?: true
   rank?: true
+  image?: true
   created_at?: true
   chasse_id?: true
 }
@@ -130,6 +135,7 @@ export type EtapeCountAggregateInputType = {
   description?: true
   rayon?: true
   rank?: true
+  image?: true
   created_at?: true
   chasse_id?: true
   _all?: true
@@ -230,6 +236,7 @@ export type EtapeGroupByOutputType = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at: Date
   chasse_id: number
   _count: EtapeCountAggregateOutputType | null
@@ -266,6 +273,7 @@ export type EtapeWhereInput = {
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
   rank?: Prisma.IntFilter<"Etape"> | number
+  image?: Prisma.StringFilter<"Etape"> | string
   created_at?: Prisma.DateTimeFilter<"Etape"> | Date | string
   chasse_id?: Prisma.IntFilter<"Etape"> | number
   chasse?: Prisma.XOR<Prisma.ChasseScalarRelationFilter, Prisma.ChasseWhereInput>
@@ -281,6 +289,7 @@ export type EtapeOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
   chasse?: Prisma.ChasseOrderByWithRelationInput
@@ -299,6 +308,7 @@ export type EtapeWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
   rank?: Prisma.IntFilter<"Etape"> | number
+  image?: Prisma.StringFilter<"Etape"> | string
   created_at?: Prisma.DateTimeFilter<"Etape"> | Date | string
   chasse_id?: Prisma.IntFilter<"Etape"> | number
   chasse?: Prisma.XOR<Prisma.ChasseScalarRelationFilter, Prisma.ChasseWhereInput>
@@ -314,6 +324,7 @@ export type EtapeOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
   _count?: Prisma.EtapeCountOrderByAggregateInput
@@ -335,6 +346,7 @@ export type EtapeScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Etape"> | string
   rayon?: Prisma.IntWithAggregatesFilter<"Etape"> | number
   rank?: Prisma.IntWithAggregatesFilter<"Etape"> | number
+  image?: Prisma.StringWithAggregatesFilter<"Etape"> | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Etape"> | Date | string
   chasse_id?: Prisma.IntWithAggregatesFilter<"Etape"> | number
 }
@@ -347,6 +359,7 @@ export type EtapeCreateInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   chasse: Prisma.ChasseCreateNestedOneWithoutEtapeInput
   UserChasseEtape?: Prisma.UserChasseEtapeCreateNestedManyWithoutEtapeInput
@@ -361,6 +374,7 @@ export type EtapeUncheckedCreateInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   chasse_id: number
   UserChasseEtape?: Prisma.UserChasseEtapeUncheckedCreateNestedManyWithoutEtapeInput
@@ -374,6 +388,7 @@ export type EtapeUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chasse?: Prisma.ChasseUpdateOneRequiredWithoutEtapeNestedInput
   UserChasseEtape?: Prisma.UserChasseEtapeUpdateManyWithoutEtapeNestedInput
@@ -388,6 +403,7 @@ export type EtapeUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chasse_id?: Prisma.IntFieldUpdateOperationsInput | number
   UserChasseEtape?: Prisma.UserChasseEtapeUncheckedUpdateManyWithoutEtapeNestedInput
@@ -402,6 +418,7 @@ export type EtapeCreateManyInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   chasse_id: number
 }
@@ -414,6 +431,7 @@ export type EtapeUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -426,6 +444,7 @@ export type EtapeUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chasse_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -449,6 +468,7 @@ export type EtapeCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
 }
@@ -469,6 +489,7 @@ export type EtapeMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
 }
@@ -482,6 +503,7 @@ export type EtapeMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   rayon?: Prisma.SortOrder
   rank?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   chasse_id?: Prisma.SortOrder
 }
@@ -562,6 +584,7 @@ export type EtapeCreateWithoutChasseInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   UserChasseEtape?: Prisma.UserChasseEtapeCreateNestedManyWithoutEtapeInput
 }
@@ -575,6 +598,7 @@ export type EtapeUncheckedCreateWithoutChasseInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   UserChasseEtape?: Prisma.UserChasseEtapeUncheckedCreateNestedManyWithoutEtapeInput
 }
@@ -617,6 +641,7 @@ export type EtapeScalarWhereInput = {
   description?: Prisma.StringFilter<"Etape"> | string
   rayon?: Prisma.IntFilter<"Etape"> | number
   rank?: Prisma.IntFilter<"Etape"> | number
+  image?: Prisma.StringFilter<"Etape"> | string
   created_at?: Prisma.DateTimeFilter<"Etape"> | Date | string
   chasse_id?: Prisma.IntFilter<"Etape"> | number
 }
@@ -629,6 +654,7 @@ export type EtapeCreateWithoutUserChasseEtapeInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   chasse: Prisma.ChasseCreateNestedOneWithoutEtapeInput
 }
@@ -642,6 +668,7 @@ export type EtapeUncheckedCreateWithoutUserChasseEtapeInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
   chasse_id: number
 }
@@ -670,6 +697,7 @@ export type EtapeUpdateWithoutUserChasseEtapeInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chasse?: Prisma.ChasseUpdateOneRequiredWithoutEtapeNestedInput
 }
@@ -683,6 +711,7 @@ export type EtapeUncheckedUpdateWithoutUserChasseEtapeInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chasse_id?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -696,6 +725,7 @@ export type EtapeCreateManyChasseInput = {
   description: string
   rayon: number
   rank: number
+  image: string
   created_at?: Date | string
 }
 
@@ -707,6 +737,7 @@ export type EtapeUpdateWithoutChasseInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   UserChasseEtape?: Prisma.UserChasseEtapeUpdateManyWithoutEtapeNestedInput
 }
@@ -720,6 +751,7 @@ export type EtapeUncheckedUpdateWithoutChasseInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   UserChasseEtape?: Prisma.UserChasseEtapeUncheckedUpdateManyWithoutEtapeNestedInput
 }
@@ -733,6 +765,7 @@ export type EtapeUncheckedUpdateManyWithoutChasseInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   rayon?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
+  image?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -776,6 +809,7 @@ export type EtapeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   rayon?: boolean
   rank?: boolean
+  image?: boolean
   created_at?: boolean
   chasse_id?: boolean
   chasse?: boolean | Prisma.ChasseDefaultArgs<ExtArgs>
@@ -792,6 +826,7 @@ export type EtapeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   rayon?: boolean
   rank?: boolean
+  image?: boolean
   created_at?: boolean
   chasse_id?: boolean
   chasse?: boolean | Prisma.ChasseDefaultArgs<ExtArgs>
@@ -806,6 +841,7 @@ export type EtapeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   rayon?: boolean
   rank?: boolean
+  image?: boolean
   created_at?: boolean
   chasse_id?: boolean
   chasse?: boolean | Prisma.ChasseDefaultArgs<ExtArgs>
@@ -820,11 +856,12 @@ export type EtapeSelectScalar = {
   description?: boolean
   rayon?: boolean
   rank?: boolean
+  image?: boolean
   created_at?: boolean
   chasse_id?: boolean
 }
 
-export type EtapeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "lat" | "long" | "address" | "description" | "rayon" | "rank" | "created_at" | "chasse_id", ExtArgs["result"]["etape"]>
+export type EtapeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "lat" | "long" | "address" | "description" | "rayon" | "rank" | "image" | "created_at" | "chasse_id", ExtArgs["result"]["etape"]>
 export type EtapeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chasse?: boolean | Prisma.ChasseDefaultArgs<ExtArgs>
   UserChasseEtape?: boolean | Prisma.Etape$UserChasseEtapeArgs<ExtArgs>
@@ -852,6 +889,7 @@ export type $EtapePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string
     rayon: number
     rank: number
+    image: string
     created_at: Date
     chasse_id: number
   }, ExtArgs["result"]["etape"]>
@@ -1287,6 +1325,7 @@ export interface EtapeFieldRefs {
   readonly description: Prisma.FieldRef<"Etape", 'String'>
   readonly rayon: Prisma.FieldRef<"Etape", 'Int'>
   readonly rank: Prisma.FieldRef<"Etape", 'Int'>
+  readonly image: Prisma.FieldRef<"Etape", 'String'>
   readonly created_at: Prisma.FieldRef<"Etape", 'DateTime'>
   readonly chasse_id: Prisma.FieldRef<"Etape", 'Int'>
 }

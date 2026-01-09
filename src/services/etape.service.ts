@@ -16,6 +16,14 @@ export class EtapeService {
         return etape
     }
 
+    async getSingleEtape(id: number): Promise<Etape | null>{
+        const singleEtape = await this.prisma.etape.findFirst({
+            where : {id:id}
+        })
+        return singleEtape
+    }
+
+    
     async createEtape(
         chasseId: number,
         data: Omit<Etape, 'id' | 'created_at' | 'updated_at' | 'chasse_id'>
@@ -28,5 +36,11 @@ export class EtapeService {
                 }
             }
         });
+    }
+
+    async deleteEtape(idEtape: number): Promise<void | null> {
+        await this.prisma.etape.delete({
+            where : {id: idEtape}
+        })
     }
 }

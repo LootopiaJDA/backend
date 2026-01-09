@@ -16,7 +16,7 @@ export class ChasseOwnershipGuard implements CanActivate {
     }
 
     // ID de la chasse depuis l'URL
-    const chasseId = Number(request.params.id);
+    const chasseId = Number(request.params.id) || Number(request.params.idChasse);
     
     if (Number.isNaN(chasseId)) {
       return false;
