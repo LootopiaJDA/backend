@@ -3,6 +3,7 @@ import { AppModule } from "./module/app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { v2 as cloudinary } from 'cloudinary';
 import cookieParser from 'cookie-parser';
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,6 +18,12 @@ async function bootstrap() {
     }
   });
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,         
+    transformOptions: {
+      enableImplicitConversion: true, 
+    },
+  }));
 
   const config = new DocumentBuilder()
     .setTitle("Swagger Lootopia")

@@ -138,6 +138,7 @@ export const EtapeScalarFieldEnum = {
   description: 'description',
   rayon: 'rayon',
   rank: 'rank',
+  image: 'image',
   created_at: 'created_at',
   chasse_id: 'chasse_id'
 } as const
