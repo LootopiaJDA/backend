@@ -38,6 +38,15 @@ export class EtapeService {
         });
     }
 
+    async updateEtape(idEtape: number,idChasse: number,data: Omit<Etape, 'id' | 'created_at' | 'updated_at' | 'chasse_id'>): Promise<void> {
+        await this.prisma.etape.update({
+            where: { id: idEtape, chasse_id: idChasse },
+            data: {
+                ...data
+            }
+        });
+    }
+
     async deleteEtape(idEtape: number): Promise<void | null> {
         await this.prisma.etape.delete({
             where : {id: idEtape}

@@ -42,7 +42,8 @@ export class EtapeDto {
   @ApiProperty({
     type: 'string',
     format: 'binary',
-    description: 'Image de l\'étape'
+    description: 'Image de l\'étape',
+    required: false,
   })
   image: string
 }

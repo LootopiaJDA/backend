@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, Delete, ParseIntPipe, HttpException, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, Delete, ParseIntPipe, HttpException, HttpStatus, Patch } from "@nestjs/common";
 import { Response } from "express";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/auth.guard";
 import { EtapeService } from "../services/etape.service";
 import { Roles } from "src/decorators/role.decorator";
@@ -9,14 +9,14 @@ import { EtapeDto } from "src/dto/etape.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import type { Multer } from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-
+import { ForbiddenException } from "src/common/ForbiddenExc";
 
 
 @ApiTags('Etape')
+@ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
 @Controller('etape')
 @UseGuards(AuthGuard)
 export class EtapeController {
-    // Must inject services to access them
     constructor(private readonly etape: EtapeService) { }
 
     @Get(':id')
@@ -38,6 +38,12 @@ export class EtapeController {
         type: EtapeDto,
     })
     async createEtape(@Param('id') id: string, @Body() body: Omit<EtapeDto, 'updated_at' | 'created_at' | 'chasse_id'>, @UploadedFile() image: Multer.file): Promise<void> {
+        if(!image){
+            throw new HttpException('Image is required', HttpStatus.BAD_REQUEST, {
+                cause: new Error('Image is required'),
+            })
+        }
+
         const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
 
         const uploadResult = await cloudinary.uploader.upload(base64Image, {
@@ -53,8 +59,49 @@ export class EtapeController {
         body.image = optimizeUrl
         body.rayon = Number(typeof body.rayon === "string" && body.rayon)
         body.rank = Number(typeof body.rank === "string" && body.rank)
+        try{
+            await this.etape.createEtape(Number(id), body)
+        }catch(exc){
+            throw new ForbiddenException("You are not allowed to create an etape for this chasse");
+        }
+    }
 
-        await this.etape.createEtape(Number(id), body)
+    @Patch(':idChasse/:idEtape')
+    @Roles('PARTENAIRE')
+    @UseGuards(ChasseOwnershipGuard)
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('image'))
+    @ApiBody({
+        description: 'Mettre à jour une étape avec image',
+        type: EtapeDto,
+    })
+    async updateEtape(@Param('idChasse', ParseIntPipe) idChasse: number, @Param('idEtape', ParseIntPipe) idEtape: number, @Body() body: Omit<EtapeDto, 'updated_at' | 'created_at' | 'chasse_id'>, @UploadedFile() image: Multer.file , @Res() res: Response): Promise<Response>{
+        
+        if(image){
+            const base64Image = `data:${image.mimetype};base64,${image.buffer.toString('base64')}`;
+
+            const uploadResult = await cloudinary.uploader.upload(base64Image, {
+                public_id: ('etape_update_' + 'chasse_' + idChasse + '_') + Date.now(),
+                folder: 'etape',
+            });
+
+            const optimizeUrl = cloudinary.url(uploadResult.public_id, {
+                fetch_format: 'auto',
+                quality: 'auto'
+            });
+
+            body.image = optimizeUrl
+        }
+
+        body.rayon = Number(typeof body.rayon === "string" && body.rayon)
+        body.rank = Number(typeof body.rank === "string" && body.rank)
+        
+        try{
+            await this.etape.updateEtape(idEtape, idChasse, body)
+            return res.status(200).json({message: "Etape updated successfully"})
+        }catch(exc){
+            throw new ForbiddenException("You are not allowed to update this etape");
+        }
     }
 
     @Delete(':idChasse/:idEtape')
