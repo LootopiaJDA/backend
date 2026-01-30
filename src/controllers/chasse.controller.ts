@@ -15,6 +15,7 @@ import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 import { v2 as cloudinary } from 'cloudinary';
 import { Role } from "src/generated/prisma/enums";
 import { RequestWithUser } from "../interface/user.interface";
+import { ChasseOccurrenceDto } from "src/dto/chasseOccurence.dto";
 
 
 
@@ -63,20 +64,29 @@ export class ChasseController {
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('image'))
     @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                name: { type: 'string' },
-                localisation: { type: 'string' },
-                etat: { type: 'string', enum: ['PENDING', 'ACTIVE'] },
-                image: {
-                    type: 'string',
-                    format: 'binary',
+    schema: {
+        type: 'object',
+        properties: {
+            name: { type: 'string' },
+            localisation: { type: 'string' },
+            etat: { type: 'string', enum: ['PENDING', 'ACTIVE'] },
+            occurrence: {
+                type: 'object',
+                properties: {
+                    date_end: { type: 'String' },
+                    date_start: { type: 'String' },
+                    limit_user: { type: 'integer' },
                 },
+                required: ['date_end', 'date_start', 'limit_user']
             },
-            required: ['name', 'localisation', 'etat', 'image'],
+            image: {
+                type: 'string',
+                format: 'binary',
+            },
         },
-    })
+        required: ['name', 'localisation', 'etat', 'occurrence', 'image'],
+    },
+})
     @Roles(Role.PARTENAIRE)
     @UseGuards(StatutPartenerGuard, RolesGuard)
     /**
@@ -88,7 +98,7 @@ export class ChasseController {
      * @returns {void}.
      */
     async createChasse(
-        @Body() body: ChasseDto,
+        @Body() body: ChasseOccurrenceDto,
         @UploadedFile() image: Multer.File,
         @Req() req: RequestWithUser,
         @Res() res: Response,
@@ -114,19 +124,26 @@ export class ChasseController {
                 quality: 'auto'
             });
 
-            console.log('Upload réussi:', uploadResult.secure_url);
-            console.log(optimizeUrl);
+            
+            const occ = JSON.parse(body.occurrence);
 
             // Create the chasse using the ChasseService
             await this.chasseService.createChasse({
                 name: body.name,
                 localisation: body.localisation,
                 etat: body.etat,
-                image: uploadResult.secure_url, // ou imageUrl: uploadResult.secure_url
+                image: uploadResult.secure_url,
                 partenaire: {
                     connect: {
                         id_partenaire: Number(user.partenaire.id_partenaire),
                     },
+                },
+            }, {                
+                date_start: new Date(occ.date_start),
+                date_end: new Date(occ.date_end),
+                limit_user: occ.limit_user,
+                chasse: {
+                    connect: { id_chasse: occ.chasse_id },
                 },
             });
 

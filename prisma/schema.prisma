@@ -78,7 +78,7 @@ model Chasse {
   idPartenaire Int 
 
   occurence Occurence[]
-  etape  Etape[]
+  etape  Etape[] 
   userchasses UserChasse[]
 }
 
@@ -105,7 +105,7 @@ model Etape {
   image        String
   created_at   DateTime @default(now())
 
-  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])
+  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse], onDelete: Cascade)
   chasse_id    Int  
 
   UserChasseEtape UserChasseEtape[]

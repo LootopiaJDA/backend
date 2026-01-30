@@ -108,7 +108,7 @@ export class EtapeController {
     @UseGuards(ChasseOwnershipGuard)
     @Roles('PARTENAIRE')
     async deleteEtape(@Param('idChasse', ParseIntPipe) idChasse: number, @Param('idEtape', ParseIntPipe) idEtape: number, @Res() res: Response): Promise<Response> {
-        const existingEtape = await this.etape.getSingleEtape(idEtape)
+        const existingEtape = await this.etape.getSingleEtape(idEtape);
         if (existingEtape) {
             await this.etape.deleteEtape(idEtape).then(async () => {
                 const regex = /\/v\d+\/(.+?)(?:\?|$)/;
@@ -118,12 +118,16 @@ export class EtapeController {
                 if (publicId) {
                     await cloudinary.uploader.destroy(publicId);
                 } else {
-                    throw new HttpException('Image does not exist', HttpStatus.BAD_REQUEST, {
+                    throw new HttpException('Image does not exist', HttpStatus.NOT_FOUND, {
                         cause: new Error('Image does not exist'),
                     })
                 }
-            });
+            }).catch((exc)=>{
+                throw new HttpException('Error during deletion', HttpStatus.INTERNAL_SERVER_ERROR, {
+                    cause: new Error('Error during deletion: ' + exc.message),
+                });
+            })
         }
-        return res.sendStatus(200)
+        return res.sendStatus(200);
     }
 }
