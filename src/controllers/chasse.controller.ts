@@ -127,7 +127,6 @@ export class ChasseController {
             
             const occ = JSON.parse(body.occurrence);
 
-            // Create the chasse using the ChasseService
             await this.chasseService.createChasse({
                 name: body.name,
                 localisation: body.localisation,
