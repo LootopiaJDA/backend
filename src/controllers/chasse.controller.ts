@@ -253,7 +253,7 @@ export class ChasseController {
     try {
       await this.userChasseService.inscriptionChasse(Number(id), user.sub);
       return res.status(200).send({ message: "Inscription successful" });
-    } catch (error: Error | any) {
+    } catch (error) {
       return res
         .status(500)
         .send({ message: "Error during inscription", error: error.message });
@@ -270,7 +270,7 @@ export class ChasseController {
     try {
       const chasses = await this.userChasseService.getUserChasses(Number(idChasse));
       return res.status(200).send({ chasses });
-    } catch (error: Error | any) {
+    } catch (error) {
       return res
         .status(500)
         .send({ message: "Error fetching player chasses", error: error.message });
