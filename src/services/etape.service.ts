@@ -7,6 +7,11 @@ import { Etape } from 'src/generated/prisma/client';
 export class EtapeService {
     constructor(private readonly prisma: PrismaService) { }
 
+    async getAllEtapes(): Promise<Etape[]> {
+        const etapes = await this.prisma.etape.findMany();
+        return etapes
+    }
+
     async getEtapeChasse(id: number): Promise<Etape[] | null> {
         const etape = await this.prisma.etape.findMany({
             where: {

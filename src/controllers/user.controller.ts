@@ -7,6 +7,7 @@ import { encryptText } from "src/services/crypto.service";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
+import { ownUserGuard } from "src/guards/ownUserGuard.guard";
 import { CreateUserPartenairDto } from "src/dto/partenair.dto";
 import { Role } from "src/generated/prisma/enums";
 
@@ -86,7 +87,7 @@ export class UserController {
      * @param {Response} response - Response object.
      */
     @ApiBearerAuth('access-token')
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, ownUserGuard)
     @ApiBody({ type: UpdateUserDto })
     @ApiParam({ name: 'id', type: Number, description: 'User ID' })
     @Put(':id')

@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, Delete, ParseIntPipe, HttpException, HttpStatus, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards, Param, Res, UploadedFile, UseInterceptors, Delete, ParseIntPipe, HttpException, HttpStatus, Patch, Query } from "@nestjs/common";
 import { Response } from "express";
-import { ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiTags, ApiQuery } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/auth.guard";
 import { EtapeService } from "../services/etape.service";
 import { Roles } from "src/decorators/role.decorator";
@@ -19,13 +19,34 @@ import { ForbiddenException } from "src/common/ForbiddenExc";
 export class EtapeController {
     constructor(private readonly etape: EtapeService) { }
 
-    @Get(':id')
+    @Get('/')
     @Roles('JOUEUR')
-    async getEtapeByChasse(@Param('id') id: string, @Res() response: Response): Promise<Response> {
-        const etape = await this.etape.getEtapeChasse(Number(id));
-
-        if (etape) return response.status(200).json(etape.length !== 0 ? etape : { message: "No etape found" })
-        return response.status(500).json({ message: "Serveur error" })
+    @ApiQuery({name: 'idChasse', required: false})
+    @ApiQuery({name: 'idEtape', required: false})
+    async getEtapeByChasse(@Query('idChasse') idChasse: string, @Query('idEtape') idEtape: string, @Res() response: Response): Promise<Response>  {
+        if(!idChasse && !idEtape){
+            const allEtapes = await this.etape.getAllEtapes()
+            return response.status(200).json(allEtapes.length !== 0 ? allEtapes : { message: "No etape found" })
+        } else if(idEtape){
+            const etape = await this.etape.getSingleEtape(Number(idEtape));
+            if (etape) return response.status(200).json(etape)
+            return response.status(404).json({ message: "Etape not found" })
+        } else if(idChasse){
+            const etape = await this.etape.getEtapeChasse(Number(idChasse));
+            if (etape) return response.status(200).json(etape)
+            return response.status(404).json({ message: "Etape not found" })
+        } else if(idChasse && idEtape){
+            const etape = await this.etape.getEtapeChasse(Number(idChasse));
+            if (etape) {
+                const filteredEtape = etape.filter(e => e.id === Number(idEtape))
+                if(filteredEtape.length > 0){
+                    return response.status(200).json(filteredEtape[0])
+                } else {
+                    return response.status(404).json({ message: "Etape not found in this chasse" })
+                }
+            }
+        }
+        return response.status(400).json({ message: "idChasse or idEtape query parameter is required" })
     }
 
     @Post(':id')
