@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Chasse, Prisma } from 'src/generated/prisma/client';
-import { ChasseOccurrenceDto } from 'src/dto/chasseOccurence.dto';
 
 
 @Injectable()

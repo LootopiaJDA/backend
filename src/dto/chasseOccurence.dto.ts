@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsDateString, ValidateNested, IsInt } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotEmpty, IsDateString, IsInt } from 'class-validator';
 import { ChasseDto } from "./chasse.dto";
 
 export class OccurenceDto {
