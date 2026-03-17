@@ -77,7 +77,7 @@ export class ChasseController {
         return res.status(404).send({ message: "Chasse not found" });
       }
       return res.status(200).send({
-        nom: chasse.name,
+        name: chasse.name,
         localisation: chasse.localisation,
         etat: chasse.etat,
         image: chasse.image,
