@@ -81,6 +81,8 @@ export class ChasseController {
         localisation: chasse.localisation,
         etat: chasse.etat,
         image: chasse.image,
+        occurence : chasse.occurence,
+        etape : chasse.etape
       });
     } catch (error) {
       return res
