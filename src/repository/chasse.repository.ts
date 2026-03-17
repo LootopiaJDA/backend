@@ -23,6 +23,7 @@ export class ChasseRepository {
         },
         etape: {
           select: {
+            id: true,
             name: true,
             description: true,
             image: true,
@@ -36,4 +37,5 @@ export class ChasseRepository {
       },
     });
   }
+
 }
