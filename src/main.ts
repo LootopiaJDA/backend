@@ -23,6 +23,7 @@ async function bootstrap() {
     transformOptions: {
       enableImplicitConversion: true, 
     },
+    forbidNonWhitelisted: true,
   }));
 
   const config = new DocumentBuilder()

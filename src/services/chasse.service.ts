@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Chasse, Prisma } from 'src/generated/prisma/client';
+import { ChasseRepository } from 'src/repository/chasse.repository';
 
 interface ChasseWithOccurence extends Chasse {
   occurence: {
@@ -22,7 +23,7 @@ interface ChasseWithOccurence extends Chasse {
 
 @Injectable()
 export class ChasseService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly chasseRepository: ChasseRepository) {}
   // data is an object, need to use Prisma.ChasseCreateInput type for type safety
   async createChasse(data: Prisma.ChasseCreateInput, occurrenceData: Prisma.OccurenceCreateInput): Promise<void> {
     this.prisma.$transaction(async (tx) => {
@@ -47,10 +48,8 @@ export class ChasseService {
     });
   }
 
-  async getChasseById(id: number): Promise<ChasseWithOccurence | null> {
-    const response = await this.prisma.chasse.findUnique({ where: { id_chasse: id }, include: { occurence: true, etape: true } });
-    console.log(response);
-    return response
+  async getChasseById(id: number) {
+    return this.chasseRepository.findById(id);
   }
 
   async getAllChasse(): Promise<Chasse[] | null> {

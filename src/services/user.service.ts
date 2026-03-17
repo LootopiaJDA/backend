@@ -5,6 +5,7 @@ import {
   Partenaire,
   Statut,
 } from '../generated/prisma/client';
+import { UserRepository } from 'src/repository/user.repository';
 
 type UserWithPartenaire = User & {
   partener: Partenaire | null;
@@ -34,7 +35,7 @@ type UserData = Omit<User, 'password' | 'updated_at' | 'created_at'>
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly userRepository: UserRepository) {}
 
   async findOne(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
@@ -81,19 +82,7 @@ export class UserService {
     });
   }
 
-  async getUser(userId: number): Promise<UserData | null> {
-    return this.prisma.user.findUnique({
-      where: { id_user: userId },
-      select: {
-        id_user: true,
-        username: true,
-        email: true,
-        partenerId: true,
-        role: true,
-        password: false,
-        created_at: false,
-        updated_at: false,
-      },
-    });
+  async getUser(userId: number){
+    return this.userRepository.findById(userId)
   }
 }

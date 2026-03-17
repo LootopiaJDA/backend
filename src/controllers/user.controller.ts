@@ -35,10 +35,10 @@ export class UserController {
     @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard)
     @Get("/personnalData")
-    async getProtectedData(@Req() req): Promise<userData | null> {
+    async getProtectedData(@Req() req, @Res() res): Promise<Response> {
         const userId = req.user.sub;
         const dataUser = await this.userService.getUser(Number(userId));
-        return dataUser; 
+        return res.status(200).send(dataUser);
     }
 
     /**
