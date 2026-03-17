@@ -3,24 +3,6 @@ import { PrismaService } from './prisma.service';
 import { Chasse, Prisma } from 'src/generated/prisma/client';
 import { ChasseRepository } from 'src/repository/chasse.repository';
 
-interface ChasseWithOccurence extends Chasse {
-  occurence: {
-    date_start: Date;
-    date_end: Date;
-    limit_user: number;
-  }[],
-  etape: {
-    name: string;
-    description: string;
-    image: string;
-    lat: string,
-    long: string,
-    address: string,
-    rayon: number,
-    rank: number,
-  }[];
-}
-
 @Injectable()
 export class ChasseService {
   constructor(private readonly prisma: PrismaService, private readonly chasseRepository: ChasseRepository) {}
