@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../services/prisma.service";
-import { Statut } from "src/generated/prisma/browser";
+
 
 @Injectable()
 export class UserRepository {

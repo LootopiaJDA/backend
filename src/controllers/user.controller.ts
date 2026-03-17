@@ -21,8 +21,6 @@ interface User {
     partenerId: number | null;
 }
 
-type userData = Omit<User, 'password'>
-
 @ApiTags('User')
 @Controller('user')
 export class UserController {

@@ -30,9 +30,6 @@ interface CreatePartenaireUserDto {
   };
 }
 
-type UserData = Omit<User, 'password' | 'updated_at' | 'created_at'>
-
-
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService, private readonly userRepository: UserRepository) {}
