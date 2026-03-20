@@ -89,7 +89,7 @@ model Occurence{
   limit_user Int @default(0)
   created_at   DateTime @default(now())
 
-  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse])
+  chasse Chasse @relation(fields: [chasse_id], references: [id_chasse], onDelete: Cascade)
   chasse_id Int
 }
 
