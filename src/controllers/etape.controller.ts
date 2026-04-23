@@ -15,7 +15,7 @@ import {
   Patch,
   Query,
 } from "@nestjs/common";
-import { Response } from "express";
+import type { Response } from "express";
 import {
   ApiBody,
   ApiConsumes,
@@ -29,7 +29,6 @@ import { Roles } from "src/decorators/role.decorator";
 import { ChasseOwnershipGuard } from "src/guards/ChasseOwnershipGuard.guard";
 import { EtapeDto } from "src/dto/etape.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
-import type { Multer } from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { ForbiddenException } from "src/common/ForbiddenExc";
 
@@ -107,7 +106,7 @@ export class EtapeController {
   async createEtape(
     @Param("id") id: string,
     @Body() body: Omit<EtapeDto, "updated_at" | "created_at" | "chasse_id">,
-    @UploadedFile() image: Multer.file,
+    @UploadedFile() image: any,
   ): Promise<void> {
     if (!image) {
       throw new HttpException("Image is required", HttpStatus.BAD_REQUEST, {
@@ -152,7 +151,7 @@ export class EtapeController {
     @Param("idChasse", ParseIntPipe) idChasse: number,
     @Param("idEtape", ParseIntPipe) idEtape: number,
     @Body() body: Omit<EtapeDto, "updated_at" | "created_at" | "chasse_id">,
-    @UploadedFile() image: Multer.file,
+    @UploadedFile() image: any,
     @Res() res: Response,
   ): Promise<Response> {
     if (image) {

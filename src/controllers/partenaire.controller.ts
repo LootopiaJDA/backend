@@ -22,7 +22,7 @@ export class PartenaireController {
       const partenaires = await this.partenaireService.getAll();
       return res.status(200).json(partenaires);
     } catch (error) {
-      return res.status(500).json({ message: "Erreur récupération partenaires", error: error.message });
+      return res.status(500).json({ message: "Erreur récupération partenaires", error });
     }
   }
 
@@ -38,7 +38,7 @@ export class PartenaireController {
       const updated = await this.partenaireService.updateStatut(Number(id), statut);
       return res.status(200).json(updated);
     } catch (error) {
-      return res.status(500).json({ message: "Erreur mise à jour statut", error: error.message });
+      return res.status(500).json({ message: "Erreur mise à jour statut", error });
     }
   }
 }

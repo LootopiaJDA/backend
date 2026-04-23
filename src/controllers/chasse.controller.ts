@@ -13,15 +13,14 @@ import {
   Delete,
   Query,
 } from "@nestjs/common";
-import type { Response } from "express";
-import { ApiTags, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
+import type { Request, Response } from "express";
+import { ApiTags, ApiBody, ApiConsumes, ApiQuery, ApiBearerAuth } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 import { ChasseDto } from "src/dto/chasse.dto";
 import { ChasseService } from "src/services/chasse.service";
 import { FileInterceptor } from "@nestjs/platform-express";
-import type { Multer } from "multer";
 import { Statuts } from "src/decorators/statut-partenaire.decorator";
 import { StatutPartenerGuard } from "src/guards/partenaire.guard";
 import { Statut } from "src/generated/prisma/browser";
@@ -101,7 +100,7 @@ export class ChasseController {
         name: { type: "string" },
         localisation: { type: "string" },
         etat: { type: "string", enum: ["PENDING", "ACTIVE"] },
-        occurence: {
+        occurrence: {
           type: "object",
           properties: {
             date_end: { type: "String" },
@@ -115,7 +114,7 @@ export class ChasseController {
           format: "binary",
         },
       },
-      required: ["name", "localisation", "etat", "occurrence", "image"],
+      required: ["name", "localisation", "etat", "occurence", "image"],
     },
   })
   @Roles(Role.PARTENAIRE)
@@ -123,26 +122,24 @@ export class ChasseController {
   /**
    * Create a new chasse.
    * @param {ChasseDto} body - Corps de la requête contenant les informations de la chasse.
-   * @param {Multer.File} image - Fichier image uploadé.
+   * @param {any} image - Fichier image uploadé.
    * @param {Request} req - Objet de la requête Express.
    * @param {Response} response - Objet de réponse Express.
    * @returns {void}.
    */
   async createChasse(
     @Body() body: ChasseOccurrenceDto,
-    @UploadedFile() image: Multer.File,
+    @UploadedFile() image: any,
     @Req() req: RequestWithUser,
     @Res() res: Response,
   ): Promise<Response> {
-    // Get user info
     const user = req.user;
-
+    console.log("je passe");
     if (!user.partenaire) {
       return res
         .status(400)
         .send({ message: "User partenaire information is missing" });
     }
-
     try {
       const base64Image = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
 
@@ -199,8 +196,7 @@ export class ChasseController {
     } catch (error) {
       console.error("Erreur Cloudinary:", error);
       return res.status(500).send({
-        message: "Erreur lors de l'upload",
-        error: error.message,
+        message: "Erreur lors de l'upload", error,
       });
     }
   }
@@ -258,7 +254,7 @@ export class ChasseController {
     } catch (error) {
       return res
         .status(500)
-        .send({ message: "Error during inscription", error: error.message });
+        .send({ message: "Error during inscription", error });
     }
   }
 
@@ -275,7 +271,7 @@ export class ChasseController {
     } catch (error) {
       return res
         .status(500)
-        .send({ message: "Error fetching player chasses", error: error.message });
+        .send({ message: "Error fetching player chasses", error });
     }
   }
 }
