@@ -14,7 +14,7 @@ import {
   Query,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { ApiTags, ApiBody, ApiConsumes, ApiQuery, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -129,6 +129,7 @@ export class ChasseController {
    */
   async createChasse(
     @Body() body: ChasseOccurrenceDto,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @UploadedFile() image: any,
     @Req() req: RequestWithUser,
     @Res() res: Response,

@@ -106,6 +106,7 @@ export class EtapeController {
   async createEtape(
     @Param("id") id: string,
     @Body() body: Omit<EtapeDto, "updated_at" | "created_at" | "chasse_id">,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @UploadedFile() image: any,
   ): Promise<void> {
     if (!image) {
@@ -151,6 +152,7 @@ export class EtapeController {
     @Param("idChasse", ParseIntPipe) idChasse: number,
     @Param("idEtape", ParseIntPipe) idEtape: number,
     @Body() body: Omit<EtapeDto, "updated_at" | "created_at" | "chasse_id">,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @UploadedFile() image: any,
     @Res() res: Response,
   ): Promise<Response> {
