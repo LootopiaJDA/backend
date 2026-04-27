@@ -1,5 +1,5 @@
 import { Controller, Get, Patch, Res, UseGuards, Body, Param, Post } from "@nestjs/common";
-import { ApiTags, ApiBody, ApiProperty } from "@nestjs/swagger";
+import { ApiTags, ApiBody } from "@nestjs/swagger";
 import { Response } from "express";
 import { Roles } from "src/decorators/role.decorator";
 import { UpdateUserDto } from "src/dto/user.tdo";
