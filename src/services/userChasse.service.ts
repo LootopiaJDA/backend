@@ -24,9 +24,9 @@ export class UserChasseService {
     });
   }
 
-  async getUserChasses(idChasse: number): Promise<UserChasse[]> {
+  async getUserChasses(userId: number): Promise<UserChasse[]> {
     const userChasses = await this.prisma.userChasse.findMany({
-      where: { id_chasse: idChasse },
+      where: { id_user: userId },
     });
     return userChasses;
   }

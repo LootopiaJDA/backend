@@ -47,7 +47,7 @@ export class ChasseController {
   // Must inject services to access them
   constructor(private readonly chasseService: ChasseService, private readonly userChasseService: UserChasseService) {}
 
-  @Get("/getAll")
+  @Get()
   @ApiQuery({ name: "partenaire", required: false })
   async getAllChasse(
     @Query("partenaire") part: number,
@@ -61,6 +61,25 @@ export class ChasseController {
     } else {
       const allChasse = await this.chasseService.getAllChasse();
       return res.status(200).json({ allChasse });
+    }
+  }
+
+  @Get('me')
+  @ApiConsumes("application/json")
+  @UseGuards(AuthGuard)
+  async getPlayerChasses(
+    @Req() req: RequestWithUser,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const user = req.user;
+    try {
+      const userId = Number(user.sub);
+      const chasses = await this.userChasseService.getUserChasses(userId);
+      return res.status(200).send({ chasses });
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ message: "Error fetching player chasses", error });
     }
   }
 
@@ -135,7 +154,6 @@ export class ChasseController {
     @Res() res: Response,
   ): Promise<Response> {
     const user = req.user;
-    console.log("je passe");
     if (!user.partenaire) {
       return res
         .status(400)
@@ -206,7 +224,7 @@ export class ChasseController {
   @Roles(Role.PARTENAIRE)
   @UseGuards(RolesGuard, ChasseOwnershipGuard, StatutPartenerGuard)
   @ApiBody({ type: ChasseDto })
-  @Patch("update/:id")
+  @Patch(":id")
   async updateChasse(
     @Param("id") id: string,
     @Body() body: ChasseDto,
@@ -226,7 +244,7 @@ export class ChasseController {
 
   @Roles(Role.PARTENAIRE)
   @UseGuards(RolesGuard, ChasseOwnershipGuard, StatutPartenerGuard)
-  @Delete("delete/:id")
+  @Delete(":id")
   async deleteChasse(
     @Param("id") id: string,
     @Res() res: Response,
@@ -239,12 +257,12 @@ export class ChasseController {
     }
   }
 
-  @Post("inscription/:idChasse")
+  @Post(":id/join")
   @ApiConsumes("application/json")
   @Roles(Role.JOUEUR)
   @UseGuards(AuthGuard)
   async inscriptionChasse(
-    @Param("idChasse") id: string,
+    @Param("id") id: string,
     @Req() req: RequestWithUser,
     @Res() res: Response,
   ): Promise<Response> {
@@ -256,23 +274,6 @@ export class ChasseController {
       return res
         .status(500)
         .send({ message: "Error during inscription", error });
-    }
-  }
-
-  @Get('getPlayerChasses/:idChasse')
-  @ApiConsumes("application/json")
-  @UseGuards(AuthGuard)
-  async getPlayerChasses(
-    @Param("idChasse") idChasse: string,
-    @Res() res: Response,
-  ): Promise<Response> {
-    try {
-      const chasses = await this.userChasseService.getUserChasses(Number(idChasse));
-      return res.status(200).send({ chasses });
-    } catch (error) {
-      return res
-        .status(500)
-        .send({ message: "Error fetching player chasses", error });
     }
   }
 }
