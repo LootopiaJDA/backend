@@ -10,6 +10,7 @@ import { AuthGuard } from "src/guards/auth.guard";
 import { ownUserGuard } from "src/guards/ownUserGuard.guard";
 import { CreateUserPartenairDto } from "src/dto/partenair.dto";
 import { Role } from "src/generated/prisma/enums";
+import { RequestWithUser } from "src/interface/user.interface";
 
 
 interface User {
@@ -27,13 +28,9 @@ export class UserController {
     // Get userService to access its methods via dependency injection
     constructor(private readonly userService: UserService) { }
 
-    /**
- * Get personnal info of user.
- */
-    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard)
     @Get("/personnalData")
-    async getProtectedData(@Req() req, @Res() res): Promise<Response> {
+    async getProtectedData(@Req() req: RequestWithUser, @Res() res: Response): Promise<Response> {
         const userId = req.user.sub;
         const dataUser = await this.userService.getUser(Number(userId));
         return res.status(200).send(dataUser);
@@ -119,7 +116,7 @@ export class UserController {
             const user = await this.userService.createPartenaire(body);
             response.status(201).send(user);
         } catch (error) {
-            response.status(500).send(error.message);
+            response.status(500).send(error);
         }
     }
 }

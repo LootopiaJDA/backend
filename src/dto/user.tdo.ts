@@ -20,12 +20,18 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto{
-  @ApiProperty({ example: 'john_doe', required: false })
-  username?: string;
-
   @ApiProperty({ example: 'john@mail.com', required: false })
   email?: string;
 
   @ApiProperty({ example: 'StrongPassword123!', required: false })
   password?: string;
+
+  @ApiProperty({
+    enum: ['ADMIN', 'PARTENAIRE', 'JOUEUR'],
+    example: 'JOUEUR',
+    required: false,
+  })
+  role?: 'ADMIN' | 'PARTENAIRE' | 'JOUEUR';
+
+  partenerId?: number | null;
 }

@@ -1,11 +1,13 @@
-import { Controller, Get, Res, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Get, Patch, Res, UseGuards, Body, Param } from "@nestjs/common";
+import { ApiTags, ApiBody } from "@nestjs/swagger";
 import { Response } from "express";
 import { Roles } from "src/decorators/role.decorator";
+import { UpdateUserDto } from "src/dto/user.tdo";
 import { Role } from "src/generated/prisma/enums";
 import { AuthGuard } from "src/guards/auth.guard";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AdminService } from "src/services/admin.service";
+import { encryptText } from "src/services/crypto.service";
 
 @ApiTags("Administrateur")
 @Controller("admin")
@@ -28,4 +30,23 @@ export class AdminController {
     }
     return res;
   }
+
+  @Patch("/users/:id")
+  @Roles(Role.ADMIN)
+  @ApiBody({ type: UpdateUserDto })
+  @UseGuards(AuthGuard, RolesGuard)
+  async updateUsersInformations(@Res() res: Response, @Body() data: UpdateUserDto, @Param('id') id: string): Promise<Response> {
+    try { 
+    if(data.password){
+      data.password = await encryptText(data.password as string);
+    }
+    await this.adminService.updateUserInformations(Number(id), data);
+    return res.status(200).json({ message: "User informations updated successfully" });
+    } catch (error) {
+      console.error("Error updating user informations:", error);
+      return res.status(500).json({ message: "Failed to update user informations" });
+    }
+  } 
+
+  
 }
