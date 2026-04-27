@@ -1,5 +1,5 @@
-import { Controller, Get, Patch, Res, UseGuards, Body, Param } from "@nestjs/common";
-import { ApiTags, ApiBody } from "@nestjs/swagger";
+import { Controller, Get, Patch, Res, UseGuards, Body, Param, Post } from "@nestjs/common";
+import { ApiTags, ApiBody, ApiProperty } from "@nestjs/swagger";
 import { Response } from "express";
 import { Roles } from "src/decorators/role.decorator";
 import { UpdateUserDto } from "src/dto/user.tdo";
@@ -48,5 +48,21 @@ export class AdminController {
     }
   } 
 
+  // Validation d'un compte partenaire
+  @Post("/partenaire/:id/validate")
+  @Roles(Role.ADMIN)
+  @ApiBody({ schema: { properties: { statut: { type: "string", enum: ["ACTIVE", "INACTIVE"] } } } })
+  @UseGuards(AuthGuard, RolesGuard)
+  async validatePartenaireAccount(@Res() res: Response, @Param('id') id: string, @Body("statut") statut: "ACTIVE" | "INACTIVE"): Promise<Response> {
+    try {
+      await this.adminService.validatePartenaireAccount(Number(id), statut);
+      return res.status(200).json({ message: "Partenaire account validated successfully" });
+    } catch (error) {
+      console.error("Error validating partenaire account:", error);
+      return res.status(500).json({ message: "Failed to validate partenaire account" });
+    }
+  }
   
+  // Accès à toutes les chasses avec étape et occurence
+
 }
