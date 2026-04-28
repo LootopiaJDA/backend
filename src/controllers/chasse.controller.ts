@@ -55,6 +55,8 @@ export class ChasseController {
     @Query("localisation") localisation: string,
     @Res() res: Response,
   ): Promise<Response> {
+    console.log("test");
+    
     if (part) {
       const chasseByPart = await this.chasseService.getChasseByPartenair(
         Number(part)
@@ -121,11 +123,13 @@ export class ChasseController {
         name: { type: "string" },
         localisation: { type: "string" },
         etat: { type: "string", enum: ["PENDING", "ACTIVE"] },
+        longitude: { type: "number" },
+        latitude: { type: "number" },
         occurrence: {
           type: "object",
           properties: {
-            date_end: { type: "String" },
-            date_start: { type: "String" },
+            date_end: { type: "string" },
+            date_start: { type: "string" },
             limit_user: { type: "integer" },
           },
           required: ["date_end", "date_start", "limit_user"],
@@ -135,7 +139,7 @@ export class ChasseController {
           format: "binary",
         },
       },
-      required: ["name", "localisation", "etat", "occurence", "image"],
+      required: ["name", "localisation", "etat", "occurrence", "image"],
     },
   })
   @Roles(Role.PARTENAIRE)
@@ -154,7 +158,7 @@ export class ChasseController {
     @UploadedFile() image: any,
     @Req() req: RequestWithUser,
     @Res() res: Response,
-  ): Promise<Response> {
+  ): Promise<Response> {    
     const user = req.user;
     if (!user.partenaire) {
       return res
@@ -191,9 +195,11 @@ export class ChasseController {
       await this.chasseService.createChasse(
         {
           name: body.name,
-          localisation: body.localisation.toUpperCase(),
+          localisation: body.localisation.toUpperCase( ),
           etat: body.etat,
           image: uploadResult.secure_url,
+          longitude: parseFloat(body.longitude),
+          latitude: parseFloat(body.latitude),
           partenaire: {
             connect: {
               id_partenaire: Number(user.partenaire.id_partenaire),
@@ -237,6 +243,8 @@ export class ChasseController {
         name: body.name,
         localisation: body.localisation,
         etat: body.etat,
+        longitude: parseFloat(body.longitude),
+        latitude: parseFloat(body.latitude),
       });
       return res.status(200).send({ message: "Chasse updated" });
     } catch (error) {

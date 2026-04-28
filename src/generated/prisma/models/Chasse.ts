@@ -28,11 +28,15 @@ export type AggregateChasse = {
 
 export type ChasseAvgAggregateOutputType = {
   id_chasse: number | null
+  longitude: number | null
+  latitude: number | null
   idPartenaire: number | null
 }
 
 export type ChasseSumAggregateOutputType = {
   id_chasse: number | null
+  longitude: number | null
+  latitude: number | null
   idPartenaire: number | null
 }
 
@@ -41,6 +45,8 @@ export type ChasseMinAggregateOutputType = {
   name: string | null
   image: string | null
   localisation: string | null
+  longitude: number | null
+  latitude: number | null
   etat: $Enums.StatutChasse | null
   created_at: Date | null
   idPartenaire: number | null
@@ -51,6 +57,8 @@ export type ChasseMaxAggregateOutputType = {
   name: string | null
   image: string | null
   localisation: string | null
+  longitude: number | null
+  latitude: number | null
   etat: $Enums.StatutChasse | null
   created_at: Date | null
   idPartenaire: number | null
@@ -61,6 +69,8 @@ export type ChasseCountAggregateOutputType = {
   name: number
   image: number
   localisation: number
+  longitude: number
+  latitude: number
   etat: number
   created_at: number
   idPartenaire: number
@@ -70,11 +80,15 @@ export type ChasseCountAggregateOutputType = {
 
 export type ChasseAvgAggregateInputType = {
   id_chasse?: true
+  longitude?: true
+  latitude?: true
   idPartenaire?: true
 }
 
 export type ChasseSumAggregateInputType = {
   id_chasse?: true
+  longitude?: true
+  latitude?: true
   idPartenaire?: true
 }
 
@@ -83,6 +97,8 @@ export type ChasseMinAggregateInputType = {
   name?: true
   image?: true
   localisation?: true
+  longitude?: true
+  latitude?: true
   etat?: true
   created_at?: true
   idPartenaire?: true
@@ -93,6 +109,8 @@ export type ChasseMaxAggregateInputType = {
   name?: true
   image?: true
   localisation?: true
+  longitude?: true
+  latitude?: true
   etat?: true
   created_at?: true
   idPartenaire?: true
@@ -103,6 +121,8 @@ export type ChasseCountAggregateInputType = {
   name?: true
   image?: true
   localisation?: true
+  longitude?: true
+  latitude?: true
   etat?: true
   created_at?: true
   idPartenaire?: true
@@ -200,6 +220,8 @@ export type ChasseGroupByOutputType = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat: $Enums.StatutChasse
   created_at: Date
   idPartenaire: number
@@ -233,6 +255,8 @@ export type ChasseWhereInput = {
   name?: Prisma.StringFilter<"Chasse"> | string
   image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
+  longitude?: Prisma.FloatFilter<"Chasse"> | number
+  latitude?: Prisma.FloatFilter<"Chasse"> | number
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
   idPartenaire?: Prisma.IntFilter<"Chasse"> | number
@@ -247,6 +271,8 @@ export type ChasseOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   localisation?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   etat?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
@@ -264,6 +290,8 @@ export type ChasseWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Chasse"> | string
   image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
+  longitude?: Prisma.FloatFilter<"Chasse"> | number
+  latitude?: Prisma.FloatFilter<"Chasse"> | number
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
   idPartenaire?: Prisma.IntFilter<"Chasse"> | number
@@ -278,6 +306,8 @@ export type ChasseOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   localisation?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   etat?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
@@ -296,6 +326,8 @@ export type ChasseScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
   image?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
   localisation?: Prisma.StringWithAggregatesFilter<"Chasse"> | string
+  longitude?: Prisma.FloatWithAggregatesFilter<"Chasse"> | number
+  latitude?: Prisma.FloatWithAggregatesFilter<"Chasse"> | number
   etat?: Prisma.EnumStatutChasseWithAggregatesFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Chasse"> | Date | string
   idPartenaire?: Prisma.IntWithAggregatesFilter<"Chasse"> | number
@@ -305,6 +337,8 @@ export type ChasseCreateInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
@@ -318,6 +352,8 @@ export type ChasseUncheckedCreateInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   idPartenaire: number
@@ -330,6 +366,8 @@ export type ChasseUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
@@ -343,6 +381,8 @@ export type ChasseUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
@@ -356,6 +396,8 @@ export type ChasseCreateManyInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   idPartenaire: number
@@ -365,6 +407,8 @@ export type ChasseUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -374,6 +418,8 @@ export type ChasseUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
@@ -394,6 +440,8 @@ export type ChasseCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   localisation?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   etat?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
@@ -401,6 +449,8 @@ export type ChasseCountOrderByAggregateInput = {
 
 export type ChasseAvgOrderByAggregateInput = {
   id_chasse?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
 }
 
@@ -409,6 +459,8 @@ export type ChasseMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   localisation?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   etat?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
@@ -419,6 +471,8 @@ export type ChasseMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
   localisation?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   etat?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
@@ -426,6 +480,8 @@ export type ChasseMinOrderByAggregateInput = {
 
 export type ChasseSumOrderByAggregateInput = {
   id_chasse?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
   idPartenaire?: Prisma.SortOrder
 }
 
@@ -474,6 +530,14 @@ export type ChasseUncheckedUpdateManyWithoutPartenaireNestedInput = {
   update?: Prisma.ChasseUpdateWithWhereUniqueWithoutPartenaireInput | Prisma.ChasseUpdateWithWhereUniqueWithoutPartenaireInput[]
   updateMany?: Prisma.ChasseUpdateManyWithWhereWithoutPartenaireInput | Prisma.ChasseUpdateManyWithWhereWithoutPartenaireInput[]
   deleteMany?: Prisma.ChasseScalarWhereInput | Prisma.ChasseScalarWhereInput[]
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type EnumStatutChasseFieldUpdateOperationsInput = {
@@ -526,6 +590,8 @@ export type ChasseCreateWithoutPartenaireInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
@@ -538,6 +604,8 @@ export type ChasseUncheckedCreateWithoutPartenaireInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
@@ -579,6 +647,8 @@ export type ChasseScalarWhereInput = {
   name?: Prisma.StringFilter<"Chasse"> | string
   image?: Prisma.StringFilter<"Chasse"> | string
   localisation?: Prisma.StringFilter<"Chasse"> | string
+  longitude?: Prisma.FloatFilter<"Chasse"> | number
+  latitude?: Prisma.FloatFilter<"Chasse"> | number
   etat?: Prisma.EnumStatutChasseFilter<"Chasse"> | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFilter<"Chasse"> | Date | string
   idPartenaire?: Prisma.IntFilter<"Chasse"> | number
@@ -588,6 +658,8 @@ export type ChasseCreateWithoutOccurenceInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
@@ -600,6 +672,8 @@ export type ChasseUncheckedCreateWithoutOccurenceInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   idPartenaire: number
@@ -627,6 +701,8 @@ export type ChasseUpdateWithoutOccurenceInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
@@ -639,6 +715,8 @@ export type ChasseUncheckedUpdateWithoutOccurenceInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
@@ -650,6 +728,8 @@ export type ChasseCreateWithoutEtapeInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
@@ -662,6 +742,8 @@ export type ChasseUncheckedCreateWithoutEtapeInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   idPartenaire: number
@@ -689,6 +771,8 @@ export type ChasseUpdateWithoutEtapeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
@@ -701,6 +785,8 @@ export type ChasseUncheckedUpdateWithoutEtapeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
@@ -712,6 +798,8 @@ export type ChasseCreateWithoutUserchassesInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
@@ -724,6 +812,8 @@ export type ChasseUncheckedCreateWithoutUserchassesInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
   idPartenaire: number
@@ -751,6 +841,8 @@ export type ChasseUpdateWithoutUserchassesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
@@ -763,6 +855,8 @@ export type ChasseUncheckedUpdateWithoutUserchassesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
@@ -775,6 +869,8 @@ export type ChasseCreateManyPartenaireInput = {
   name: string
   image: string
   localisation: string
+  longitude: number
+  latitude: number
   etat?: $Enums.StatutChasse
   created_at?: Date | string
 }
@@ -783,6 +879,8 @@ export type ChasseUpdateWithoutPartenaireInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
@@ -795,6 +893,8 @@ export type ChasseUncheckedUpdateWithoutPartenaireInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
@@ -807,6 +907,8 @@ export type ChasseUncheckedUpdateManyWithoutPartenaireInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   image?: Prisma.StringFieldUpdateOperationsInput | string
   localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
   etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -865,6 +967,8 @@ export type ChasseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name?: boolean
   image?: boolean
   localisation?: boolean
+  longitude?: boolean
+  latitude?: boolean
   etat?: boolean
   created_at?: boolean
   idPartenaire?: boolean
@@ -880,6 +984,8 @@ export type ChasseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   image?: boolean
   localisation?: boolean
+  longitude?: boolean
+  latitude?: boolean
   etat?: boolean
   created_at?: boolean
   idPartenaire?: boolean
@@ -891,6 +997,8 @@ export type ChasseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   image?: boolean
   localisation?: boolean
+  longitude?: boolean
+  latitude?: boolean
   etat?: boolean
   created_at?: boolean
   idPartenaire?: boolean
@@ -902,12 +1010,14 @@ export type ChasseSelectScalar = {
   name?: boolean
   image?: boolean
   localisation?: boolean
+  longitude?: boolean
+  latitude?: boolean
   etat?: boolean
   created_at?: boolean
   idPartenaire?: boolean
 }
 
-export type ChasseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_chasse" | "name" | "image" | "localisation" | "etat" | "created_at" | "idPartenaire", ExtArgs["result"]["chasse"]>
+export type ChasseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_chasse" | "name" | "image" | "localisation" | "longitude" | "latitude" | "etat" | "created_at" | "idPartenaire", ExtArgs["result"]["chasse"]>
 export type ChasseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   partenaire?: boolean | Prisma.PartenaireDefaultArgs<ExtArgs>
   occurence?: boolean | Prisma.Chasse$occurenceArgs<ExtArgs>
@@ -935,6 +1045,8 @@ export type $ChassePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     name: string
     image: string
     localisation: string
+    longitude: number
+    latitude: number
     etat: $Enums.StatutChasse
     created_at: Date
     idPartenaire: number
@@ -1369,6 +1481,8 @@ export interface ChasseFieldRefs {
   readonly name: Prisma.FieldRef<"Chasse", 'String'>
   readonly image: Prisma.FieldRef<"Chasse", 'String'>
   readonly localisation: Prisma.FieldRef<"Chasse", 'String'>
+  readonly longitude: Prisma.FieldRef<"Chasse", 'Float'>
+  readonly latitude: Prisma.FieldRef<"Chasse", 'Float'>
   readonly etat: Prisma.FieldRef<"Chasse", 'StatutChasse'>
   readonly created_at: Prisma.FieldRef<"Chasse", 'DateTime'>
   readonly idPartenaire: Prisma.FieldRef<"Chasse", 'Int'>

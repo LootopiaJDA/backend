@@ -71,6 +71,8 @@ model Chasse {
   name         String
   image        String
   localisation String
+  longitude     Float
+  latitude      Float
   etat         StatutChasse  @default(PENDING)
   created_at   DateTime @default(now())
 

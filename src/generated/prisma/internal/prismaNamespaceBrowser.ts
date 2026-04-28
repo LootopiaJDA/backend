@@ -109,6 +109,8 @@ export const ChasseScalarFieldEnum = {
   name: 'name',
   image: 'image',
   localisation: 'localisation',
+  longitude: 'longitude',
+  latitude: 'latitude',
   etat: 'etat',
   created_at: 'created_at',
   idPartenaire: 'idPartenaire'

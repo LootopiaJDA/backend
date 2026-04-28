@@ -1074,6 +1074,8 @@ export const ChasseScalarFieldEnum = {
   name: 'name',
   image: 'image',
   localisation: 'localisation',
+  longitude: 'longitude',
+  latitude: 'latitude',
   etat: 'etat',
   created_at: 'created_at',
   idPartenaire: 'idPartenaire'
@@ -1243,6 +1245,20 @@ export type ListEnumStatutFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 
 
 /**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'StatutChasse'
  */
 export type EnumStatutChasseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutChasse'>
@@ -1267,20 +1283,6 @@ export type EnumStatutUserChasseFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'StatutUserChasse[]'
  */
 export type ListEnumStatutUserChasseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutUserChasse[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**

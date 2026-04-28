@@ -20,7 +20,7 @@ export class ChasseService {
           },
         },
       });
-    });
+    });    
   }
 
   async updateChasse(id: number, data: Prisma.ChasseUpdateInput): Promise<void> {

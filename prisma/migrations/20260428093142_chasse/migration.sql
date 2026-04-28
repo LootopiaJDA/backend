@@ -43,6 +43,8 @@ CREATE TABLE "Chasse" (
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "localisation" TEXT NOT NULL,
+    "longitude" TEXT NOT NULL,
+    "latitude" TEXT NOT NULL,
     "etat" "StatutChasse" NOT NULL DEFAULT 'PENDING',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "idPartenaire" INTEGER NOT NULL,
@@ -66,12 +68,13 @@ CREATE TABLE "Occurence" (
 CREATE TABLE "Etape" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "lat" DOUBLE PRECISION NOT NULL,
-    "long" DOUBLE PRECISION NOT NULL,
+    "lat" TEXT NOT NULL,
+    "long" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "rayon" INTEGER NOT NULL,
     "rank" INTEGER NOT NULL,
+    "image" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "chasse_id" INTEGER NOT NULL,
 
@@ -143,10 +146,10 @@ ALTER TABLE "User" ADD CONSTRAINT "User_partenerId_fkey" FOREIGN KEY ("partenerI
 ALTER TABLE "Chasse" ADD CONSTRAINT "Chasse_idPartenaire_fkey" FOREIGN KEY ("idPartenaire") REFERENCES "Partenaire"("id_partenaire") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Occurence" ADD CONSTRAINT "Occurence_chasse_id_fkey" FOREIGN KEY ("chasse_id") REFERENCES "Chasse"("id_chasse") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Occurence" ADD CONSTRAINT "Occurence_chasse_id_fkey" FOREIGN KEY ("chasse_id") REFERENCES "Chasse"("id_chasse") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Etape" ADD CONSTRAINT "Etape_chasse_id_fkey" FOREIGN KEY ("chasse_id") REFERENCES "Chasse"("id_chasse") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Etape" ADD CONSTRAINT "Etape_chasse_id_fkey" FOREIGN KEY ("chasse_id") REFERENCES "Chasse"("id_chasse") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserChasse" ADD CONSTRAINT "UserChasse_id_user_fkey" FOREIGN KEY ("id_user") REFERENCES "User"("id_user") ON DELETE RESTRICT ON UPDATE CASCADE;
