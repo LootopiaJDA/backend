@@ -34,8 +34,12 @@ export class ChasseService {
     return this.chasseRepository.findById(id);
   }
 
-  async getAllChasse(): Promise<Chasse[] | null> {
-    return await this.prisma.chasse.findMany({where:{etat: "ACTIVE"}})
+  async getAllChasse(localisation?: string): Promise<Chasse[] | null> {
+    const whereClause: Prisma.ChasseWhereInput = { etat: "ACTIVE" };
+    if (localisation) {
+      whereClause.localisation = localisation.toUpperCase();
+    }
+    return await this.prisma.chasse.findMany({ where: whereClause });
   }
 
   async getChasseByPartenair(id: number): Promise<Chasse[] | null> {

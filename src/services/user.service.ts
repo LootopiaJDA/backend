@@ -45,7 +45,9 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: { partener: true },
+    });
   }
 
   async updateUser(userId: number, data: UserUpdateData): Promise<User> {

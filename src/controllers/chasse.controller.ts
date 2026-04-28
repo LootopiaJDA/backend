@@ -49,17 +49,19 @@ export class ChasseController {
 
   @Get()
   @ApiQuery({ name: "partenaire", required: false })
+  @ApiQuery({name: "localisation", required: false})
   async getAllChasse(
     @Query("partenaire") part: number,
+    @Query("localisation") localisation: string,
     @Res() res: Response,
   ): Promise<Response> {
     if (part) {
       const chasseByPart = await this.chasseService.getChasseByPartenair(
-        Number(part),
+        Number(part)
       );
       return res.status(200).json({ chasseByPart });
     } else {
-      const allChasse = await this.chasseService.getAllChasse();
+      const allChasse = await this.chasseService.getAllChasse(localisation);
       return res.status(200).json({ allChasse });
     }
   }
@@ -189,7 +191,7 @@ export class ChasseController {
       await this.chasseService.createChasse(
         {
           name: body.name,
-          localisation: body.localisation,
+          localisation: body.localisation.toUpperCase(),
           etat: body.etat,
           image: uploadResult.secure_url,
           partenaire: {
