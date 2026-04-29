@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Etape } from 'src/generated/prisma/client';
-import { UserChasse } from '@prisma/client';
+import { UserChasse } from "src/generated/prisma/client";
 
 @Injectable()
 export class EtapeService {
