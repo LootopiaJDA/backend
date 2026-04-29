@@ -239,7 +239,7 @@ export class EtapeController {
   ): Promise<Response> {
     try {
       const userChasseid = await this.etape.getUserChasseId(req.user.sub,idChasse);
-      this.etape.validateEtape(idEtape, userChasseid[0].id_userchasse);
+      await this.etape.validateEtape(idEtape, userChasseid[0].id_userchasse);
       return res.status(200).json({ message: "Étape validée avec succès" });
     } catch (exc) {
       throw new HttpException(
