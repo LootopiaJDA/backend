@@ -37,9 +37,9 @@ export class ChasseService {
   async getAllChasse(localisation?: string): Promise<Chasse[] | null> {
     const whereClause: Prisma.ChasseWhereInput = { etat: "ACTIVE" };
     if (localisation) {
-      whereClause.localisation = localisation.toUpperCase();
+      whereClause.localisation = { contains: localisation, mode: 'insensitive' };
     }
-    return await this.prisma.chasse.findMany({ where: whereClause });
+    return await this.prisma.chasse.findMany({ where: whereClause, include: { occurence: true } });
   }
 
   async getChasseByPartenair(id: number): Promise<Chasse[] | null> {

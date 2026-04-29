@@ -37,9 +37,14 @@ export class AuthService {
 
         if(user.role === 'PARTENAIRE') {
             const partenaire = await this.partenaireService.getPartenaireByUserId(Number(user.partenerId));
+
+            if (!partenaire || partenaire.statut !== 'ACTIVE') {
+                throw new HttpException('Votre compte partenaire est en attente de validation', HttpStatus.FORBIDDEN);
+            }
+
             payload['partenaire'] = {
-                id_partenaire: partenaire?.id_partenaire,
-                statut: partenaire?.statut,
+                id_partenaire: partenaire.id_partenaire,
+                statut: partenaire.statut,
             };
         }
         

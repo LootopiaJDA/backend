@@ -267,6 +267,23 @@ export class ChasseController {
     }
   }
 
+  @Patch(":id/complete")
+  @ApiConsumes("application/json")
+  @Roles(Role.JOUEUR)
+  @UseGuards(AuthGuard)
+  async completeChasse(
+    @Param("id") id: string,
+    @Req() req: RequestWithUser,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      await this.userChasseService.completeChasse(Number(id), req.user.sub);
+      return res.status(200).send({ message: "Chasse completed" });
+    } catch (error) {
+      return res.status(500).send({ message: "Error completing chasse", error });
+    }
+  }
+
   @Post(":id/join")
   @ApiConsumes("application/json")
   @Roles(Role.JOUEUR)

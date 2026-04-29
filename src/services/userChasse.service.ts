@@ -30,4 +30,11 @@ export class UserChasseService {
     });
     return userChasses;
   }
+
+  async completeChasse(chasseId: number, userId: number): Promise<void> {
+    await this.prisma.userChasse.updateMany({
+      where: { id_user: userId, id_chasse: chasseId, statut: 'IN_PROGRESS' },
+      data: { statut: 'COMPLETED', completed_at: new Date() },
+    });
+  }
 }
