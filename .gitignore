@@ -1,5 +1,6 @@
 # .gitignore
 node_modules/
+postgres_data/
 dist/
 .env
 .env.local
