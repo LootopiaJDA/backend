@@ -6,11 +6,12 @@ import { EtapeController } from "../controllers/etape.controller";
 import { EtapeService } from "../services/etape.service";
 import { ChasseRepository } from "src/repository/chasse.repository";
 import { UserRepository } from "src/repository/user.repository";
+import { UserChasseService } from "src/services/userChasse.service";
 
 @Module({
   imports: [],
   controllers: [EtapeController],
-  providers: [PrismaService, ChasseService, UserService, EtapeService, ChasseRepository, UserRepository],
+  providers: [PrismaService, ChasseService, UserService, EtapeService, ChasseRepository, UserRepository, UserChasseService],
   exports: []
 })
 export class EtapeModule {}
