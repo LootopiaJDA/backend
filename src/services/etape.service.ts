@@ -29,7 +29,6 @@ export class EtapeService {
         return singleEtape
     }
 
-    
     async createEtape(
         chasseId: number,
         data: Omit<Etape, 'id' | 'created_at' | 'updated_at' | 'chasse_id'>
