@@ -14,6 +14,7 @@ import {
   HttpStatus,
   Patch,
   Query,
+  Req,
 } from "@nestjs/common";
 import type { Response } from "express";
 import {
@@ -31,13 +32,15 @@ import { EtapeDto } from "src/dto/etape.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { v2 as cloudinary } from "cloudinary";
 import { ForbiddenException } from "src/common/ForbiddenExc";
+import { UserChasseService } from "src/services/userChasse.service";
+import { RequestWithUser } from "src/interface/user.interface";
 
 @ApiTags("Etape")
 @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
 @Controller("etape")
 @UseGuards(AuthGuard)
 export class EtapeController {
-  constructor(private readonly etape: EtapeService) {}
+  constructor(private readonly etape: EtapeService, private readonly userChasse: UserChasseService) {}
 
   @Get("/")
   @Roles("JOUEUR")
@@ -223,5 +226,29 @@ export class EtapeController {
         });
     }
     return res.sendStatus(200);
+  }
+
+  @Post(":idChasse/:idEtape/validateEtape")
+  @Roles("JOUEUR")
+  @UseGuards(AuthGuard)
+  async validateEtape(
+    @Param("idChasse", ParseIntPipe) idChasse: number,
+    @Param("idEtape", ParseIntPipe) idEtape: number,
+    @Res() res: Response,
+    @Req() req: RequestWithUser,
+  ): Promise<Response> {
+    try {
+      const userChasseid = await this.etape.getUserChasseId(req.user.sub,idChasse);
+      this.etape.validateEtape(idEtape, userChasseid[0].id_userchasse);
+      return res.status(200).json({ message: "Étape validée avec succès" });
+    } catch (exc) {
+      throw new HttpException(
+        "Vous n'êtes pas autorisé à valider cette étape",
+        HttpStatus.FORBIDDEN,
+        {
+          cause: new Error("You are not allowed to validate this step"),
+        },
+      );
+    } 
   }
 }

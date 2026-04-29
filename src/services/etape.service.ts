@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { Etape } from 'src/generated/prisma/client';
+import { UserChasse } from "src/generated/prisma/client";
 
 @Injectable()
 export class EtapeService {
@@ -28,7 +29,6 @@ export class EtapeService {
         return singleEtape
     }
 
-    
     async createEtape(
         chasseId: number,
         data: Omit<Etape, 'id' | 'created_at' | 'updated_at' | 'chasse_id'>
@@ -56,5 +56,25 @@ export class EtapeService {
         await this.prisma.etape.delete({
             where : {id: idEtape}
         })
+    }
+
+    async getUserChasseId(idUser: number, idChasse: number): Promise<UserChasse[]> {
+        const userChasseEtapes = await this.prisma.userChasse.findFirst({
+            where: {
+                id_chasse: idChasse,
+                id_user: idUser,
+            },
+        });
+        return userChasseEtapes ? [userChasseEtapes] : [];
+    }
+
+    async validateEtape(idEtape: number, idUserChasse: number): Promise<void> {
+        await this.prisma.userChasseEtape.create({
+            data: {
+                id_etape: idEtape,
+                id_userchasse: idUserChasse,
+                reached_at: new Date()
+            }
+        });
     }
 }
