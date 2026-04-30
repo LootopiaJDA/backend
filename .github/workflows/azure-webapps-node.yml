@@ -40,20 +40,6 @@ jobs:
     needs: build-and-push
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set lowercase image name
-        run: echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend" >> $GITHUB_ENV
-
-      - name: Copy docker-compose.yml to VM
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USERNAME }}
-          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          source: "docker-compose.yml"
-          target: "/home/azureuser/"
-
       - name: Déployer sur la VM via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -61,8 +47,68 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            # Ecrire le docker-compose prod sur la VM
+            cat > /home/azureuser/docker-compose.prod.yml << 'COMPOSE'
+            version: "3.9"
+            services:
+              backend:
+                image: ghcr.io/lootopiaJDA/lootopia-backend:latest
+                container_name: lootopia-backend
+                ports:
+                  - "3000:3000"
+                environment:
+                  DATABASE_URL: ${DATABASE_URL_DOCKER}
+                  ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+                  JWT_SECRET: ${JWT_SECRET}
+                  API_KEY_CLOUDINARY_SECRET: ${API_KEY_CLOUDINARY_SECRET}
+                  API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
+                  NODE_ENV: production
+                depends_on:
+                  postgres:
+                    condition: service_healthy
+                networks:
+                  - lootopia-network
 
+              postgres:
+                image: postgres:15
+                container_name: lootopia-postgres
+                restart: always
+                environment:
+                  POSTGRES_DB: ${POSTGRES_DB}
+                  POSTGRES_USER: ${POSTGRES_USER}
+                  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                volumes:
+                  - postgres_data:/var/lib/postgresql/data
+                networks:
+                  - lootopia-network
+                healthcheck:
+                  test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+                  interval: 5s
+                  timeout: 3s
+                  retries: 20
+
+              pgadmin:
+                image: dpage/pgadmin4
+                container_name: lootopia-pgadmin
+                restart: always
+                ports:
+                  - "5050:80"
+                environment:
+                  PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+                  PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+                depends_on:
+                  - postgres
+                networks:
+                  - lootopia-network
+
+            networks:
+              lootopia-network:
+
+            volumes:
+              postgres_data:
+            COMPOSE
+
+            # Ecrire le .env
             cat > /home/azureuser/.env << EOF
             DATABASE_URL_DOCKER=${{ secrets.DATABASE_URL_DOCKER }}
             ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
@@ -76,6 +122,8 @@ jobs:
             PG_ADMIN_PASSWORD=${{ secrets.PG_ADMIN_PASSWORD }}
             EOF
 
+            # Login, pull et déployer
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             cd /home/azureuser
-            docker compose -f docker-compose.yml --env-file .env pull
-            docker compose -f docker-compose.yml --env-file .env up -d
+            docker compose -f docker-compose.prod.yml --env-file .env pull
+            docker compose -f docker-compose.prod.yml --env-file .env up -d
