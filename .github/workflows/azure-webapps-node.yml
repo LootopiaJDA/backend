@@ -47,81 +47,9 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
-            IMAGE="ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend:latest"
-
-            cat > /home/azureuser/docker-compose.prod.yml << COMPOSE
-            services:
-              backend:
-                image: $IMAGE
-                container_name: lootopia-backend
-                ports:
-                  - "3000:3000"
-                environment:
-                  DATABASE_URL: \${DATABASE_URL_DOCKER}
-                  ENCRYPTION_PASSWORD: \${ENCRYPTION_PASSWORD}
-                  JWT_SECRET: \${JWT_SECRET}
-                  API_KEY_CLOUDINARY_SECRET: \${API_KEY_CLOUDINARY_SECRET}
-                  API_KEY_CLOUDINARY: \${API_KEY_CLOUDINARY}
-                  NODE_ENV: production
-                depends_on:
-                  postgres:
-                    condition: service_healthy
-                networks:
-                  - lootopia-network
-
-              postgres:
-                image: postgres:15
-                container_name: lootopia-postgres
-                restart: always
-                environment:
-                  POSTGRES_DB: \${POSTGRES_DB}
-                  POSTGRES_USER: \${POSTGRES_USER}
-                  POSTGRES_PASSWORD: \${POSTGRES_PASSWORD}
-                volumes:
-                  - postgres_data:/var/lib/postgresql/data
-                networks:
-                  - lootopia-network
-                healthcheck:
-                  test: ["CMD-SHELL", "pg_isready -U \${POSTGRES_USER} -d \${POSTGRES_DB} -h localhost"]
-                  interval: 5s
-                  timeout: 3s
-                  retries: 20
-
-              pgadmin:
-                image: dpage/pgadmin4
-                container_name: lootopia-pgadmin
-                restart: always
-                ports:
-                  - "5050:80"
-                environment:
-                  PGADMIN_DEFAULT_EMAIL: \${PG_ADMIN_EMAIL}
-                  PGADMIN_DEFAULT_PASSWORD: \${PG_ADMIN_PASSWORD}
-                depends_on:
-                  - postgres
-                networks:
-                  - lootopia-network
-
-            networks:
-              lootopia-network:
-
-            volumes:
-              postgres_data:
-            COMPOSE
-
-            cat > /home/azureuser/.env << EOF
-            DATABASE_URL_DOCKER=${{ secrets.DATABASE_URL_DOCKER }}
-            ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            API_KEY_CLOUDINARY_SECRET=${{ secrets.API_KEY_CLOUDINARY_SECRET }}
-            API_KEY_CLOUDINARY=${{ secrets.API_KEY_CLOUDINARY }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            PG_ADMIN_EMAIL=${{ secrets.PG_ADMIN_EMAIL }}
-            PG_ADMIN_PASSWORD=${{ secrets.PG_ADMIN_PASSWORD }}
-            EOF
-
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             cd /home/azureuser
             docker compose -f docker-compose.prod.yml --env-file .env pull
             docker compose -f docker-compose.prod.yml --env-file .env up -d
+            sleep 10
+            docker exec lootopia-backend npx prisma migrate deploy
