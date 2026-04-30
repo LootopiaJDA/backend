@@ -1,10 +1,9 @@
+name: CD
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
-
-env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/mon-app
 
 jobs:
   build-and-push:
@@ -15,6 +14,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend" >> $GITHUB_ENV
 
       - name: Se connecter à GitHub Container Registry
         uses: docker/login-action@v3
@@ -38,6 +40,20 @@ jobs:
     needs: build-and-push
 
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend" >> $GITHUB_ENV
+
+      - name: Copy docker-compose.prod.yml to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+          source: "docker-compose.prod.yml"
+          target: "/home/azureuser/"
+
       - name: Déployer sur la VM via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -46,11 +62,20 @@ jobs:
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ github.repository_owner }}/mon-app:latest
-            docker stop mon-app || true
-            docker rm mon-app || true
-            docker run -d \
-              --name mon-app \
-              --restart always \
-              -p 80:3000 \
-              ghcr.io/${{ github.repository_owner }}/mon-app:latest
+
+            cat > /home/azureuser/.env << EOF
+            DATABASE_URL_DOCKER=${{ secrets.DATABASE_URL_DOCKER }}
+            ENCRYPTION_PASSWORD=${{ secrets.ENCRYPTION_PASSWORD }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            API_KEY_CLOUDINARY_SECRET=${{ secrets.API_KEY_CLOUDINARY_SECRET }}
+            API_KEY_CLOUDINARY=${{ secrets.API_KEY_CLOUDINARY }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            PG_ADMIN_EMAIL=${{ secrets.PG_ADMIN_EMAIL }}
+            PG_ADMIN_PASSWORD=${{ secrets.PG_ADMIN_PASSWORD }}
+            EOF
+
+            cd /home/azureuser
+            docker compose -f docker-compose.prod.yml --env-file .env pull
+            docker compose -f docker-compose.prod.yml --env-file .env up -d
