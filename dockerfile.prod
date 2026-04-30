@@ -9,7 +9,6 @@ RUN npm install
 COPY . .
 COPY prisma ./prisma
 
-# Passer DATABASE_URL comme arg de build
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
@@ -25,9 +24,10 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY prisma ./prisma
+
+# 👇 Le bon chemin d'output Prisma
+COPY --from=builder /app/src/generated ./src/generated
 
 ENV NODE_ENV=production
 
