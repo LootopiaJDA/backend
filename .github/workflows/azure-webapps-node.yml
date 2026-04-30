@@ -47,20 +47,21 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
           script: |
-            cat > /home/azureuser/docker-compose.prod.yml << 'COMPOSE'
-            version: "3.9"
+            IMAGE="ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend:latest"
+
+            cat > /home/azureuser/docker-compose.prod.yml << COMPOSE
             services:
               backend:
-                image: ghcr.io/lootopiaJDA/lootopia-backend:latest
+                image: $IMAGE
                 container_name: lootopia-backend
                 ports:
                   - "3000:3000"
                 environment:
-                  DATABASE_URL: ${DATABASE_URL_DOCKER}
-                  ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
-                  JWT_SECRET: ${JWT_SECRET}
-                  API_KEY_CLOUDINARY_SECRET: ${API_KEY_CLOUDINARY_SECRET}
-                  API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
+                  DATABASE_URL: \${DATABASE_URL_DOCKER}
+                  ENCRYPTION_PASSWORD: \${ENCRYPTION_PASSWORD}
+                  JWT_SECRET: \${JWT_SECRET}
+                  API_KEY_CLOUDINARY_SECRET: \${API_KEY_CLOUDINARY_SECRET}
+                  API_KEY_CLOUDINARY: \${API_KEY_CLOUDINARY}
                   NODE_ENV: production
                 depends_on:
                   postgres:
@@ -73,15 +74,15 @@ jobs:
                 container_name: lootopia-postgres
                 restart: always
                 environment:
-                  POSTGRES_DB: ${POSTGRES_DB}
-                  POSTGRES_USER: ${POSTGRES_USER}
-                  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                  POSTGRES_DB: \${POSTGRES_DB}
+                  POSTGRES_USER: \${POSTGRES_USER}
+                  POSTGRES_PASSWORD: \${POSTGRES_PASSWORD}
                 volumes:
                   - postgres_data:/var/lib/postgresql/data
                 networks:
                   - lootopia-network
                 healthcheck:
-                  test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost"]
+                  test: ["CMD-SHELL", "pg_isready -U \${POSTGRES_USER} -d \${POSTGRES_DB} -h localhost"]
                   interval: 5s
                   timeout: 3s
                   retries: 20
@@ -93,8 +94,8 @@ jobs:
                 ports:
                   - "5050:80"
                 environment:
-                  PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
-                  PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+                  PGADMIN_DEFAULT_EMAIL: \${PG_ADMIN_EMAIL}
+                  PGADMIN_DEFAULT_PASSWORD: \${PG_ADMIN_PASSWORD}
                 depends_on:
                   - postgres
                 networks:
