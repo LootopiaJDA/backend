@@ -40,7 +40,7 @@ jobs:
 
       # 5. Build Docker (vérifie que ton Dockerfile fonctionne)
       - name: Build Docker image
-        run: docker build -t myapp-ci .
+        run: docker build -t myapp-ci -f dockerfile.prod .
 
       # 6. Lint (si tu utilises ESLint)
       - name: Run ESLint
