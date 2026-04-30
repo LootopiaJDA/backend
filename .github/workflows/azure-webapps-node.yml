@@ -45,13 +45,13 @@ jobs:
       - name: Set lowercase image name
         run: echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/lootopia-backend" >> $GITHUB_ENV
 
-      - name: Copy docker-compose.prod.yml to VM
+      - name: Copy docker-compose.yml to VM
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.yml"
           target: "/home/azureuser/"
 
       - name: Déployer sur la VM via SSH
