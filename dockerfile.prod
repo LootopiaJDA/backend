@@ -8,7 +8,11 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma generate || true
+# Copier le schéma Prisma avant de générer
+COPY prisma ./prisma
+
+# Sans || true pour voir les vraies erreurs
+RUN npx prisma generate
 RUN npm run build
 
 # ---- STAGE 2 : Production ----
@@ -20,11 +24,9 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
-COPY prisma ./prisma
-
-# Copier le client Prisma généré
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY prisma ./prisma
 
 ENV NODE_ENV=production
 
