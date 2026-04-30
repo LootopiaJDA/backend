@@ -23,12 +23,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & Push l'image Docker
+      - name: Build & Push image Docker
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: dockerfile.prod
           push: true
           tags: ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
 
   deploy:
     runs-on: ubuntu-latest

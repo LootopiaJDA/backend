@@ -7,11 +7,12 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-
-# Copier le schéma Prisma avant de générer
 COPY prisma ./prisma
 
-# Sans || true pour voir les vraies erreurs
+# Passer DATABASE_URL comme arg de build
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN npx prisma generate
 RUN npm run build
 

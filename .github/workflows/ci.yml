@@ -40,7 +40,7 @@ jobs:
 
       # 5. Build Docker (vérifie que ton Dockerfile fonctionne)
       - name: Build Docker image
-        run: docker build -t myapp-ci -f dockerfile.prod .
+        run: docker build -t myapp-ci -f dockerfile.prod --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} .
 
       # 6. Lint (si tu utilises ESLint)
       - name: Run ESLint
