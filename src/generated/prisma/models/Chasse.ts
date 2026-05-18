@@ -264,6 +264,7 @@ export type ChasseWhereInput = {
   occurence?: Prisma.OccurenceListRelationFilter
   etape?: Prisma.EtapeListRelationFilter
   userchasses?: Prisma.UserChasseListRelationFilter
+  scoreboards?: Prisma.ScoreBoardListRelationFilter
 }
 
 export type ChasseOrderByWithRelationInput = {
@@ -280,6 +281,7 @@ export type ChasseOrderByWithRelationInput = {
   occurence?: Prisma.OccurenceOrderByRelationAggregateInput
   etape?: Prisma.EtapeOrderByRelationAggregateInput
   userchasses?: Prisma.UserChasseOrderByRelationAggregateInput
+  scoreboards?: Prisma.ScoreBoardOrderByRelationAggregateInput
 }
 
 export type ChasseWhereUniqueInput = Prisma.AtLeast<{
@@ -299,6 +301,7 @@ export type ChasseWhereUniqueInput = Prisma.AtLeast<{
   occurence?: Prisma.OccurenceListRelationFilter
   etape?: Prisma.EtapeListRelationFilter
   userchasses?: Prisma.UserChasseListRelationFilter
+  scoreboards?: Prisma.ScoreBoardListRelationFilter
 }, "id_chasse">
 
 export type ChasseOrderByWithAggregationInput = {
@@ -345,6 +348,7 @@ export type ChasseCreateInput = {
   occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUncheckedCreateInput = {
@@ -360,6 +364,7 @@ export type ChasseUncheckedCreateInput = {
   occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeUncheckedCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUpdateInput = {
@@ -374,6 +379,7 @@ export type ChasseUpdateInput = {
   occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateInput = {
@@ -389,6 +395,7 @@ export type ChasseUncheckedUpdateInput = {
   occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUncheckedUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseCreateManyInput = {
@@ -586,6 +593,20 @@ export type ChasseUpdateOneRequiredWithoutUserchassesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChasseUpdateToOneWithWhereWithoutUserchassesInput, Prisma.ChasseUpdateWithoutUserchassesInput>, Prisma.ChasseUncheckedUpdateWithoutUserchassesInput>
 }
 
+export type ChasseCreateNestedOneWithoutScoreboardsInput = {
+  create?: Prisma.XOR<Prisma.ChasseCreateWithoutScoreboardsInput, Prisma.ChasseUncheckedCreateWithoutScoreboardsInput>
+  connectOrCreate?: Prisma.ChasseCreateOrConnectWithoutScoreboardsInput
+  connect?: Prisma.ChasseWhereUniqueInput
+}
+
+export type ChasseUpdateOneRequiredWithoutScoreboardsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChasseCreateWithoutScoreboardsInput, Prisma.ChasseUncheckedCreateWithoutScoreboardsInput>
+  connectOrCreate?: Prisma.ChasseCreateOrConnectWithoutScoreboardsInput
+  upsert?: Prisma.ChasseUpsertWithoutScoreboardsInput
+  connect?: Prisma.ChasseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChasseUpdateToOneWithWhereWithoutScoreboardsInput, Prisma.ChasseUpdateWithoutScoreboardsInput>, Prisma.ChasseUncheckedUpdateWithoutScoreboardsInput>
+}
+
 export type ChasseCreateWithoutPartenaireInput = {
   name: string
   image: string
@@ -597,6 +618,7 @@ export type ChasseCreateWithoutPartenaireInput = {
   occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUncheckedCreateWithoutPartenaireInput = {
@@ -611,6 +633,7 @@ export type ChasseUncheckedCreateWithoutPartenaireInput = {
   occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeUncheckedCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseCreateOrConnectWithoutPartenaireInput = {
@@ -665,6 +688,7 @@ export type ChasseCreateWithoutOccurenceInput = {
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
   etape?: Prisma.EtapeCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUncheckedCreateWithoutOccurenceInput = {
@@ -679,6 +703,7 @@ export type ChasseUncheckedCreateWithoutOccurenceInput = {
   idPartenaire: number
   etape?: Prisma.EtapeUncheckedCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseCreateOrConnectWithoutOccurenceInput = {
@@ -708,6 +733,7 @@ export type ChasseUpdateWithoutOccurenceInput = {
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
   etape?: Prisma.EtapeUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateWithoutOccurenceInput = {
@@ -722,6 +748,7 @@ export type ChasseUncheckedUpdateWithoutOccurenceInput = {
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
   etape?: Prisma.EtapeUncheckedUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseCreateWithoutEtapeInput = {
@@ -735,6 +762,7 @@ export type ChasseCreateWithoutEtapeInput = {
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
   occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUncheckedCreateWithoutEtapeInput = {
@@ -749,6 +777,7 @@ export type ChasseUncheckedCreateWithoutEtapeInput = {
   idPartenaire: number
   occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseCreateOrConnectWithoutEtapeInput = {
@@ -778,6 +807,7 @@ export type ChasseUpdateWithoutEtapeInput = {
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
   occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateWithoutEtapeInput = {
@@ -792,6 +822,7 @@ export type ChasseUncheckedUpdateWithoutEtapeInput = {
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
   occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseCreateWithoutUserchassesInput = {
@@ -805,6 +836,7 @@ export type ChasseCreateWithoutUserchassesInput = {
   partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
   occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseUncheckedCreateWithoutUserchassesInput = {
@@ -819,6 +851,7 @@ export type ChasseUncheckedCreateWithoutUserchassesInput = {
   idPartenaire: number
   occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
   etape?: Prisma.EtapeUncheckedCreateNestedManyWithoutChasseInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutChasseInput
 }
 
 export type ChasseCreateOrConnectWithoutUserchassesInput = {
@@ -848,6 +881,7 @@ export type ChasseUpdateWithoutUserchassesInput = {
   partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
   occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateWithoutUserchassesInput = {
@@ -862,6 +896,81 @@ export type ChasseUncheckedUpdateWithoutUserchassesInput = {
   idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
   occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUncheckedUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutChasseNestedInput
+}
+
+export type ChasseCreateWithoutScoreboardsInput = {
+  name: string
+  image: string
+  localisation: string
+  longitude: number
+  latitude: number
+  etat?: $Enums.StatutChasse
+  created_at?: Date | string
+  partenaire: Prisma.PartenaireCreateNestedOneWithoutChassesInput
+  occurence?: Prisma.OccurenceCreateNestedManyWithoutChasseInput
+  etape?: Prisma.EtapeCreateNestedManyWithoutChasseInput
+  userchasses?: Prisma.UserChasseCreateNestedManyWithoutChasseInput
+}
+
+export type ChasseUncheckedCreateWithoutScoreboardsInput = {
+  id_chasse?: number
+  name: string
+  image: string
+  localisation: string
+  longitude: number
+  latitude: number
+  etat?: $Enums.StatutChasse
+  created_at?: Date | string
+  idPartenaire: number
+  occurence?: Prisma.OccurenceUncheckedCreateNestedManyWithoutChasseInput
+  etape?: Prisma.EtapeUncheckedCreateNestedManyWithoutChasseInput
+  userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutChasseInput
+}
+
+export type ChasseCreateOrConnectWithoutScoreboardsInput = {
+  where: Prisma.ChasseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChasseCreateWithoutScoreboardsInput, Prisma.ChasseUncheckedCreateWithoutScoreboardsInput>
+}
+
+export type ChasseUpsertWithoutScoreboardsInput = {
+  update: Prisma.XOR<Prisma.ChasseUpdateWithoutScoreboardsInput, Prisma.ChasseUncheckedUpdateWithoutScoreboardsInput>
+  create: Prisma.XOR<Prisma.ChasseCreateWithoutScoreboardsInput, Prisma.ChasseUncheckedCreateWithoutScoreboardsInput>
+  where?: Prisma.ChasseWhereInput
+}
+
+export type ChasseUpdateToOneWithWhereWithoutScoreboardsInput = {
+  where?: Prisma.ChasseWhereInput
+  data: Prisma.XOR<Prisma.ChasseUpdateWithoutScoreboardsInput, Prisma.ChasseUncheckedUpdateWithoutScoreboardsInput>
+}
+
+export type ChasseUpdateWithoutScoreboardsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partenaire?: Prisma.PartenaireUpdateOneRequiredWithoutChassesNestedInput
+  occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
+  etape?: Prisma.EtapeUpdateManyWithoutChasseNestedInput
+  userchasses?: Prisma.UserChasseUpdateManyWithoutChasseNestedInput
+}
+
+export type ChasseUncheckedUpdateWithoutScoreboardsInput = {
+  id_chasse?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.StringFieldUpdateOperationsInput | string
+  localisation?: Prisma.StringFieldUpdateOperationsInput | string
+  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
+  etat?: Prisma.EnumStatutChasseFieldUpdateOperationsInput | $Enums.StatutChasse
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  idPartenaire?: Prisma.IntFieldUpdateOperationsInput | number
+  occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
+  etape?: Prisma.EtapeUncheckedUpdateManyWithoutChasseNestedInput
+  userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseCreateManyPartenaireInput = {
@@ -886,6 +995,7 @@ export type ChasseUpdateWithoutPartenaireInput = {
   occurence?: Prisma.OccurenceUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateWithoutPartenaireInput = {
@@ -900,6 +1010,7 @@ export type ChasseUncheckedUpdateWithoutPartenaireInput = {
   occurence?: Prisma.OccurenceUncheckedUpdateManyWithoutChasseNestedInput
   etape?: Prisma.EtapeUncheckedUpdateManyWithoutChasseNestedInput
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutChasseNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutChasseNestedInput
 }
 
 export type ChasseUncheckedUpdateManyWithoutPartenaireInput = {
@@ -922,12 +1033,14 @@ export type ChasseCountOutputType = {
   occurence: number
   etape: number
   userchasses: number
+  scoreboards: number
 }
 
 export type ChasseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   occurence?: boolean | ChasseCountOutputTypeCountOccurenceArgs
   etape?: boolean | ChasseCountOutputTypeCountEtapeArgs
   userchasses?: boolean | ChasseCountOutputTypeCountUserchassesArgs
+  scoreboards?: boolean | ChasseCountOutputTypeCountScoreboardsArgs
 }
 
 /**
@@ -961,6 +1074,13 @@ export type ChasseCountOutputTypeCountUserchassesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.UserChasseWhereInput
 }
 
+/**
+ * ChasseCountOutputType without action
+ */
+export type ChasseCountOutputTypeCountScoreboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ScoreBoardWhereInput
+}
+
 
 export type ChasseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_chasse?: boolean
@@ -976,6 +1096,7 @@ export type ChasseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   occurence?: boolean | Prisma.Chasse$occurenceArgs<ExtArgs>
   etape?: boolean | Prisma.Chasse$etapeArgs<ExtArgs>
   userchasses?: boolean | Prisma.Chasse$userchassesArgs<ExtArgs>
+  scoreboards?: boolean | Prisma.Chasse$scoreboardsArgs<ExtArgs>
   _count?: boolean | Prisma.ChasseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chasse"]>
 
@@ -1023,6 +1144,7 @@ export type ChasseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   occurence?: boolean | Prisma.Chasse$occurenceArgs<ExtArgs>
   etape?: boolean | Prisma.Chasse$etapeArgs<ExtArgs>
   userchasses?: boolean | Prisma.Chasse$userchassesArgs<ExtArgs>
+  scoreboards?: boolean | Prisma.Chasse$scoreboardsArgs<ExtArgs>
   _count?: boolean | Prisma.ChasseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ChasseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1039,6 +1161,7 @@ export type $ChassePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     occurence: Prisma.$OccurencePayload<ExtArgs>[]
     etape: Prisma.$EtapePayload<ExtArgs>[]
     userchasses: Prisma.$UserChassePayload<ExtArgs>[]
+    scoreboards: Prisma.$ScoreBoardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_chasse: number
@@ -1448,6 +1571,7 @@ export interface Prisma__ChasseClient<T, Null = never, ExtArgs extends runtime.T
   occurence<T extends Prisma.Chasse$occurenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chasse$occurenceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OccurencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   etape<T extends Prisma.Chasse$etapeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chasse$etapeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EtapePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userchasses<T extends Prisma.Chasse$userchassesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chasse$userchassesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserChassePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scoreboards<T extends Prisma.Chasse$scoreboardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chasse$scoreboardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScoreBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1951,6 +2075,30 @@ export type Chasse$userchassesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.UserChasseScalarFieldEnum | Prisma.UserChasseScalarFieldEnum[]
+}
+
+/**
+ * Chasse.scoreboards
+ */
+export type Chasse$scoreboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ScoreBoard
+   */
+  select?: Prisma.ScoreBoardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ScoreBoard
+   */
+  omit?: Prisma.ScoreBoardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScoreBoardInclude<ExtArgs> | null
+  where?: Prisma.ScoreBoardWhereInput
+  orderBy?: Prisma.ScoreBoardOrderByWithRelationInput | Prisma.ScoreBoardOrderByWithRelationInput[]
+  cursor?: Prisma.ScoreBoardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ScoreBoardScalarFieldEnum | Prisma.ScoreBoardScalarFieldEnum[]
 }
 
 /**

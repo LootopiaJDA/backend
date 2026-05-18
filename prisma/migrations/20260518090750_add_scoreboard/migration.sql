@@ -43,8 +43,8 @@ CREATE TABLE "Chasse" (
     "name" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "localisation" TEXT NOT NULL,
-    "longitude" TEXT NOT NULL,
-    "latitude" TEXT NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
     "etat" "StatutChasse" NOT NULL DEFAULT 'PENDING',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "idPartenaire" INTEGER NOT NULL,
@@ -112,6 +112,18 @@ CREATE TABLE "UserChasseEtape" (
     CONSTRAINT "UserChasseEtape_pkey" PRIMARY KEY ("id_userchasseetape")
 );
 
+-- CreateTable
+CREATE TABLE "ScoreBoard" (
+    "id_score" SERIAL NOT NULL,
+    "score" INTEGER NOT NULL DEFAULT 0,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "id_user" INTEGER NOT NULL,
+    "id_chasse" INTEGER NOT NULL,
+
+    CONSTRAINT "ScoreBoard_pkey" PRIMARY KEY ("id_score")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -139,6 +151,15 @@ CREATE INDEX "UserChasseEtape_id_etape_idx" ON "UserChasseEtape"("id_etape");
 -- CreateIndex
 CREATE UNIQUE INDEX "UserChasseEtape_id_userchasse_id_etape_key" ON "UserChasseEtape"("id_userchasse", "id_etape");
 
+-- CreateIndex
+CREATE INDEX "ScoreBoard_id_user_idx" ON "ScoreBoard"("id_user");
+
+-- CreateIndex
+CREATE INDEX "ScoreBoard_id_chasse_idx" ON "ScoreBoard"("id_chasse");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ScoreBoard_id_user_id_chasse_key" ON "ScoreBoard"("id_user", "id_chasse");
+
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_partenerId_fkey" FOREIGN KEY ("partenerId") REFERENCES "Partenaire"("id_partenaire") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -162,3 +183,9 @@ ALTER TABLE "UserChasseEtape" ADD CONSTRAINT "UserChasseEtape_id_userchasse_fkey
 
 -- AddForeignKey
 ALTER TABLE "UserChasseEtape" ADD CONSTRAINT "UserChasseEtape_id_etape_fkey" FOREIGN KEY ("id_etape") REFERENCES "Etape"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ScoreBoard" ADD CONSTRAINT "ScoreBoard_id_user_fkey" FOREIGN KEY ("id_user") REFERENCES "User"("id_user") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ScoreBoard" ADD CONSTRAINT "ScoreBoard_id_chasse_fkey" FOREIGN KEY ("id_chasse") REFERENCES "Chasse"("id_chasse") ON DELETE RESTRICT ON UPDATE CASCADE;

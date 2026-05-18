@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Req, Res, UseGuards } from "@n
 import { UserService } from "../services/user.service";
 import type { Request, Response } from 'express';
 import { CreateUserDto, UpdateUserDto } from "../dto/user.tdo";
-import { ApiTags, ApiBody, ApiBearerAuth, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiParam } from "@nestjs/swagger";
 import { encryptText } from "src/services/crypto.service";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
@@ -22,7 +22,7 @@ interface User {
     partenerId: number | null;
 }
 
-@ApiTags('User')
+@ApiTags('Partie utilisateur')
 @Controller('user')
 export class UserController {
     // Get userService to access its methods via dependency injection
@@ -61,7 +61,6 @@ export class UserController {
      * @param {Request} request - Montant HT.
      * @param {Response} response - Taux de TVA (ex: 0.20).
      */
-    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.ADMIN)
     @Get()
@@ -81,7 +80,6 @@ export class UserController {
      * @param {Object} body - User data to update.
      * @param {Response} response - Response object.
      */
-    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, ownUserGuard)
     @ApiBody({ type: UpdateUserDto })
     @ApiParam({ name: 'id', type: Number, description: 'User ID' })

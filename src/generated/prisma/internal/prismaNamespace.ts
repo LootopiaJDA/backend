@@ -391,7 +391,8 @@ export const ModelName = {
   Etape: 'Etape',
   Message: 'Message',
   UserChasse: 'UserChasse',
-  UserChasseEtape: 'UserChasseEtape'
+  UserChasseEtape: 'UserChasseEtape',
+  ScoreBoard: 'ScoreBoard'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "partenaire" | "chasse" | "occurence" | "etape" | "message" | "userChasse" | "userChasseEtape"
+    modelProps: "user" | "partenaire" | "chasse" | "occurence" | "etape" | "message" | "userChasse" | "userChasseEtape" | "scoreBoard"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ScoreBoard: {
+      payload: Prisma.$ScoreBoardPayload<ExtArgs>
+      fields: Prisma.ScoreBoardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScoreBoardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScoreBoardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        findFirst: {
+          args: Prisma.ScoreBoardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScoreBoardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        findMany: {
+          args: Prisma.ScoreBoardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>[]
+        }
+        create: {
+          args: Prisma.ScoreBoardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        createMany: {
+          args: Prisma.ScoreBoardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScoreBoardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>[]
+        }
+        delete: {
+          args: Prisma.ScoreBoardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        update: {
+          args: Prisma.ScoreBoardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScoreBoardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScoreBoardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScoreBoardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScoreBoardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScoreBoardPayload>
+        }
+        aggregate: {
+          args: Prisma.ScoreBoardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScoreBoard>
+        }
+        groupBy: {
+          args: Prisma.ScoreBoardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScoreBoardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScoreBoardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScoreBoardCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1142,6 +1217,18 @@ export const UserChasseEtapeScalarFieldEnum = {
 } as const
 
 export type UserChasseEtapeScalarFieldEnum = (typeof UserChasseEtapeScalarFieldEnum)[keyof typeof UserChasseEtapeScalarFieldEnum]
+
+
+export const ScoreBoardScalarFieldEnum = {
+  id_score: 'id_score',
+  score: 'score',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  id_user: 'id_user',
+  id_chasse: 'id_chasse'
+} as const
+
+export type ScoreBoardScalarFieldEnum = (typeof ScoreBoardScalarFieldEnum)[keyof typeof ScoreBoardScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1388,6 +1475,7 @@ export type GlobalOmitConfig = {
   message?: Prisma.MessageOmit
   userChasse?: Prisma.UserChasseOmit
   userChasseEtape?: Prisma.UserChasseEtapeOmit
+  scoreBoard?: Prisma.ScoreBoardOmit
 }
 
 /* Types for Logging */

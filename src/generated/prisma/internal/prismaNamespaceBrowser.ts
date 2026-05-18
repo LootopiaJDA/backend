@@ -58,7 +58,8 @@ export const ModelName = {
   Etape: 'Etape',
   Message: 'Message',
   UserChasse: 'UserChasse',
-  UserChasseEtape: 'UserChasseEtape'
+  UserChasseEtape: 'UserChasseEtape',
+  ScoreBoard: 'ScoreBoard'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -177,6 +178,18 @@ export const UserChasseEtapeScalarFieldEnum = {
 } as const
 
 export type UserChasseEtapeScalarFieldEnum = (typeof UserChasseEtapeScalarFieldEnum)[keyof typeof UserChasseEtapeScalarFieldEnum]
+
+
+export const ScoreBoardScalarFieldEnum = {
+  id_score: 'id_score',
+  score: 'score',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  id_user: 'id_user',
+  id_chasse: 'id_chasse'
+} as const
+
+export type ScoreBoardScalarFieldEnum = (typeof ScoreBoardScalarFieldEnum)[keyof typeof ScoreBoardScalarFieldEnum]
 
 
 export const SortOrder = {

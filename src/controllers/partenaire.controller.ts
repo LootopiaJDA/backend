@@ -8,7 +8,7 @@ import { Role } from "src/generated/prisma/enums";
 import { Statut } from "src/generated/prisma/browser";
 import { PartenaireService } from "src/services/partenaire.service";
 
-@ApiTags("Partenaire")
+@ApiTags("Partie partenaire")
 @Controller("partenaire")
 @UseGuards(AuthGuard)
 export class PartenaireController {

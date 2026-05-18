@@ -51,6 +51,7 @@ model User {
   partenerId  Int?
   
   userchasses UserChasse[]
+  scoreboards ScoreBoard[]
 }
 
 model Partenaire {
@@ -82,6 +83,7 @@ model Chasse {
   occurence Occurence[]
   etape  Etape[] 
   userchasses UserChasse[]
+  scoreboards ScoreBoard[]
 }
 
 model Occurence{
@@ -156,4 +158,21 @@ model UserChasseEtape {
   @@index([id_userchasse])
   @@index([id_etape])
 
+}
+
+model ScoreBoard {
+  id_score     Int      @id @default(autoincrement())
+  score        Int      @default(0)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user     User   @relation(fields: [id_user], references: [id_user])
+  id_user  Int
+
+  chasse     Chasse @relation(fields: [id_chasse], references: [id_chasse])
+  id_chasse  Int
+
+  @@unique([id_user, id_chasse])
+  @@index([id_user])
+  @@index([id_chasse])
 }

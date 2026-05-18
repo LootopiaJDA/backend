@@ -35,7 +35,7 @@ import { ForbiddenException } from "src/common/ForbiddenExc";
 import { UserChasseService } from "src/services/userChasse.service";
 import { RequestWithUser } from "src/interface/user.interface";
 
-@ApiTags("Etape")
+@ApiTags("Partie étape")
 @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
 @Controller("etape")
 @UseGuards(AuthGuard)

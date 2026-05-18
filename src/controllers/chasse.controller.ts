@@ -39,7 +39,7 @@ interface RequestWithUser extends Request {
   };
 }
 
-@ApiTags("Chasse")
+@ApiTags("Partie chasse")
 @Controller("chasse")
 @Statuts(Statut.ACTIVE)
 @UseGuards(AuthGuard)
@@ -55,8 +55,6 @@ export class ChasseController {
     @Query("localisation") localisation: string,
     @Res() res: Response,
   ): Promise<Response> {
-    console.log("test");
-    
     if (part) {
       const chasseByPart = await this.chasseService.getChasseByPartenair(
         Number(part)
@@ -67,7 +65,6 @@ export class ChasseController {
       return res.status(200).json({ allChasse });
     }
   }
-
   @Get('me')
   @ApiConsumes("application/json")
   @UseGuards(AuthGuard)

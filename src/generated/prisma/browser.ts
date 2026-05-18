@@ -57,3 +57,8 @@ export type UserChasse = Prisma.UserChasseModel
  * 
  */
 export type UserChasseEtape = Prisma.UserChasseEtapeModel
+/**
+ * Model ScoreBoard
+ * 
+ */
+export type ScoreBoard = Prisma.ScoreBoardModel

@@ -246,6 +246,7 @@ export type UserWhereInput = {
   partenerId?: Prisma.IntNullableFilter<"User"> | number | null
   partener?: Prisma.XOR<Prisma.PartenaireNullableScalarRelationFilter, Prisma.PartenaireWhereInput> | null
   userchasses?: Prisma.UserChasseListRelationFilter
+  scoreboards?: Prisma.ScoreBoardListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -259,6 +260,7 @@ export type UserOrderByWithRelationInput = {
   partenerId?: Prisma.SortOrderInput | Prisma.SortOrder
   partener?: Prisma.PartenaireOrderByWithRelationInput
   userchasses?: Prisma.UserChasseOrderByRelationAggregateInput
+  scoreboards?: Prisma.ScoreBoardOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +277,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   partenerId?: Prisma.IntNullableFilter<"User"> | number | null
   partener?: Prisma.XOR<Prisma.PartenaireNullableScalarRelationFilter, Prisma.PartenaireWhereInput> | null
   userchasses?: Prisma.UserChasseListRelationFilter
+  scoreboards?: Prisma.ScoreBoardListRelationFilter
 }, "id_user" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -316,6 +319,7 @@ export type UserCreateInput = {
   updated_at?: Date | string
   partener?: Prisma.PartenaireCreateNestedOneWithoutUsersInput
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutUserInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -328,6 +332,7 @@ export type UserUncheckedCreateInput = {
   updated_at?: Date | string
   partenerId?: number | null
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutUserInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -339,6 +344,7 @@ export type UserUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partener?: Prisma.PartenaireUpdateOneWithoutUsersNestedInput
   userchasses?: Prisma.UserChasseUpdateManyWithoutUserNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -351,6 +357,7 @@ export type UserUncheckedUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutUserNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -526,6 +533,20 @@ export type UserUpdateOneRequiredWithoutUserchassesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserchassesInput, Prisma.UserUpdateWithoutUserchassesInput>, Prisma.UserUncheckedUpdateWithoutUserchassesInput>
 }
 
+export type UserCreateNestedOneWithoutScoreboardsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutScoreboardsInput, Prisma.UserUncheckedCreateWithoutScoreboardsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutScoreboardsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutScoreboardsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutScoreboardsInput, Prisma.UserUncheckedCreateWithoutScoreboardsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutScoreboardsInput
+  upsert?: Prisma.UserUpsertWithoutScoreboardsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutScoreboardsInput, Prisma.UserUpdateWithoutScoreboardsInput>, Prisma.UserUncheckedUpdateWithoutScoreboardsInput>
+}
+
 export type UserCreateWithoutPartenerInput = {
   username: string
   role?: $Enums.Role
@@ -534,6 +555,7 @@ export type UserCreateWithoutPartenerInput = {
   created_at?: Date | string
   updated_at?: Date | string
   userchasses?: Prisma.UserChasseCreateNestedManyWithoutUserInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPartenerInput = {
@@ -545,6 +567,7 @@ export type UserUncheckedCreateWithoutPartenerInput = {
   created_at?: Date | string
   updated_at?: Date | string
   userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutUserInput
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPartenerInput = {
@@ -595,6 +618,7 @@ export type UserCreateWithoutUserchassesInput = {
   created_at?: Date | string
   updated_at?: Date | string
   partener?: Prisma.PartenaireCreateNestedOneWithoutUsersInput
+  scoreboards?: Prisma.ScoreBoardCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserchassesInput = {
@@ -606,6 +630,7 @@ export type UserUncheckedCreateWithoutUserchassesInput = {
   created_at?: Date | string
   updated_at?: Date | string
   partenerId?: number | null
+  scoreboards?: Prisma.ScoreBoardUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserchassesInput = {
@@ -632,6 +657,7 @@ export type UserUpdateWithoutUserchassesInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partener?: Prisma.PartenaireUpdateOneWithoutUsersNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserchassesInput = {
@@ -643,6 +669,69 @@ export type UserUncheckedUpdateWithoutUserchassesInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   partenerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutScoreboardsInput = {
+  username: string
+  role?: $Enums.Role
+  password: string
+  email: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  partener?: Prisma.PartenaireCreateNestedOneWithoutUsersInput
+  userchasses?: Prisma.UserChasseCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutScoreboardsInput = {
+  id_user?: number
+  username: string
+  role?: $Enums.Role
+  password: string
+  email: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  partenerId?: number | null
+  userchasses?: Prisma.UserChasseUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutScoreboardsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutScoreboardsInput, Prisma.UserUncheckedCreateWithoutScoreboardsInput>
+}
+
+export type UserUpsertWithoutScoreboardsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutScoreboardsInput, Prisma.UserUncheckedUpdateWithoutScoreboardsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutScoreboardsInput, Prisma.UserUncheckedCreateWithoutScoreboardsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutScoreboardsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutScoreboardsInput, Prisma.UserUncheckedUpdateWithoutScoreboardsInput>
+}
+
+export type UserUpdateWithoutScoreboardsInput = {
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partener?: Prisma.PartenaireUpdateOneWithoutUsersNestedInput
+  userchasses?: Prisma.UserChasseUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutScoreboardsInput = {
+  id_user?: Prisma.IntFieldUpdateOperationsInput | number
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partenerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyPartenerInput = {
@@ -663,6 +752,7 @@ export type UserUpdateWithoutPartenerInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userchasses?: Prisma.UserChasseUpdateManyWithoutUserNestedInput
+  scoreboards?: Prisma.ScoreBoardUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPartenerInput = {
@@ -674,6 +764,7 @@ export type UserUncheckedUpdateWithoutPartenerInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userchasses?: Prisma.UserChasseUncheckedUpdateManyWithoutUserNestedInput
+  scoreboards?: Prisma.ScoreBoardUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutPartenerInput = {
@@ -693,10 +784,12 @@ export type UserUncheckedUpdateManyWithoutPartenerInput = {
 
 export type UserCountOutputType = {
   userchasses: number
+  scoreboards: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   userchasses?: boolean | UserCountOutputTypeCountUserchassesArgs
+  scoreboards?: boolean | UserCountOutputTypeCountScoreboardsArgs
 }
 
 /**
@@ -716,6 +809,13 @@ export type UserCountOutputTypeCountUserchassesArgs<ExtArgs extends runtime.Type
   where?: Prisma.UserChasseWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountScoreboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ScoreBoardWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_user?: boolean
@@ -728,6 +828,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   partenerId?: boolean
   partener?: boolean | Prisma.User$partenerArgs<ExtArgs>
   userchasses?: boolean | Prisma.User$userchassesArgs<ExtArgs>
+  scoreboards?: boolean | Prisma.User$scoreboardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -770,6 +871,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   partener?: boolean | Prisma.User$partenerArgs<ExtArgs>
   userchasses?: boolean | Prisma.User$userchassesArgs<ExtArgs>
+  scoreboards?: boolean | Prisma.User$scoreboardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -784,6 +886,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     partener: Prisma.$PartenairePayload<ExtArgs> | null
     userchasses: Prisma.$UserChassePayload<ExtArgs>[]
+    scoreboards: Prisma.$ScoreBoardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_user: number
@@ -1190,6 +1293,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   partener<T extends Prisma.User$partenerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$partenerArgs<ExtArgs>>): Prisma.Prisma__PartenaireClient<runtime.Types.Result.GetResult<Prisma.$PartenairePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   userchasses<T extends Prisma.User$userchassesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userchassesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserChassePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scoreboards<T extends Prisma.User$scoreboardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$scoreboardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScoreBoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1663,6 +1767,30 @@ export type User$userchassesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.UserChasseScalarFieldEnum | Prisma.UserChasseScalarFieldEnum[]
+}
+
+/**
+ * User.scoreboards
+ */
+export type User$scoreboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ScoreBoard
+   */
+  select?: Prisma.ScoreBoardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ScoreBoard
+   */
+  omit?: Prisma.ScoreBoardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScoreBoardInclude<ExtArgs> | null
+  where?: Prisma.ScoreBoardWhereInput
+  orderBy?: Prisma.ScoreBoardOrderByWithRelationInput | Prisma.ScoreBoardOrderByWithRelationInput[]
+  cursor?: Prisma.ScoreBoardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ScoreBoardScalarFieldEnum | Prisma.ScoreBoardScalarFieldEnum[]
 }
 
 /**
