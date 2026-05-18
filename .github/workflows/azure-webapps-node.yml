@@ -52,5 +52,6 @@ jobs:
             docker compose -f docker-compose.prod.yml --env-file .env pull
             docker compose -f docker-compose.prod.yml --env-file .env up -d
             sleep 10
-            docker exec lootopia-backend npx prisma migrate resolve --rolled-back 20260518090750_add_scoreboard || true
-            docker exec lootopia-backend npx prisma migrate deploy
+              docker exec lootopia-backend npx prisma migrate resolve --rolled-back 20260518090750_add_scoreboard || true
+              docker exec lootopia-backend npx prisma migrate resolve --applied 20260518090750_init || true
+              docker exec lootopia-backend npx prisma migrate deploy
