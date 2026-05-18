@@ -27,7 +27,7 @@ export class ScoreService {
             },
             data: {
                 score: {
-                    increment: 1
+                    increment: 100
                 }
             }
         });
