@@ -45,11 +45,14 @@ interface RequestWithUser extends Request {
 @UseGuards(AuthGuard)
 export class ChasseController {
   // Must inject services to access them
-  constructor(private readonly chasseService: ChasseService, private readonly userChasseService: UserChasseService) {}
+  constructor(
+    private readonly chasseService: ChasseService,
+    private readonly userChasseService: UserChasseService,
+  ) {}
 
   @Get()
   @ApiQuery({ name: "partenaire", required: false })
-  @ApiQuery({name: "localisation", required: false})
+  @ApiQuery({ name: "localisation", required: false })
   async getAllChasse(
     @Query("partenaire") part: number,
     @Query("localisation") localisation: string,
@@ -57,7 +60,7 @@ export class ChasseController {
   ): Promise<Response> {
     if (part) {
       const chasseByPart = await this.chasseService.getChasseByPartenair(
-        Number(part)
+        Number(part),
       );
       return res.status(200).json({ chasseByPart });
     } else {
@@ -65,7 +68,7 @@ export class ChasseController {
       return res.status(200).json({ allChasse });
     }
   }
-  @Get('me')
+  @Get("me")
   @ApiConsumes("application/json")
   @UseGuards(AuthGuard)
   async getPlayerChasses(
@@ -100,8 +103,8 @@ export class ChasseController {
         localisation: chasse.localisation,
         etat: chasse.etat,
         image: chasse.image,
-        occurence : chasse.occurence,
-        etape : chasse.etape
+        occurence: chasse.occurence,
+        etape: chasse.etape,
       });
     } catch (error) {
       return res
@@ -155,7 +158,7 @@ export class ChasseController {
     @UploadedFile() image: any,
     @Req() req: RequestWithUser,
     @Res() res: Response,
-  ): Promise<Response> {    
+  ): Promise<Response> {
     const user = req.user;
     if (!user.partenaire) {
       return res
@@ -181,18 +184,16 @@ export class ChasseController {
       isValidDate(occ.date_end);
 
       if (!isValidDate(occ.date_start) || !isValidDate(occ.date_end)) {
-        return res
-          .status(400)
-          .send({
-            message:
-              "Invalid date format for occurrence. Expected format: YYYY-MM-DD",
-          });
+        return res.status(400).send({
+          message:
+            "Invalid date format for occurrence. Expected format: YYYY-MM-DD",
+        });
       }
 
       await this.chasseService.createChasse(
         {
           name: body.name,
-          localisation: body.localisation.toUpperCase( ),
+          localisation: body.localisation.toUpperCase(),
           etat: body.etat,
           image: uploadResult.secure_url,
           longitude: parseFloat(body.longitude),
@@ -220,7 +221,8 @@ export class ChasseController {
     } catch (error) {
       console.error("Erreur Cloudinary:", error);
       return res.status(500).send({
-        message: "Erreur lors de l'upload", error,
+        message: "Erreur lors de l'upload",
+        error,
       });
     }
   }
@@ -277,7 +279,9 @@ export class ChasseController {
       await this.userChasseService.completeChasse(Number(id), req.user.sub);
       return res.status(200).send({ message: "Chasse completed" });
     } catch (error) {
-      return res.status(500).send({ message: "Error completing chasse", error });
+      return res
+        .status(500)
+        .send({ message: "Error completing chasse", error });
     }
   }
 
@@ -290,7 +294,7 @@ export class ChasseController {
     @Req() req: RequestWithUser,
     @Res() res: Response,
   ): Promise<Response> {
-    const user = req.user;  
+    const user = req.user;
     try {
       await this.userChasseService.inscriptionChasse(Number(id), user.sub);
       return res.status(200).send({ message: "Inscription successful" });
@@ -298,6 +302,20 @@ export class ChasseController {
       return res
         .status(500)
         .send({ message: "Error during inscription", error });
+    }
+  }
+
+  @Patch(":idChasse/leave")
+  @ApiConsumes("application/json")
+  @Roles(Role.JOUEUR)
+  @UseGuards(AuthGuard)
+  async leaveChasse(@Param("idChasse") id: string,@Req() req: RequestWithUser,@Res() res: Response,): Promise<Response> {
+    const user = req.user;
+    try {
+      await this.userChasseService.leaveChasse(Number(id), user.sub);
+      return res.status(200).send({ message: "Left chasse successfully" });
+    } catch (error) {
+      return res.status(500).send({ message: "Error leaving chasse", error });
     }
   }
 }

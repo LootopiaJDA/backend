@@ -36,4 +36,12 @@ export class UserChasseService {
       data: { statut: 'COMPLETED', completed_at: new Date() },
     });
   }
+
+  async leaveChasse(chasseId: number, userId: number): Promise<void> {
+    await this.prisma.userChasse.updateMany({
+      where: { id_user: userId, id_chasse: chasseId },
+      data: { statut: 'ABANDONED' },
+    });
+  }
+
 }
