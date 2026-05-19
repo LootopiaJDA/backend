@@ -296,8 +296,13 @@ export class ChasseController {
   ): Promise<Response> {
     const user = req.user;
     try {
-      await this.userChasseService.inscriptionChasse(Number(id), user.sub);
-      return res.status(200).send({ message: "Inscription successful" });
+      if(!await this.userChasseService.getUserInscription(Number(id), user.sub)) {
+        await this.userChasseService.inscriptionChasse(Number(id), user.sub);
+        return res.status(200).send({ message: "Inscription successful" });
+      } else {
+        await this.userChasseService.changeState(Number(id), user.sub);
+        return res.status(200).send({ message: "State changed successfully" });
+      }
     } catch (error) {
       return res
         .status(500)
