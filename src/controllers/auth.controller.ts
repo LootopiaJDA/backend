@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import type { Response } from 'express';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { ConnexionDto } from "../dto/connexion.tdo";
 import { ApiBody } from "@nestjs/swagger";
 import { AuthGuard } from "../guards/auth.guard";
@@ -38,7 +38,6 @@ export class AuthController {
 
             return { message: 'Connexion réussie' };
         } catch (error) {
-            console.log(error);
             throw new HttpException(
                 error.message || 'Erreur lors de la connexion',
                 error.status || HttpStatus.INTERNAL_SERVER_ERROR
@@ -46,6 +45,7 @@ export class AuthController {
         }
     }
 
+    @ApiBearerAuth('access-token')
     @Get('logout')
     @UseGuards(AuthGuard)
     async logout(@Res({ passthrough: true }) res: Response): Promise<{message: string}> {

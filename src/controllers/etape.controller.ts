@@ -23,6 +23,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiTags,
   ApiQuery,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/auth.guard";
 import { EtapeService } from "../services/etape.service";
@@ -35,6 +36,7 @@ import { ForbiddenException } from "src/common/ForbiddenExc";
 import { UserChasseService } from "src/services/userChasse.service";
 import { RequestWithUser } from "src/interface/user.interface";
 
+@ApiBearerAuth('access-token')
 @ApiTags("Partie étape")
 @ApiInternalServerErrorResponse({ description: "Internal Server Error" })
 @Controller("etape")

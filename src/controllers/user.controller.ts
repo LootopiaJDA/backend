@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Req, Res, UseGuards } from "@n
 import { UserService } from "../services/user.service";
 import type { Request, Response } from 'express';
 import { CreateUserDto, UpdateUserDto } from "../dto/user.tdo";
-import { ApiTags, ApiBody, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiParam, ApiBearerAuth } from "@nestjs/swagger";
 import { encryptText } from "src/services/crypto.service";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
@@ -28,6 +28,7 @@ export class UserController {
     // Get userService to access its methods via dependency injection
     constructor(private readonly userService: UserService) { }
 
+    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard)
     @Get("/personnalData")
     async getProtectedData(@Req() req: RequestWithUser, @Res() res: Response): Promise<Response> {
@@ -51,7 +52,7 @@ export class UserController {
             const user = await this.userService.createUser(body);
             response.status(201).send(user);
         } catch (error) {
-            response.status(500).send(error.message);
+            response.status(500).send(error);
         }
     }
 
@@ -61,6 +62,7 @@ export class UserController {
      * @param {Request} request - Montant HT.
      * @param {Response} response - Taux de TVA (ex: 0.20).
      */
+    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, RolesGuard)
     @Roles(Role.ADMIN)
     @Get()
@@ -69,7 +71,7 @@ export class UserController {
             const users = await this.userService.getAllUsers();
             response.status(200).send(users);
         } catch (error) {
-            response.status(500).send(error.message);
+            response.status(500).send(error);
         }
     }
 
@@ -80,6 +82,7 @@ export class UserController {
      * @param {Object} body - User data to update.
      * @param {Response} response - Response object.
      */
+    @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard, ownUserGuard)
     @ApiBody({ type: UpdateUserDto })
     @ApiParam({ name: 'id', type: Number, description: 'User ID' })
@@ -95,7 +98,7 @@ export class UserController {
             // Implementation for updating a user goes here
             response.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
-            response.status(500).send(error.message);
+            response.status(500).send(error);
         }
     }
 

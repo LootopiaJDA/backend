@@ -43,6 +43,7 @@ interface RequestWithUser extends Request {
 @Controller("chasse")
 @Statuts(Statut.ACTIVE)
 @UseGuards(AuthGuard)
+@ApiBearerAuth('access-token')
 export class ChasseController {
   // Must inject services to access them
   constructor(
@@ -50,7 +51,6 @@ export class ChasseController {
     private readonly userChasseService: UserChasseService,
   ) {}
 
-  @ApiBearerAuth('access-token')
   @Get()
   @ApiQuery({ name: "partenaire", required: false })
   @ApiQuery({ name: "localisation", required: false })

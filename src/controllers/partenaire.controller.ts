@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Res, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import type { Response } from "express";
 import { AuthGuard } from "src/guards/auth.guard";
 import { RolesGuard } from "src/guards/roles.guard";
@@ -11,6 +11,7 @@ import { PartenaireService } from "src/services/partenaire.service";
 @ApiTags("Partie partenaire")
 @Controller("partenaire")
 @UseGuards(AuthGuard)
+@ApiBearerAuth('access-token')
 export class PartenaireController {
   constructor(private readonly partenaireService: PartenaireService) {}
 

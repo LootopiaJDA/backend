@@ -4,11 +4,12 @@ import { Roles } from 'src/decorators/role.decorator';
 import { Role, ScoreBoard } from 'src/generated/prisma/browser';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { ScoreService } from 'src/services/score.service';
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { AuthGuard } from 'src/guards/auth.guard';
 import type { Response } from "express";
 import { RequestWithUser } from 'src/interface/user.interface';
 
+ApiBearerAuth('access-token')
 @ApiTags('Partie score')
 @Controller('scores')
 @UseGuards(AuthGuard)

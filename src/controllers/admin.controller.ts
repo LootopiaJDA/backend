@@ -1,5 +1,5 @@
 import { Controller, Get, Patch, Res, UseGuards, Body, Param, Post } from "@nestjs/common";
-import { ApiTags, ApiBody } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 import { Response } from "express";
 import { Roles } from "src/decorators/role.decorator";
 import { UpdateUserDto } from "src/dto/user.tdo";
@@ -9,6 +9,7 @@ import { RolesGuard } from "src/guards/roles.guard";
 import { AdminService } from "src/services/admin.service";
 import { encryptText } from "src/services/crypto.service";
 
+@ApiBearerAuth('access-token')
 @ApiTags("Administrateur")
 @Controller("admin")
 export class AdminController {
