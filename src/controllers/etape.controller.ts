@@ -35,6 +35,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { ForbiddenException } from "src/common/ForbiddenExc";
 import { UserChasseService } from "src/services/userChasse.service";
 import { RequestWithUser } from "src/interface/user.interface";
+import { ScoreService } from "src/services/score.service";
 
 @ApiBearerAuth('access-token')
 @ApiTags("Partie étape")
@@ -42,7 +43,11 @@ import { RequestWithUser } from "src/interface/user.interface";
 @Controller("etape")
 @UseGuards(AuthGuard)
 export class EtapeController {
-  constructor(private readonly etape: EtapeService, private readonly userChasse: UserChasseService) {}
+  constructor(
+    private readonly etape: EtapeService,
+    private readonly userChasse: UserChasseService,
+    private readonly scoreService: ScoreService,
+  ) {}
 
   @Get("/")
   @Roles("JOUEUR")
@@ -239,18 +244,25 @@ export class EtapeController {
     @Res() res: Response,
     @Req() req: RequestWithUser,
   ): Promise<Response> {
+    const userChasseid = await this.etape.getUserChasseId(req.user.sub, idChasse);
+    if (!userChasseid || userChasseid.length === 0) {
+      throw new HttpException(
+        "Inscription introuvable",
+        HttpStatus.FORBIDDEN,
+      );
+    }
     try {
-      const userChasseid = await this.etape.getUserChasseId(req.user.sub,idChasse);
       await this.etape.validateEtape(idEtape, userChasseid[0].id_userchasse);
-      return res.status(200).json({ message: "Étape validée avec succès" });
-    } catch (exc) {
+    } catch (exc: any) {
+      if (exc?.code === "P2002") {
+        return res.status(200).json({ message: "Étape déjà validée" });
+      }
       throw new HttpException(
         "Vous n'êtes pas autorisé à valider cette étape",
         HttpStatus.FORBIDDEN,
-        {
-          cause: new Error("You are not allowed to validate this step"),
-        },
       );
-    } 
+    }
+    await this.scoreService.incrementScore(req.user.sub, idChasse);
+    return res.status(200).json({ message: "Étape validée avec succès" });
   }
 }

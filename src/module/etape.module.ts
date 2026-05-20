@@ -7,9 +7,10 @@ import { EtapeService } from "../services/etape.service";
 import { ChasseRepository } from "src/repository/chasse.repository";
 import { UserRepository } from "src/repository/user.repository";
 import { UserChasseService } from "src/services/userChasse.service";
+import { ScoreModule } from "src/module/score.module";
 
 @Module({
-  imports: [],
+  imports: [ScoreModule],
   controllers: [EtapeController],
   providers: [PrismaService, ChasseService, UserService, EtapeService, ChasseRepository, UserRepository, UserChasseService],
   exports: []

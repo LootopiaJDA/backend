@@ -6,9 +6,10 @@ import { UserService } from "src/services/user.service";
 import { UserChasseService } from "src/services/userChasse.service";
 import { ChasseRepository } from "src/repository/chasse.repository";
 import { UserRepository } from "src/repository/user.repository";
+import { ScoreModule } from "./score.module";
 
 @Module({
-  imports: [],
+  imports: [ScoreModule],
   controllers: [ChasseController],
   providers: [PrismaService, ChasseService, UserService, UserChasseService, ChasseRepository, UserRepository],
   exports: [ChasseService]

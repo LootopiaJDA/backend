@@ -26,6 +26,13 @@ export class ScoreController {
 
     @Roles(Role.JOUEUR)
     @UseGuards(RolesGuard)
+    @Get(':idChasse')
+    async getScoresByChasse(@Param('idChasse') idChasse: string): Promise<any[]> {
+        return await this.scoreService.getScoresByChasse(parseInt(idChasse));
+    }
+
+    @Roles(Role.JOUEUR)
+    @UseGuards(RolesGuard)
     @Post('/:idChasse')
     async createScore(@Param('idChasse') idChasse: string, @Res() response: Response, @Req() req: RequestWithUser): Promise<Response> {
         const user = req.user; 

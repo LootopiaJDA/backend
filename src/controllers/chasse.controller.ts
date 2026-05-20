@@ -29,6 +29,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { Role } from "src/generated/prisma/enums";
 import { ChasseOccurrenceDto } from "src/dto/chasseOccurence.dto";
 import { UserChasseService } from "src/services/userChasse.service";
+import { ScoreService } from "src/services/score.service";
 
 interface RequestWithUser extends Request {
   user: {
@@ -49,6 +50,7 @@ export class ChasseController {
   constructor(
     private readonly chasseService: ChasseService,
     private readonly userChasseService: UserChasseService,
+    private readonly scoreService: ScoreService,
   ) {}
 
   @Get()
@@ -278,6 +280,7 @@ export class ChasseController {
   ): Promise<Response> {
     try {
       await this.userChasseService.completeChasse(Number(id), req.user.sub);
+      await this.scoreService.syncScore(req.user.sub, Number(id));
       return res.status(200).send({ message: "Chasse completed" });
     } catch (error) {
       return res
