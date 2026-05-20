@@ -1,12 +1,21 @@
-# 🚀 Guide de Démarrage - Lootopia Backend
+# 🚀 Guide de Démarrage — Lootopia Backend
+
+> Projet d'études M1 DEVA 2025/2026 — SUP DE VINCI  
+> Équipe : Jimmy (Backend) · Damien (Frontend) · Alexandre (Gestion de projet)
+
+---
 
 ## Prérequis
 
-- **Node.js** : >= 18.x
-- **npm** : >= 9.x
-- **PostgreSQL** : >= 12
-- **Docker** (optionnel, mais recommandé)
-- **Git**
+| Outil | Version minimale | Vérification |
+|---|---|---|
+| **Node.js** | >= 20.x | `node -v` |
+| **npm** | >= 9.x | `npm -v` |
+| **Docker** | >= 24.x | `docker -v` |
+| **Docker Compose** | v2+ | `docker compose version` |
+| **Git** | — | `git --version` |
+
+> PostgreSQL n'est **pas** à installer manuellement — Docker Compose le gère.
 
 ---
 
@@ -16,7 +25,7 @@
 
 ```bash
 git clone <repo-url>
-cd backend
+cd lootopiajda-backend
 ```
 
 ### 2. Installer les dépendances
@@ -27,94 +36,85 @@ npm install
 
 ### 3. Configurer les variables d'environnement
 
-Créer un fichier `.env` à la racine :
+```bash
+cp .env.example .env
+```
+
+Renseigner le fichier `.env` :
 
 ```env
-# Database
+# Base de données (Docker Compose)
 DATABASE_URL=postgresql://admin:admin@localhost:5432/lootopia
+DATABASE_URL_DOCKER=postgresql://admin:admin@postgres:5432/lootopia
 
-# Cloudinary (Image Storage)
-API_KEY_CLOUDINARY=your_api_key_here
-API_KEY_CLOUDINARY_SECRET=your_secret_here
+# PostgreSQL (Docker)
+POSTGRES_DB=lootopia
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
 
-# JWT Authentication
+# pgAdmin (Docker)
+PG_ADMIN_EMAIL=admin@admin.com
+PG_ADMIN_PASSWORD=admin
+
+# JWT
 JWT_SECRET=your_super_secret_jwt_key_change_in_prod
 
-# Environment
+# Chiffrement AES-256
+ENCRYPTION_PASSWORD=your_encryption_password_32chars
+
+# Cloudinary (stockage images)
+API_KEY_CLOUDINARY=your_cloudinary_api_key
+API_KEY_CLOUDINARY_SECRET=your_cloudinary_secret
+
+# Environnement
 NODE_ENV=development
 PORT=3000
 ```
 
-### 4. Démarrer PostgreSQL
+> ⚠️ Ne jamais versionner le fichier `.env`. Il est dans le `.gitignore`.
 
-#### Option A : Avec Docker Compose
+### 4. Démarrer les services Docker
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-Cela va démarrer :
-- PostgreSQL (port 5432)
-- PgAdmin (port 5050)
-- Redis (optionnel)
+Lance automatiquement :
+- **PostgreSQL 15** → port `5432`
+- **pgAdmin 4** → port `5050` (http://localhost:5050)
 
-**Pour accéder à PgAdmin** :
-- URL: http://localhost:5050
-- Email: admin@admin.com
-- Password: admin
-
-#### Option B : PostgreSQL local
+Attendre que PostgreSQL soit `healthy` avant de continuer :
 
 ```bash
-# macOS
-brew install postgresql
-brew services start postgresql
-
-# Linux
-sudo apt-get install postgresql postgresql-contrib
-sudo systemctl start postgresql
-
-# Windows
-# Télécharger depuis https://www.postgresql.org/download/windows/
+docker compose ps   # vérifier le statut "healthy" du service postgres
 ```
 
 ### 5. Initialiser la base de données
 
 ```bash
-# Générer le client Prisma
+# Générer le client Prisma (src/generated/prisma/)
 npm run prisma:generate
 
-# Exécuter les migrations
+# Appliquer les migrations
 npm run prisma:migrate
-
-# (Optionnel) Seed des données de test
-npm run prisma:seed
 ```
 
-### 6. Démarrer le serveur
+### 6. Lancer le serveur
 
 ```bash
-# Développement avec hot reload
+# Mode développement (hot reload)
 npm run start:dev
-
-# Production
-npm run build
-npm run start:prod
 ```
 
-**Sortie attendue :**
+Sortie attendue :
 
 ```
------------------------------------------------------
- 🚀 Lootopia Backend is running!
- 
- 👉 API:             http://localhost:3000
- 👉 Swagger:         http://localhost:3000/api
- 👉 PgAdmin:         http://localhost:5050
- 👉 PostgreSQL:      postgresql://admin:admin@localhost:5432/lootopia
- 👉 PrismaStudio:    http://localhost:5555
+🚀 Lootopia Backend is running!
 
------------------------------------------------------
+👉 API:          http://localhost:3000
+👉 Swagger:      http://localhost:3000/api
+👉 PgAdmin:      http://localhost:5050
+👉 PostgreSQL:   postgresql://admin:admin@localhost:5432/lootopia
 ```
 
 ---
@@ -124,347 +124,152 @@ npm run start:prod
 ### Développement
 
 ```bash
-# Démarrer en mode développement (avec hot reload)
-npm run start:dev
-
-# Démarrer en mode debug
-npm run start:debug
-
-# Build le projet
-npm run build
-
-# Démarrer l'app compilée
-npm run start:prod
+npm run start:dev       # Démarrage avec hot reload
+npm run start:debug     # Mode debug
+npm run build           # Compilation TypeScript
+npm run start:prod      # Démarrage en production (après build)
 ```
 
 ### Base de données
 
 ```bash
-# Ouvrir Prisma Studio (UI de gestion BD)
-npm run studio
-# URL: http://localhost:5555
-
-# Générer le client Prisma
-npm run prisma:generate
-
-# Créer une nouvelle migration
-npm run prisma:migrate dev --name <nom_migration>
-
-# Appliquer les migrations
-npm run prisma:migrate deploy
-
-# Seed des données
-npm run prisma:seed
+npm run prisma:generate           # Régénérer le client Prisma
+npm run prisma:migrate            # Créer + appliquer une migration (dev)
+npm run prisma:migrate deploy     # Appliquer les migrations (prod)
+npm run studio                    # Prisma Studio → http://localhost:5555
 ```
 
 ### Tests
 
 ```bash
-# Lancer tous les tests
-npm run test
-
-# Tests en mode watch
-npm run test:watch
-
-# Coverage des tests
-npm run test:cov
-
-# Tests E2E
-npm run test:e2e
+npm run test            # Tests unitaires (Jest)
+npm run test:watch      # Tests en mode watch
+npm run test:cov        # Couverture de code
+npm run test:e2e        # Tests end-to-end
 ```
 
-### Linting & Formatting
+### Qualité de code
 
 ```bash
-# Vérifier le code
-npm run lint
-
-# Fixer automatiquement les erreurs
-npm run lint:fix
-
-# Formater le code
-npm run format
+npm run lint            # Analyse ESLint
+npm run lint:fix        # Correction automatique ESLint
+npm run format          # Formatage Prettier
 ```
 
 ---
 
-## Endpoints de test rapide
+## Test rapide de l'API
 
-### 1. Login
-
-```bash
-curl -X POST http://localhost:3000/connexion \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "test@example.com",
-    "password": "password123"
-  }' \
-  -c cookies.txt
-```
-
-### 2. Récupérer mes données
-
-```bash
-curl -X GET http://localhost:3000/user/personnalData \
-  -b cookies.txt
-```
-
-### 3. Créer un utilisateur
+### Créer un utilisateur
 
 ```bash
 curl -X POST http://localhost:3000/user \
   -H "Content-Type: application/json" \
-  -d '{
-    "username": "johndoe",
-    "email": "john@example.com",
-    "password": "securepass123",
-    "role": "JOUEUR"
-  }'
+  -d '{"username": "testuser", "email": "test@example.com", "password": "Password123!"}'
 ```
 
-### 4. Lister les chasses
+### Se connecter
+
+```bash
+curl -X POST http://localhost:3000/connexion \
+  -H "Content-Type: application/json" \
+  -c cookies.txt \
+  -d '{"email": "test@example.com", "password": "Password123!"}'
+```
+
+Le cookie JWT `access_token` est automatiquement stocké dans `cookies.txt`.
+
+### Consulter les chasses disponibles
 
 ```bash
 curl -X GET http://localhost:3000/chasse \
   -b cookies.txt
 ```
 
-### 5. Créer une chasse (avec image)
-
-```bash
-curl -X POST http://localhost:3000/chasse \
-  -H "Authorization: Bearer <jwt-token>" \
-  -F "name=My Hunt" \
-  -F "localisation=LYON" \
-  -F "etat=ACTIVE" \
-  -F "longitude=4.8357" \
-  -F "latitude=45.7640" \
-  -F 'occurrence={"date_start":"2024-06-01","date_end":"2024-06-30","limit_user":50}' \
-  -F "image=@path/to/image.jpg"
-```
-
 ---
 
-## Documentation API (Swagger)
+## Déploiement Production (Azure)
 
-Accédez à la documentation interactive :
+### Infrastructure
 
+| Service | Port | Description |
+|---|---|---|
+| Backend API | 3000 | NestJS — http://20.46.53.133:3000 |
+| PostgreSQL | 5432 | Base de données (interne) |
+| pgAdmin | 5050 | Interface admin BD (interne) |
+
+### Pipeline CI/CD (GitHub Actions)
+
+Le déploiement est **entièrement automatique** sur push vers `main`.
+
+**CI** (`.github/workflows/ci.yml`) — sur push/PR vers `main` et `develop` :
 ```
-http://localhost:3000/api
+checkout → npm ci → prisma generate → npm test → docker build → eslint
 ```
 
-Vous pouvez :
-- ✅ Lister tous les endpoints
-- ✅ Tester les routes directement
-- ✅ Voir les paramètres requis
-- ✅ Voir les responses attendues
+**CD** (`.github/workflows/azure-webapps-node.yml`) — sur push vers `main` :
+```
+build image → push ghcr.io → SSH Azure VM → docker compose pull → up -d → prisma migrate deploy
+```
 
----
+### Secrets GitHub requis
 
-## Débogage
+| Secret | Description |
+|---|---|
+| `DATABASE_URL` | URL de connexion PostgreSQL production |
+| `JWT_SECRET` | Clé secrète JWT production |
+| `ENCRYPTION_PASSWORD` | Clé AES-256 production |
+| `VM_HOST` | IP de la VM Azure (20.46.53.133) |
+| `VM_USERNAME` | Utilisateur SSH Azure (azureuser) |
+| `VM_SSH_PRIVATE_KEY` | Clé privée SSH pour le déploiement |
 
-### Activer les logs détaillés
+### Déploiement manuel (si besoin)
 
 ```bash
-# Dans .env
-NODE_ENV=development
-DEBUG=lootopia:*
+# Sur la VM Azure
+ssh azureuser@20.46.53.133
 
-# Démarrer
-npm run start:dev
-```
+# Tirer la dernière image et redémarrer
+docker compose -f docker-compose.prod.yml --env-file .env pull
+docker compose -f docker-compose.prod.yml --env-file .env up -d
 
-### Inspecteur Node.js
-
-```bash
-# Démarrer avec debugger
-npm run start:debug
-
-# Ouvrir chrome://inspect dans Chrome
-# Connecter le debugger
-```
-
-### Prisma Studio pour inspecter la BD
-
-```bash
-npm run studio
-```
-
-Cela ouvre une interface graphique pour inspecter/éditer les données.
-
----
-
-## Structure des fichiers générés
-
-```
-.
-├── dist/                    # Code compilé (généré par build)
-├── node_modules/            # Dépendances npm
-├── prisma/
-│   └── schema.prisma        # Schéma base de données
-├── src/
-│   ├── controllers/         # Routes HTTP
-│   ├── services/            # Logique métier
-│   ├── modules/             # Modules NestJS
-│   ├── dto/                 # Data Transfer Objects
-│   ├── guards/              # Sécurité
-│   ├── decorators/          # Métadonnées
-│   ├── generated/           # Code généré Prisma
-│   └── main.ts              # Point d'entrée
-├── .env                     # Variables d'environnement
-├── .env.example             # Template d'env
-├── package.json
-├── tsconfig.json
-├── DOCUMENTATION.md         # Cette doc complète
-├── ARCHITECTURE.md          # Diagrammes architecture
-└── GETTING_STARTED.md       # Ce guide
+# Appliquer les migrations
+docker exec lootopia-backend npx prisma migrate deploy
 ```
 
 ---
 
 ## Troubleshooting
 
+### PostgreSQL ne démarre pas
+
+```bash
+docker compose logs postgres   # Voir les logs
+docker compose down -v         # Supprimer les volumes et recommencer
+docker compose up -d
+```
+
+### Erreur "Prisma Client not generated"
+
+```bash
+npm run prisma:generate
+```
+
 ### Port 3000 déjà utilisé
 
 ```bash
-# Trouver le processus
+# Trouver et stopper le processus
 lsof -i :3000
-
-# Tuer le processus
 kill -9 <PID>
-
-# Ou utiliser un autre port
-PORT=3001 npm run start:dev
 ```
 
-### Erreur "Cannot find module @prisma/client"
+### Variables d'environnement non chargées
 
+Vérifier que le fichier `.env` est bien à la racine du projet et relancer :
 ```bash
-npm run prisma:generate
-npm install
-```
-
-### Erreur PostgreSQL connection refused
-
-```bash
-# Vérifier que PostgreSQL est actif
-docker-compose ps
-# ou
-brew services list
-
-# Relancer si nécessaire
-docker-compose restart postgres
-```
-
-### Token JWT invalide
-
-```bash
-# Vérifier le JWT_SECRET dans .env
-# S'assurer que le token n'a pas expiré
-# Se reconnecter: POST /connexion
-```
-
-### Migration Prisma échouée
-
-```bash
-# Vérifier le statut des migrations
-npm run prisma:migrate status
-
-# Réinitialiser complètement (ATTENTION: données perdues!)
-npm run prisma:migrate reset
-
-# Puis regénérer
-npm run prisma:generate
+npm run start:dev
 ```
 
 ---
 
-## Configuration Cloudinary
-
-### 1. S'inscrire
-
-Aller sur [https://cloudinary.com/](https://cloudinary.com/) et créer un compte gratuit.
-
-### 2. Récupérer les clés
-
-Dashboard → Account Settings → API Keys
-
-### 3. Ajouter à .env
-
-```env
-API_KEY_CLOUDINARY=your_key_here
-API_KEY_CLOUDINARY_SECRET=your_secret_here
-```
-
-### 4. Tester l'upload
-
-```typescript
-// Dans un service
-const uploadResult = await cloudinary.uploader.upload(base64Image, {
-  public_id: "test_image",
-  folder: "lootopia"
-});
-
-console.log(uploadResult.secure_url); // URL sécurisée
-```
-
----
-
-## Déploiement
-
-### Sur Vercel (Frontend) / Azure (Backend)
-
-```bash
-# Build pour production
-npm run build
-
-# Déployer (dépend de votre plateforme)
-# - Azure: az deploy
-# - Heroku: git push heroku main
-# - Vercel: vercel deploy
-```
-
-### Variables d'environnement en production
-
-```env
-DATABASE_URL=postgresql://prod-user:password@prod-host:5432/lootopia_prod
-JWT_SECRET=very_secure_random_secret_change_frequently
-API_KEY_CLOUDINARY=prod_key
-API_KEY_CLOUDINARY_SECRET=prod_secret
-NODE_ENV=production
-```
-
----
-
-## Support & Ressources
-
-| Ressource | Lien |
-|---|---|
-| **NestJS Docs** | https://docs.nestjs.com |
-| **Prisma Docs** | https://www.prisma.io/docs |
-| **TypeScript** | https://www.typescriptlang.org/docs |
-| **Express** | https://expressjs.com |
-| **PostgreSQL** | https://www.postgresql.org/docs |
-| **Cloudinary** | https://cloudinary.com/documentation |
-
----
-
-## Checklist de démarrage
-
-- [ ] Cloner le repository
-- [ ] `npm install`
-- [ ] Créer `.env`
-- [ ] `docker-compose up -d`
-- [ ] `npm run prisma:generate`
-- [ ] `npm run prisma:migrate`
-- [ ] `npm run start:dev`
-- [ ] Tester http://localhost:3000/api
-- [ ] Créer un compte utilisateur
-- [ ] Se connecter
-- [ ] Tester une requête authentifiée
-
----
-
-**Version** : 1.0  
-**Dernière mise à jour** : 19 Mai 2026  
-**Maintainers** : Jimmy
+*SUP DE VINCI — M1 DEVA — 2025/2026 — Jimmy · Damien · Alexandre*

@@ -1,73 +1,48 @@
 # 🎯 Lootopia - Backend API
 
-Plateforme de chasse au trésor (treasure hunt) construite avec **NestJS** et **PostgreSQL**.
+> Plateforme de chasse au trésor géolocalisée — Projet d'études M1 DEVA 2025/2026 — SUP DE VINCI
+
+**Équipe :** Jimmy (Backend & DevOps) · Damien (Frontend) · Alexandre (Gestion de projet)  
+**Production :** http://20.46.53.133:3000  
+**Swagger :** http://20.46.53.133:3000/api
+
+---
 
 ## 📚 Documentation
 
-La documentation complète du backend est divisée en 3 parties :
-
-### 1. **[DOCUMENTATION.md](./DOCUMENTATION.md)** - Documentation Complète
-   - Vue d'ensemble du projet
-   - Architecture générale
-   - Technologies utilisées
-   - Structure du projet
-   - Schéma base de données
-   - Authentification & Autorisation
-   - **Toutes les routes API** avec exemples
-   - Flux de traitement détaillés
-   - DTOs et Interfaces
-   - Guides de développement
-
-   **À lire en premier pour comprendre le projet.**
-
-### 2. **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Diagrammes & Architecture Technique
-   - Schémas visuels en ASCII
-   - Architecture en couches
-   - Flux HTTP détaillé
-   - Cycle de vie d'une requête
-   - Flux d'authentification JWT
-   - Structure des modules NestJS
-   - Gestion des erreurs
-   - Patterns et bonnes pratiques
-
-   **À lire pour approfondir la structure technique.**
-
-### 3. **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Guide Pratique de Démarrage
-   - Prérequis d'installation
-   - Installation pas à pas
-   - Configuration variables d'environnement
-   - Commandes utiles (npm scripts)
-   - Endpoints de test rapide
-   - Débogage
-   - Troubleshooting
-   - Déploiement
-
-   **À lire pour démarrer localement.**
+| Fichier | Contenu |
+|---|---|
+| [DOCUMENTATION.md](./DOCUMENTATION.md) | Vue d'ensemble, architecture, routes API, DTOs, flux de traitement |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Diagrammes en couches, flux HTTP, cycle de vie d'une requête, JWT |
+| [GETTING_STARTED.md](./GETTING_STARTED.md) | Installation locale, variables d'environnement, commandes, déploiement |
 
 ---
 
 ## 🚀 Démarrage rapide
 
 ```bash
-# 1. Installer les dépendances
+# 1. Cloner le repo
+git clone <repo-url>
+cd lootopiajda-backend
+
+# 2. Installer les dépendances
 npm install
 
-# 2. Configurer .env (voir GETTING_STARTED.md)
+# 3. Configurer l'environnement
 cp .env.example .env
+# Renseigner DATABASE_URL, JWT_SECRET, ENCRYPTION_PASSWORD, clés Cloudinary
 
-# 3. Démarrer PostgreSQL
-docker-compose up -d
+# 4. Démarrer PostgreSQL + pgAdmin via Docker
+docker compose up -d
 
-# 4. Initialiser la base de données
+# 5. Appliquer les migrations Prisma
 npm run prisma:generate
 npm run prisma:migrate
 
-# 5. Lancer le serveur
+# 6. Lancer le serveur
 npm run start:dev
-
-# 6. Accéder à l'API
-# API: http://localhost:3000
-# Swagger: http://localhost:3000/api
+# → API disponible sur http://localhost:3000
+# → Swagger sur http://localhost:3000/api
 ```
 
 ---
@@ -78,212 +53,122 @@ npm run start:dev
 |---|---|---|
 | **NestJS** | ^11.0.1 | Framework backend |
 | **TypeScript** | ^5.7.3 | Langage |
-| **PostgreSQL** | 12+ | Base de données |
+| **PostgreSQL** | 15 | Base de données |
 | **Prisma** | ^7.0.1 | ORM |
-| **Express** | (inclus) | Serveur HTTP |
-| **JWT** | ^11.0.2 | Authentification |
-| **Cloudinary** | ^2.8.0 | Stockage d'images |
+| **Express** | (inclus NestJS) | Serveur HTTP |
+| **JWT** | ^11.0.2 | Authentification (cookies HttpOnly) |
+| **Cloudinary** | ^2.8.0 | Stockage et CDN images |
+| **Docker / Docker Compose** | — | Conteneurisation |
+| **GitHub Actions** | — | CI/CD (CI: tests/lint/build, CD: push GHCR + deploy Azure) |
+| **Azure VM** | Ubuntu | Hébergement production |
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture (résumé)
 
 ```
-CLIENT → NestJS Controllers → Services → Prisma → PostgreSQL
-              ↑                  ↑          ↑
-         Guards, Pipes      Business    ORM
-         Validation         Logic       
+CLIENT (React Native / Next.js)
+        │  HTTP/REST
+        ▼
+NestJS (Controllers → Guards → Pipes → Services)
+        │
+        ▼
+Prisma ORM → PostgreSQL 15 (Azure)
+        │
+     Cloudinary (images)
 ```
 
-Consultez [ARCHITECTURE.md](./ARCHITECTURE.md) pour les diagrammes détaillés.
+Voir [ARCHITECTURE.md](./ARCHITECTURE.md) pour les diagrammes ASCII complets.
 
 ---
 
-## 🔐 Authentification
+## 🔐 Authentification & Rôles
 
-- **JWT** stocké dans les cookies HTTP-only
-- Expiration : 1 heure
-- Rôles : ADMIN, PARTENAIRE, JOUEUR
-- Guards pour la sécurité par rôle et propriété
-
-Voir [DOCUMENTATION.md#authentification--autorisation](./DOCUMENTATION.md#authentification--autorisation)
+- **JWT** stocké en cookies **HttpOnly** (protection XSS)
+- Expiration configurable via `JWT_SECRET`
+- **RBAC** — 3 rôles :
+  - `ADMIN` : supervision complète, validation des partenaires
+  - `PARTENAIRE` : création et gestion de ses propres chasses
+  - `JOUEUR` : participation aux chasses, validation des étapes
 
 ---
 
-## 📡 Routes API Principales
+## 📡 Routes API principales
 
 ### Authentification
-- `POST /connexion` - Login
-- `GET /connexion/logout` - Logout
+| Méthode | Route | Description |
+|---|---|---|
+| POST | `/connexion` | Login → retourne cookie JWT |
+| GET | `/connexion/logout` | Logout → supprime le cookie |
 
 ### Utilisateurs
-- `POST /user` - Créer joueur
-- `POST /user/partenaire` - Créer partenaire
-- `GET /user/personnalData` - Mes données
-- `PUT /user/:id` - Modifier utilisateur
+| Méthode | Route | Rôle requis |
+|---|---|---|
+| POST | `/user` | Public |
+| GET | `/user` | ADMIN |
+| PATCH | `/user/:id` | ADMIN / Propriétaire |
+| DELETE | `/user/:id` | ADMIN / Propriétaire |
 
 ### Chasses
-- `GET /chasse` - Lister
-- `POST /chasse` - Créer (PARTENAIRE)
-- `PATCH /chasse/:id` - Modifier
-- `DELETE /chasse/:id` - Supprimer
-- `POST /chasse/:id/join` - Rejoindre (JOUEUR)
-- `PATCH /chasse/:id/complete` - Compléter
-- `PATCH /chasse/:id/leave` - Abandonner
+| Méthode | Route | Rôle requis |
+|---|---|---|
+| GET | `/chasse` | Authentifié |
+| POST | `/chasse` | PARTENAIRE |
+| PATCH | `/chasse/:id` | PARTENAIRE (propriétaire) |
+| DELETE | `/chasse/:id` | PARTENAIRE (propriétaire) |
 
 ### Étapes
-- `GET /etape` - Lister
-- `POST /etape/:id` - Créer
-- `PATCH /etape/:idChasse/:idEtape` - Modifier
-- `DELETE /etape/:idChasse/:idEtape` - Supprimer
-- `POST /etape/:idChasse/:idEtape/validateEtape` - Valider
+| Méthode | Route | Rôle requis |
+|---|---|---|
+| POST | `/etape` | PARTENAIRE |
+| PATCH | `/etape/:id/validateEtape` | JOUEUR |
+| DELETE | `/etape/:id` | PARTENAIRE (propriétaire) |
 
-**Consultez [DOCUMENTATION.md#api-routes](./DOCUMENTATION.md#api-routes) pour la liste complète.**
-
----
-
-## 🗄️ Base de Données
-
-Modèles principaux :
-- **User** - Utilisateurs (ADMIN, PARTENAIRE, JOUEUR)
-- **Partenaire** - Créateurs de chasses
-- **Chasse** - Chasses au trésor
-- **Etape** - Étapes/Points de chasse
-- **UserChasse** - Participation des joueurs
-- **UserChasseEtape** - Progression dans les étapes
-- **ScoreBoard** - Scores des joueurs
-- **Occurrence** - Éditions/Périodes de chasse
-
-**Schéma ER complet** : [DOCUMENTATION.md#base-de-données](./DOCUMENTATION.md#base-de-données)
+### Score & Admin
+| Méthode | Route | Rôle requis |
+|---|---|---|
+| GET | `/score/:chasseId` | Authentifié |
+| GET | `/admin/partenaires` | ADMIN |
+| PATCH | `/admin/valider/:id` | ADMIN |
 
 ---
 
-## 🔧 Commandes npm
+## ☁️ Déploiement Production (Azure)
+
+Le déploiement est **entièrement automatisé** via GitHub Actions :
+
+1. **CI** (`ci.yml`) — déclenché sur push/PR vers `main` et `develop` :
+   - `npm ci` → `prisma generate` → `npm test` → `docker build` → `eslint`
+
+2. **CD** (`azure-webapps-node.yml`) — déclenché sur push vers `main` :
+   - Build & push image Docker → **GitHub Container Registry (ghcr.io)**
+   - Déploiement SSH sur VM Azure → `docker compose up -d`
+   - Migrations automatiques → `prisma migrate deploy`
+
+**URL production :** http://20.46.53.133:3000  
+**Services actifs :** backend (3000), postgres (5432), pgadmin (5050)
+
+---
+
+## 🧪 Tests
 
 ```bash
-# Développement
-npm run start:dev          # Hot reload
-npm run start:debug        # Debugger Node.js
-npm run build              # Compiler
-
-# Tests
-npm run test               # Jest tests
-npm run test:watch         # Watch mode
-npm run test:cov           # Coverage
-
-# Base de données
-npm run prisma:generate    # Générer types Prisma
-npm run prisma:migrate     # Créer migration
-npm run studio             # Ouvrir Prisma Studio
-
-# Linting
-npm run lint               # Vérifier
-npm run lint:fix           # Fixer erreurs
-npm run format             # Formatter code
-```
-
-**Voir [GETTING_STARTED.md#commandes-utiles](./GETTING_STARTED.md#commandes-utiles) pour plus.**
-
----
-
-## 📖 Pour les développeurs
-
-### Ajouter une nouvelle route
-1. Créer la méthode dans le Service
-2. Créer la méthode dans le Controller
-3. Enregistrer le module
-4. Tester via Swagger
-
-Voir [DOCUMENTATION.md#1-ajouter-une-nouvelle-route](./DOCUMENTATION.md#1-ajouter-une-nouvelle-route)
-
-### Ajouter un Guard
-Consultez [DOCUMENTATION.md#2-ajouter-un-guard-personnalisé](./DOCUMENTATION.md#2-ajouter-un-guard-personnalisé)
-
-### Ajouter une validation DTO
-Consultez [DOCUMENTATION.md#3-ajouter-une-validation-dto](./DOCUMENTATION.md#3-ajouter-une-validation-dto)
-
-### Travailler avec Cloudinary
-Consultez [DOCUMENTATION.md#4-travailler-avec-cloudinary](./DOCUMENTATION.md#4-travailler-avec-cloudinary)
-
----
-
-## 🐛 Dépannage
-
-### Problèmes courants
-- Port 3000 déjà utilisé → [Voir GETTING_STARTED.md](./GETTING_STARTED.md#port-3000-déjà-utilisé)
-- Cannot find module → [Voir GETTING_STARTED.md](./GETTING_STARTED.md#erreur-cannot-find-module-prismaclient)
-- PostgreSQL connection error → [Voir GETTING_STARTED.md](./GETTING_STARTED.md#erreur-postgresql-connection-refused)
-
----
-
-## ☁️ Azure Deployment
-
-### Accéder au shell Azure
-
-```bash
-# Se connecter au serveur Azure via SSH
-ssh -i "chemin/vers/Jeu de clé.pem" Utilisateur@IpAzure
-```
-
-### Commandes utiles en production
-
-```bash
-# Voir les logs du backend
-docker logs -f lootopia-backend
-
-# Accéder à la base de données PostgreSQL
-docker exec -it lootopia-postgres psql -U admin -d lootopia
-
-# Redémarrer les services
-docker-compose restart
-
-# Voir le status des containers
-docker-compose ps
+npm run test          # Tests unitaires (Jest)
+npm run test:e2e      # Tests end-to-end
+npm run test:cov      # Couverture de code
+npm run lint          # ESLint
 ```
 
 ---
 
-## 📞 Support
+## 👥 Équipe projet
 
-- **Swagger/Docs** : http://localhost:3000/api
-- **Prisma Studio** : `npm run studio`
-- **NestJS Docs** : https://docs.nestjs.com
-- **Prisma Docs** : https://www.prisma.io/docs
-
----
-
-## 📝 Environnement
-
-Créer un fichier `.env` à la racine :
-
-```env
-DATABASE_URL=postgresql://admin:admin@localhost:5432/lootopia
-API_KEY_CLOUDINARY=your_key
-API_KEY_CLOUDINARY_SECRET=your_secret
-JWT_SECRET=your_secret
-NODE_ENV=development
-PORT=3000
-```
-
-Voir [GETTING_STARTED.md#3-configurer-les-variables-denvironnement](./GETTING_STARTED.md#3-configurer-les-variables-denvironnement)
+| Prénom | Rôle | Responsabilités |
+|---|---|---|
+| **Jimmy** | Backend & DevOps | NestJS, Prisma, PostgreSQL, Docker, CI/CD Azure |
+| **Damien** | Frontend | React Native (mobile), Next.js (web) |
+| **Alexandre** | Gestion de projet | Kanban, backlog, livrables, vidéo MVP |
 
 ---
 
-## 🎓 Lectures recommandées
-
-1. **Pour comprendre le projet** → [DOCUMENTATION.md](./DOCUMENTATION.md)
-2. **Pour la structure technique** → [ARCHITECTURE.md](./ARCHITECTURE.md)
-3. **Pour démarrer en local** → [GETTING_STARTED.md](./GETTING_STARTED.md)
-4. **Pour tester l'API** → http://localhost:3000/api
-
----
-
-## 📄 License
-
-MIT License
-
----
-
-**Version** : 1.0  
-**Dernière mise à jour** : 19 Mai 2026  
-**Status** : ✅ Production Ready
+*SUP DE VINCI — Mastère Développement Fullstack — M1 DEVA — 2025/2026*

@@ -1,582 +1,339 @@
-# 🏗️ Architecture Détaillée - Lootopia Backend
+# 🏗️ Architecture Détaillée — Lootopia Backend
 
-## Diagrammes d'architecture
+> Projet d'études M1 DEVA 2025/2026 — SUP DE VINCI  
+> Backend : Jimmy | Frontend : Damien | Gestion de projet : Alexandre
 
-### 1. Architecte générale en couches
+---
+
+## 1. Vue d'ensemble de l'architecture
+
+Lootopia repose sur une **Layered Architecture** (architecture en couches) côté backend, découplée du frontend via une API REST.
+
+### Architecture globale du système
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      PRÉSENTATION (HTTP REST)                        │
-│  POST /chasse   GET /user   PATCH /etape/:id/validateEtape ...      │
-└────────────────────────────────┬────────────────────────────────────┘
-                                 │
-                    Express.js + NestJS (Framework)
-                                 │
-┌────────────────────────────────▼────────────────────────────────────┐
-│                         CONTRÔLEURS                                  │
-│  ├─ ChasseController    ├─ UserController    ├─ EtapeController    │
-│  ├─ AuthController      ├─ AdminController   ├─ ScoreController    │
-│  └─ PartenaireController                                            │
-└────────────────────────────────┬────────────────────────────────────┘
-                                 │
-        ┌───────────────────────┼───────────────────────┐
-        │                       │                       │
-   ┌────▼────┐          ┌──────▼──────┐        ┌─────▼─────┐
-   │  Guards  │          │   Pipes     │        │ Decorators│
-   ├─────────┤          ├────────────┤        ├───────────┤
-   │AuthGuard │          │Validation  │        │@Roles()   │
-   │RolesGuard│          │Transform   │        │@Statuts() │
-   │Ownership │          │Query       │        │@UseGuards()
-   └────┬────┘          └──────┬──────┘        └─────┬─────┘
-        │                       │                     │
-        └───────────────────────┼─────────────────────┘
-                                │
-┌────────────────────────────────▼────────────────────────────────────┐
-│                    SERVICES (Métier)                                │
-│  ├─ AuthService        ├─ UserService       ├─ ChasseService      │
-│  ├─ EtapeService       ├─ UserChasseService │─ ScoreService       │
-│  ├─ PrismaService      └─ CryptoService                            │
-└────────────────────────────────┬────────────────────────────────────┘
-                                 │
-        ┌────────────────────────┼────────────────────────┐
-        │                        │                        │
-   ┌────▼─────┐          ┌──────▼────────┐     ┌────────▼──────┐
-   │Repositories│         │ DTOs/Validation│    │ Data Interfaces│
-   │(Optional) │         │                │    │                │
-   └────┬─────┘          └──────┬────────┘     └────────┬──────┘
-        │                        │                       │
-        └────────────────────────┼───────────────────────┘
-                                 │
-┌────────────────────────────────▼────────────────────────────────────┐
-│                   PRISMA ORM                                         │
-│  ├─ PrismaClient       ├─ Query Builder     ├─ Relations           │
-└────────────────────────────────┬────────────────────────────────────┘
-                                 │
-┌────────────────────────────────▼────────────────────────────────────┐
-│              PostgreSQL Database (Azure)                             │
-│  ├─ Users              ├─ Chasses           ├─ Etapes              │
-│  ├─ Partenaires        ├─ UserChasses       ├─ ScoreBoards         │
-│  └─ Messages                                                         │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                   CLIENTS FRONTEND                        │
+│  ┌─────────────────────┐  ┌──────────────────────────┐  │
+│  │  React Native        │  │  Next.js (Web)            │  │
+│  │  (iOS / Android)     │  │  Dashboard partenaire/    │  │
+│  │  Joueurs             │  │  admin                    │  │
+│  └──────────┬──────────┘  └───────────┬──────────────┘  │
+└─────────────┼────────────────────────┼──────────────────┘
+              │        HTTP/REST        │
+              └────────────┬───────────┘
+                           │
+┌──────────────────────────▼───────────────────────────────┐
+│              BACKEND NestJS — http://20.46.53.133:3000    │
+│                                                            │
+│  ┌──────────────────────────────────────────────────┐    │
+│  │                  COUCHE HTTP                      │    │
+│  │  Express.js · CORS · Cookie Parser · Body Parser  │    │
+│  └──────────────────────┬───────────────────────────┘    │
+│                         │                                  │
+│  ┌──────────────────────▼───────────────────────────┐    │
+│  │              COUCHE CONTRÔLEURS                   │    │
+│  │  AuthController · UserController · ChasseCtrl    │    │
+│  │  EtapeController · ScoreController · AdminCtrl   │    │
+│  │  PartenaireController                             │    │
+│  └──────────┬─────────────────────────┬─────────────┘    │
+│             │                         │                    │
+│  ┌──────────▼──────────┐  ┌──────────▼──────────────┐   │
+│  │  GUARDS (Sécurité)  │  │  PIPES (Validation)      │   │
+│  │  AuthGuard          │  │  ValidationPipe           │   │
+│  │  RolesGuard         │  │  (class-validator)        │   │
+│  │  OwnershipGuard     │  └─────────────────────────┘    │
+│  │  ActiveChasseGuard  │                                   │
+│  └──────────┬──────────┘                                  │
+│             │                                              │
+│  ┌──────────▼───────────────────────────────────────┐    │
+│  │              COUCHE SERVICES (Métier)             │    │
+│  │  AuthService · UserService · ChasseService        │    │
+│  │  EtapeService · UserChasseService · ScoreService  │    │
+│  │  PrismaService · CryptoService                    │    │
+│  └──────────────────────┬───────────────────────────┘    │
+│                         │                                  │
+│  ┌──────────────────────▼───────────────────────────┐    │
+│  │          COUCHE DONNÉES (Prisma ORM)              │    │
+│  │  PrismaClient · Query Builder · Migrations        │    │
+│  └──────────────────────┬───────────────────────────┘    │
+└─────────────────────────┼──────────────────────────────┘
+                          │
+┌─────────────────────────▼──────────────────────────────┐
+│              PostgreSQL 15 (Azure VM)                    │
+│  Users · Partenaires · Chasses · Etapes                 │
+│  Occurrences · UserChasses · ScoreBoards · Messages     │
+└─────────────────────────────────────────────────────────┘
+                          │
+              ┌───────────▼───────────┐
+              │  Cloudinary (CDN)     │
+              │  Stockage images      │
+              └───────────────────────┘
 ```
 
-### 2. Flux de requête HTTP
+---
+
+## 2. Flux d'une requête HTTP
 
 ```
 CLIENT REQUEST
 │
-├─> Request arrive à Express
-│   ├─ CORS middleware
-│   ├─ Cookie Parser middleware
-│   └─ Body Parser middleware
+├─> Middlewares Express
+│   ├─ CORSMiddleware          (origines autorisées)
+│   ├─ CookieParserMiddleware  (lecture cookies HttpOnly)
+│   └─ BodyParserMiddleware    (parsing JSON/multipart)
 │
-├─> Route matching avec NestJS
-│   └─ Trouve le bon Controller
+├─> Route matching NestJS
+│   └─ Résolution du Controller
 │
-├─> Exécution des Guards (ordre d'exécution)
-│   1. AuthGuard   - Vérifie authentification
-│   2. RolesGuard  - Vérifie rôle
-│   3. Custom Guards (Ownership, etc.)
-│       └─ Si une guard retourne false → 403 Forbidden
+├─> Exécution des Guards (ordre strict)
+│   1. AuthGuard
+│      ├─ Lit le cookie "access_token"
+│      ├─ Valide la signature JWT
+│      └─ Injecte req.user = { sub, role, partenaire }
+│   2. StatutPartenaireGuard (si route partenaire)
+│      └─ Vérifie statut ACTIVE du partenaire
+│   3. RolesGuard
+│      └─ Vérifie req.user.role ∈ rôles autorisés
+│   4. OwnershipGuard / ActiveChasseGuard (si applicable)
+│      └─ Vérifie que la ressource appartient à l'utilisateur
+│   → 403 Forbidden si un guard rejette
 │
-├─> Exécution des Pipes (Transformation & Validation)
-│   1. ValidationPipe
-│   └─ Si validation échoue → 400 Bad Request
+├─> Pipes de validation
+│   └─ ValidationPipe → class-validator sur les DTOs
+│   → 400 Bad Request si validation échoue
 │
-├─> Exécution du Controller method
-│   ├─ Extrait paramètres (body, params, query)
-│   ├─ Appelle Service
-│   └─ Gère les erreurs
+├─> Exécution du Controller
+│   ├─ Extraction des paramètres (body, params, query)
+│   └─ Appel au Service
 │
-├─> Service execute logique métier
-│   ├─ Appelle Prisma pour accès données
-│   ├─ Applique règles métier
-│   └─ Retourne résultat ou lève exception
+├─> Exécution du Service (logique métier)
+│   ├─ Règles métier appliquées
+│   ├─ Accès Prisma → PostgreSQL
+│   ├─ Upload Cloudinary si image
+│   └─ Retour résultat ou exception
 │
-├─> Controller formatte réponse
-│   └─ Status Code + Body JSON
-│
-└─> Response retourne au client
-    ├─ Headers (CORS, Set-Cookie, etc.)
-    └─ Body (JSON)
-```
-
-### 3. Cycle de vie d'une requête POST /chasse
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ USER REQUEST: POST /chasse                                      │
-│ {                                                               │
-│   "name": "Chasse Lyon",                                        │
-│   "localisation": "LYON",                                       │
-│   "longitude": 4.8357,                                          │
-│   "latitude": 45.7640,                                          │
-│   "etat": "ACTIVE",                                             │
-│   "occurrence": "{...}",                                        │
-│   "image": <binary>                                             │
-│ }                                                               │
-└────────────────────┬──────────────────────────────────────────┘
-                     │
-    ┌────────────────▼─────────────────┐
-    │ NestJS Request Pipeline Begins   │
-    └────────────────┬─────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 1. Middleware & Pipes                            │
-    │    ├─ CORSMiddleware                             │
-    │    ├─ BodyParserMiddleware                       │
-    │    ├─ FileInterceptor (extrait file)             │
-    │    └─ ValidationPipe                             │
-    │        ├─ Valide body contre ChasseOccurrenceDto│
-    │        └─ Transform (enableImplicitConversion)   │
-    └────────────────┬──────────────────────────────────┘
-                     │
-         ┌───────────▼────────────┐
-         │ 2. Route Resolution    │
-         │    Trouve Controller   │
-         │    @Controller('chasse')
-         └───────────┬────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 3. Decorator Processing                          │
-    │    @Roles(Role.PARTENAIRE)                       │
-    │    └─> Stocke metadata: roles = [PARTENAIRE]     │
-    │                                                   │
-    │    @UseGuards(StatutPartenerGuard, RolesGuard)   │
-    │    └─> Prépare guards pour exécution             │
-    │                                                   │
-    │    @UseInterceptors(FileInterceptor('image'))    │
-    │    └─> Intercepteur fichier activé               │
-    └────────────────┬──────────────────────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 4. Guard Execution (ORDRE IMPORTANT)             │
-    │                                                   │
-    │    Guard 1: AuthGuard                            │
-    │    ├─> Récupère cookie 'access_token'           │
-    │    ├─> Valide signature JWT                     │
-    │    ├─ Extrait payload: { sub, partenaire }      │
-    │    └─> Ajoute à req.user                         │
-    │                                                   │
-    │    Guard 2: StatutPartenerGuard                  │
-    │    ├─> Vérifie req.user.partenaire existe       │
-    │    ├─> Récupère partenaire: Partenaire.findUnique │
-    │    ├─> Vérifie statut === ACTIVE                │
-    │    └─> Si non → Throw ForbiddenException        │
-    │                                                   │
-    │    Guard 3: RolesGuard                           │
-    │    ├─> Récupère roles requis du décorateur      │
-    │    ├─> Récupère role utilisateur: req.user.role│
-    │    ├─> Vérifie req.user.role IN [PARTENAIRE]   │
-    │    └─> Si non → Throw ForbiddenException        │
-    └────────────────┬──────────────────────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 5. Controller Method Execution                   │
-    │                                                   │
-    │    async createChasse(                           │
-    │      @Body() body: ChasseOccurrenceDto,         │
-    │      @UploadedFile() image: any,                │
-    │      @Req() req: RequestWithUser,               │
-    │      @Res() res: Response                        │
-    │    )                                             │
-    │                                                   │
-    │    ├─> body = validé et transformé              │
-    │    ├─> image = extrait du multipart             │
-    │    ├─> req.user = authentifié + roles           │
-    │    └─> res = réponse Express                    │
-    └────────────────┬──────────────────────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 6. Business Logic Execution                      │
-    │                                                   │
-    │    ├─> Convertir image en Base64                │
-    │    ├─> Upload vers Cloudinary                    │
-    │    │   ├─ POST https://api.cloudinary.com/...   │
-    │    │   └─> Retour: { secure_url, public_id }   │
-    │    │                                             │
-    │    ├─> Valider dates (isValidDate)              │
-    │    │                                             │
-    │    ├─> ChasseService.createChasse()             │
-    │    │   ├─ PrismaService.chasse.create({         │
-    │    │   │   name: "Chasse Lyon",                 │
-    │    │   │   localisation: "LYON",                │
-    │    │   │   image: "https://cloudinary.com/...",│
-    │    │   │   longitude: 4.8357,                   │
-    │    │   │   latitude: 45.7640,                   │
-    │    │   │   etat: "ACTIVE",                      │
-    │    │   │   partenaire: {                        │
-    │    │   │     connect: { id_partenaire: 1 }     │
-    │    │   │   }                                     │
-    │    │   │ })                                      │
-    │    │   │                                         │
-    │    │   └─ Execute: INSERT INTO chasse (...)     │
-    │    │      └─> Database retourne: chasse créée   │
-    │    │                                             │
-    │    └─> Créer occurrence (édition)               │
-    │        └─ PrismaService.occurence.create({      │
-    │             chasse_id: <id>,                    │
-    │             date_start, date_end, limit_user    │
-    │           })                                     │
-    └────────────────┬──────────────────────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 7. Response Formatting                           │
-    │                                                   │
-    │    res.status(201).send({                        │
-    │      message: "Chasse created",                  │
-    │      imageUrl: "https://cloudinary.com/..."      │
-    │    })                                            │
-    └────────────────┬──────────────────────────────────┘
-                     │
-    ┌────────────────▼──────────────────────────────────┐
-    │ 8. Response Sent to Client                       │
-    │                                                   │
-    │    HTTP 201 Created                              │
-    │    {                                             │
-    │      message: "Chasse created",                  │
-    │      imageUrl: "https://cloudinary.com/..."      │
-    │    }                                             │
-    └────────────────┬──────────────────────────────────┘
-                     │
-                     └─▶ CLIENT RECEIVES RESPONSE
-```
-
-### 4. Authentification JWT Flow
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│ AUTHENTICATION WORKFLOW                                      │
-└──────────────────────────────────────────────────────────────┘
-
-STEP 1: LOGIN
-┌────────────────────────────────────────────────────────────┐
-│ POST /connexion                                            │
-│ {                                                          │
-│   email: "john@example.com",                              │
-│   password: "secret123"                                    │
-│ }                                                          │
-└────────────────────┬─────────────────────────────────────┘
-                     │
-         ┌───────────▼──────────────┐
-         │ AuthService.login()      │
-         │                          │
-         ├─> User.findUnique({      │
-         │     where: { email }     │
-         │   })                     │
-         │                          │
-         ├─> Récupère utilisateur   │
-         │   {                      │
-         │     id_user: 42,         │
-         │     email: "john@...",   │
-         │     password: "$2b$..."  │
-         │     role: "PARTENAIRE",  │
-         │     partenerId: 7        │
-         │   }                      │
-         │                          │
-         ├─> Compare password       │
-         │   bcrypt.compare(        │
-         │     "secret123",         │
-         │     "$2b$..."            │
-         │   ) ===== true ✅        │
-         │                          │
-         └───────────┬──────────────┘
-                     │
-         ┌───────────▼──────────────┐
-         │ Générer JWT Token        │
-         │                          │
-         │ jwt.sign(                │
-         │   {                      │
-         │     sub: 42,             │
-         │     partenaire: {        │
-         │       id_partenaire: 7   │
-         │     }                    │
-         │   },                     │
-         │   process.env.JWT_SECRET,
-         │   {                      │
-         │     expiresIn: '1h'      │
-         │   }                      │
-         │ )                        │
-         │                          │
-         │ Token généré:            │
-         │ eyJhbGciOiJIUzI1NiIs... │
-         │                          │
-         └───────────┬──────────────┘
-                     │
-         ┌───────────▼──────────────────────────────────┐
-         │ Stocker dans Cookie                         │
-         │                                             │
-         │ response.cookie('access_token', token, {   │
-         │   httpOnly: true,    // JS ne peut pas    │
-         │   secure: (prod),    // HTTPS seulement   │
-         │   sameSite: 'strict',// CSRF protection   │
-         │   maxAge: 3600000,   // 1 heure           │
-         │   path: '/'          // Tous les chemins  │
-         │ })                                         │
-         │                                            │
-         │ Header Response:                           │
-         │ Set-Cookie: access_token=eyJ...;           │
-         │   HttpOnly; Secure; SameSite=Strict; ...  │
-         │                                            │
-         └───────────┬──────────────────────────────────┘
-                     │
-         ┌───────────▼──────────────────────────────────┐
-         │ Response au Client                          │
-         │                                             │
-         │ HTTP 200 OK                                │
-         │ {                                          │
-         │   message: "Connexion réussie"            │
-         │ }                                          │
-         │                                            │
-         │ Cookie stocké automatiquement par browser   │
-         └───────────┬──────────────────────────────────┘
-                     │
-                 ✅ AUTHENTIFIÉ
-
-STEP 2: AUTHENTICATED REQUEST
-┌────────────────────────────────────────────────────────────┐
-│ GET /chasse/me                                            │
-│ Headers: Cookie: access_token=eyJ...                     │
-└────────────────────┬─────────────────────────────────────┘
-                     │
-         ┌───────────▼──────────────────────────────────┐
-         │ AuthGuard.canActivate()                     │
-         │                                             │
-         ├─> Récupère cookie                          │
-         │   req.cookies['access_token']              │
-         │   = "eyJ..."                               │
-         │                                             │
-         ├─> Valide JWT                               │
-         │   jwt.verify(token, secret)                │
-         │                                             │
-         ├─> Décrypte payload                         │
-         │   {                                        │
-         │     sub: 42,                              │
-         │     partenaire: { id_partenaire: 7 },    │
-         │     iat: 1234567890,                      │
-         │     exp: 1234571490                       │
-         │   }                                        │
-         │                                             │
-         ├─> Ajoute à request                         │
-         │   req.user = payload                       │
-         │   req.user.sub = 42                        │
-         │   req.user.partenaire = ...                │
-         │                                             │
-         └───────────┬──────────────────────────────────┘
-                     │
-         ┌───────────▼──────────────────────────────────┐
-         │ Request continue normal                     │
-         │ req.user disponible dans Controller         │
-         │                                             │
-         │ @Req() req: RequestWithUser                │
-         │ const userId = req.user.sub  // = 42      │
-         │                                             │
-         └───────────┬──────────────────────────────────┘
-                     │
-                 ✅ AUTORISÉ
-
-
-STEP 3: LOGOUT
-┌────────────────────────────────────────────────────────────┐
-│ GET /connexion/logout                                     │
-│ (avec Cookie: access_token=eyJ...)                        │
-└────────────────────┬─────────────────────────────────────┘
-                     │
-         ┌───────────▼──────────────┐
-         │ AuthGuard valide token   │
-         └───────────┬──────────────┘
-                     │
-         ┌───────────▼──────────────────────────────────┐
-         │ Logout action                               │
-         │                                             │
-         │ res.clearCookie('access_token')            │
-         │                                             │
-         │ Response:                                  │
-         │ Set-Cookie: access_token=; Max-Age=0; ... │
-         │                                             │
-         └───────────┬──────────────────────────────────┘
-                     │
-                 ✅ DÉCONNECTÉ
-```
-
-### 5. Structure Module NestJS
-
-```
-AppModule (Root)
-│
-├─ imports:
-│  ├─ UserModule
-│  │  ├─ controllers: [UserController]
-│  │  ├─ providers: [UserService, PrismaService]
-│  │  └─ exports: [UserService]
-│  │
-│  ├─ AuthModule
-│  │  ├─ controllers: [AuthController]
-│  │  ├─ providers: [AuthService, PrismaService]
-│  │  └─ exports: [AuthService]
-│  │
-│  ├─ ChasseModule
-│  │  ├─ controllers: [ChasseController]
-│  │  ├─ providers: [ChasseService, UserChasseService, PrismaService]
-│  │  └─ exports: [ChasseService, UserChasseService]
-│  │
-│  ├─ EtapeModule
-│  │  ├─ controllers: [EtapeController]
-│  │  ├─ providers: [EtapeService, UserChasseService, PrismaService]
-│  │  └─ exports: [EtapeService]
-│  │
-│  ├─ AdminModule
-│  │  ├─ controllers: [AdminController]
-│  │  ├─ providers: [AdminService, PrismaService]
-│  │  └─ exports: [AdminService]
-│  │
-│  ├─ PartenaireModule
-│  │  ├─ controllers: [PartenaireController]
-│  │  ├─ providers: [PartenaireService, PrismaService]
-│  │  └─ exports: [PartenaireService]
-│  │
-│  └─ ScoreModule
-│     ├─ controllers: [ScoreController]
-│     ├─ providers: [ScoreService, PrismaService]
-│     └─ exports: [ScoreService]
-│
-└─ Providers (Global):
-   ├─ PrismaService (partagé dans tous les modules)
-   ├─ CryptoService (service utilitaire)
-   └─ Custom Guards / Decorators (disponibles partout)
-```
-
-### 6. Gestion des erreurs
-
-```
-REQUEST ERROR HANDLING FLOW
-
-┌─────────────────────────────────────┐
-│ Erreur survient dans Controller     │
-│ ou Service                          │
-└─────────────┬───────────────────────┘
-              │
-    ┌─────────▼────────────┐
-    │ try/catch bloc       │
-    │                      │
-    │ catch (error) {      │
-    │   res.status(500)    │
-    │   .send({            │
-    │     message: "...",  │
-    │     error: error     │
-    │   })                 │
-    │ }                    │
-    │                      │
-    │ Ou Throw Exception:  │
-    │ throw new            │
-    │ HttpException(...)   │
-    └─────────┬────────────┘
-              │
-    ┌─────────▼────────────────────────────────────┐
-    │ NestJS Exception Filter (global)             │
-    │                                              │
-    │ Si HttpException                            │
-    │ ├─> Extrait status + message                │
-    │ └─> Retourne response formatée              │
-    │                                              │
-    │ Si Erreur non gérée                         │
-    │ └─> Retourne 500 Internal Server Error      │
-    └─────────┬────────────────────────────────────┘
-              │
-    ┌─────────▼────────────────────────────────────┐
-    │ Response Sent                                │
-    │                                              │
-    │ HTTP 500                                    │
-    │ {                                           │
-    │   message: "Error updating chasse",         │
-    │   error: {...}                              │
-    │ }                                           │
-    │                                             │
-    │ Ou HTTP 400/401/403 selon type exception    │
-    └─────────────────────────────────────────────┘
+└─> Réponse HTTP
+    ├─ Status Code (200, 201, 400, 401, 403, 404...)
+    ├─ Headers (CORS, Set-Cookie)
+    └─ Body JSON
 ```
 
 ---
 
-## Patterns et Bonnes Pratiques
+## 3. Flux d'authentification JWT
 
-### 1. Service Dependency Injection
-
-```typescript
-// ✅ BON
-@Injectable()
-export class ChasseService {
-  constructor(private prisma: PrismaService) {}
-  
-  async getChasse(id: number) {
-    return this.prisma.chasse.findUnique({ where: { id_chasse: id } });
-  }
-}
-
-// ❌ MAUVAIS (créer instance manuellement)
-export class ChasseService {
-  private prisma = new PrismaClient();
-  // Génère plusieurs instances, fuites mémoire
-}
 ```
-
-### 2. Gestion des Erreurs
-
-```typescript
-// ✅ BON
-async getChasse(id: number) {
-  const chasse = await this.prisma.chasse.findUnique({
-    where: { id_chasse: id }
-  });
-  
-  if (!chasse) {
-    throw new HttpException('Chasse not found', HttpStatus.NOT_FOUND);
-  }
-  
-  return chasse;
-}
-
-// ❌ MAUVAIS (erreur non gérée)
-async getChasse(id: number) {
-  return this.prisma.chasse.findUnique({
-    where: { id_chasse: id }
-  }); // Peut retourner null sans message clair
-}
-```
-
-### 3. Validation DTO
-
-```typescript
-// ✅ BON - Validation automatique
-@Post()
-async createUser(@Body() body: CreateUserDto) {
-  // body est automatiquement validé
-  return this.userService.create(body);
-}
-
-// ❌ MAUVAIS - Validation manuelle
-@Post()
-async createUser(@Body() body: any) {
-  if (!body.email) throw new Error('Email required');
-  if (!body.password) throw new Error('Password required');
-  // Répétitif et fragile
-}
-```
-
-### 4. Async/Await
-
-```typescript
-// ✅ BON
-async getChasses() {
-  return await this.prisma.chasse.findMany();
-}
-
-// ❌ MAUVAIS (Promise confusion)
-async getChasses() {
-  return this.prisma.chasse.findMany(); // Pas await -> retourne Promise brute
-}
+JOUEUR                     BACKEND                    POSTGRESQL
+   │                           │                           │
+   │  POST /connexion           │                           │
+   │  { email, password }       │                           │
+   │──────────────────────────>│                           │
+   │                           │  SELECT User WHERE email  │
+   │                           │──────────────────────────>│
+   │                           │<──────────────────────────│
+   │                           │  bcrypt.compare(password) │
+   │                           │  sign JWT { sub, role }   │
+   │                           │                           │
+   │  200 OK                   │                           │
+   │  Set-Cookie: access_token │                           │
+   │  (HttpOnly, Secure)       │                           │
+   │<──────────────────────────│                           │
+   │                           │                           │
+   │  GET /chasse              │                           │
+   │  Cookie: access_token     │                           │
+   │──────────────────────────>│                           │
+   │                           │  jwt.verify(token)        │
+   │                           │  req.user = payload       │
+   │                           │  RolesGuard ✓             │
+   │  200 OK + data            │                           │
+   │<──────────────────────────│                           │
 ```
 
 ---
 
-**Última atualización**: 19 de Mayo de 2026
+## 4. Schéma de base de données
+
+```
+┌──────────────┐       ┌──────────────────┐       ┌────────────────┐
+│     User     │       │    Partenaire     │       │    Chasse      │
+├──────────────┤       ├──────────────────┤       ├────────────────┤
+│ id_user      │       │ id_partenaire     │       │ id_chasse      │
+│ username     │       │ siret (unique)    │       │ name           │
+│ email (uniq) │       │ company_name      │       │ image          │
+│ password     │       │ adresse           │       │ localisation   │
+│ role         │──────>│ statut            │<──────│ longitude      │
+│ partenerId?  │       │ (VERIF/ACT/INACT) │       │ latitude       │
+│ created_at   │       │ created_at        │       │ etat           │
+│ updated_at   │       └──────────────────┘       │ idPartenaire   │
+└──────┬───────┘                                   └───────┬────────┘
+       │                                                   │
+       │              ┌────────────────┐                  │
+       │              │    Occurence   │                  │
+       │              ├────────────────┤<─────────────────┤
+       │              │ id_occurence   │                  │
+       │              │ date_start     │                  │
+       │              │ date_end       │                  │
+       │              │ limit_user     │                  │
+       │              └────────────────┘                  │
+       │                                                   │
+       │              ┌────────────────┐                  │
+       │              │     Etape      │                  │
+       │              ├────────────────┤<─────────────────┤
+       │              │ id             │                  │
+       │              │ name           │                  │
+       │              │ lat / long     │                  │
+       │              │ address        │                  │
+       │              │ rayon          │                  │
+       │              │ rank           │                  │
+       │              │ image          │                  │
+       │              └───────┬────────┘                  │
+       │                      │                           │
+       │    ┌─────────────────▼──────┐                   │
+       │    │      UserChasse        │                   │
+       │    ├───────────────────────┤                   │
+       └───>│ id_userchasse         │<──────────────────┘
+            │ id_user               │
+            │ id_chasse             │
+            │ statut                │
+            │ (IN_PROG/DONE/ABAND)  │
+            │ started_at            │
+            │ completed_at?         │
+            └──────────┬────────────┘
+                       │
+            ┌──────────▼────────────┐     ┌───────────────┐
+            │   UserChasseEtape     │     │  ScoreBoard   │
+            ├───────────────────────┤     ├───────────────┤
+            │ id_userchasseetape    │     │ id_user       │
+            │ (suivi étape/étape)   │     │ id_chasse     │
+            └───────────────────────┘     └───────────────┘
+```
+
+**Enums :**
+
+| Enum | Valeurs |
+|---|---|
+| `Role` | `ADMIN` · `PARTENAIRE` · `JOUEUR` |
+| `Statut` (partenaire) | `VERIFICATION` · `ACTIVE` · `INACTIVE` |
+| `StatutChasse` | `PENDING` · `ACTIVE` · `COMPLETED` |
+| `StatutUserChasse` | `IN_PROGRESS` · `COMPLETED` · `ABANDONED` |
+
+---
+
+## 5. Structure des modules NestJS
+
+```
+src/
+├── app.module.ts              # Module racine (import de tous les modules)
+│
+├── controllers/               # Points d'entrée HTTP
+│   ├── auth.controller.ts     # POST /connexion, GET /connexion/logout
+│   ├── user.controller.ts     # CRUD utilisateurs
+│   ├── chasse.controller.ts   # CRUD chasses
+│   ├── etape.controller.ts    # CRUD étapes + validation géo
+│   ├── partenaire.controller.ts
+│   ├── score.controller.ts
+│   └── admin.controller.ts
+│
+├── services/                  # Logique métier
+│   ├── auth.service.ts        # Login/logout, génération JWT
+│   ├── user.service.ts
+│   ├── chasse.service.ts      # Création chasse + upload Cloudinary
+│   ├── etape.service.ts       # Validation étape par géolocalisation
+│   ├── userChasse.service.ts  # Participation joueur
+│   ├── score.service.ts       # Calcul et récupération scores
+│   ├── prisma.service.ts      # Singleton PrismaClient
+│   └── crypto.service.ts      # Chiffrement AES-256 / bcrypt
+│
+├── guards/                    # Sécurité
+│   ├── auth.guard.ts          # Vérifie JWT
+│   ├── roles.guard.ts         # Vérifie le rôle (@Roles decorator)
+│   ├── ChasseOwnershipGuard   # Partenaire = propriétaire de la chasse
+│   ├── activeChasse.guard.ts  # Chasse au statut ACTIVE
+│   ├── partenaire.guard.ts    # Partenaire au statut ACTIVE
+│   └── ownUserGuard.guard.ts  # Utilisateur = lui-même
+│
+├── decorators/
+│   ├── role.decorator.ts      # @Roles(Role.ADMIN)
+│   ├── statut-chasse.decorator.ts
+│   └── statut-partenaire.decorator.ts
+│
+├── dto/                       # Validation des entrées
+│   ├── chasse.dto.ts
+│   ├── chasseOccurence.dto.ts
+│   ├── etape.dto.ts
+│   ├── partenair.dto.ts
+│   ├── user.tdo.ts
+│   └── connexion.tdo.ts
+│
+├── module/                    # Modules NestJS
+│   ├── auth.module.ts
+│   ├── user.module.ts
+│   ├── chasse.module.ts
+│   ├── etape.module.ts
+│   ├── partenair.module.ts
+│   ├── score.module.ts
+│   └── admin.module.ts
+│
+├── repository/                # Accès données (abstraction Prisma)
+│   ├── user.repository.ts
+│   └── chasse.repository.ts
+│
+└── generated/prisma/          # Client Prisma auto-généré
+    └── (ne pas modifier manuellement)
+```
+
+---
+
+## 6. Infrastructure CI/CD
+
+```
+GitHub (push → main)
+        │
+        ▼
+┌────────────────────────────────────────────────────┐
+│  GitHub Actions CI (ci.yml)                        │
+│  ① npm ci                                          │
+│  ② npx prisma generate                             │
+│  ③ npm test                                        │
+│  ④ docker build -f dockerfile.prod                 │
+│  ⑤ npm run lint                                    │
+└────────────────────────────────────────────────────┘
+        │ (si CI réussit)
+        ▼
+┌────────────────────────────────────────────────────┐
+│  GitHub Actions CD (azure-webapps-node.yml)        │
+│  ① docker build + push → ghcr.io/…/lootopia:latest│
+│  ② SSH → azureuser@20.46.53.133                   │
+│  ③ docker compose pull                             │
+│  ④ docker compose up -d                            │
+│  ⑤ docker exec … prisma migrate deploy            │
+└────────────────────────────────────────────────────┘
+        │
+        ▼
+┌────────────────────────────────────────────────────┐
+│  Azure VM Ubuntu                                    │
+│  ├─ lootopia-backend  :3000  (NestJS)              │
+│  ├─ lootopia-postgres :5432  (PostgreSQL 15)       │
+│  └─ lootopia-pgadmin  :5050  (pgAdmin 4)           │
+└────────────────────────────────────────────────────┘
+```
+
+---
+
+## 7. Sécurité (Security by Design)
+
+| Mécanisme | Implémentation |
+|---|---|
+| Authentification | JWT signé (HS256), stocké en cookie HttpOnly |
+| Autorisation | RBAC via Guards NestJS + décorateurs |
+| Mots de passe | bcrypt (hash + salt, jamais en clair) |
+| Données sensibles | AES-256 via CryptoService |
+| Validation entrées | ValidationPipe + class-validator sur tous les DTOs |
+| Secrets | GitHub Secrets (jamais versionnés) |
+| CORS | Origines autorisées configurées dans main.ts |
+| Ownership | Guards vérifient que la ressource appartient à l'appelant |
+
+---
+
+*SUP DE VINCI — M1 DEVA — 2025/2026 — Jimmy · Damien · Alexandre*
