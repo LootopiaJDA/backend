@@ -68,10 +68,10 @@ async function bootstrap() {
 -----------------------------------------------------
   `);
 
-  cloudinary.config({
-    cloud_name: 'dedqcxfgq',
-    api_key: process.env.API_KEY_CLOUDINARY,
-    api_secret: process.env.API_KEY_CLOUDINARY_SECRET
-  });
+    cloudinary.config({
+      cloud_name: 'dedqcxfgq',
+      api_key: process.env.API_KEY_CLOUDINARY,
+      api_secret: process.env.API_KEY_CLOUDINARY_SECRET
+    });
 }
 void bootstrap();
