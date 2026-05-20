@@ -14,7 +14,7 @@ import {
   Query,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { ApiTags, ApiBody, ApiConsumes, ApiQuery } from "@nestjs/swagger";
+import { ApiTags, ApiBody, ApiConsumes, ApiQuery, ApiBearerAuth } from "@nestjs/swagger";
 import { Roles } from "src/decorators/role.decorator";
 import { RolesGuard } from "src/guards/roles.guard";
 import { AuthGuard } from "src/guards/auth.guard";
@@ -50,6 +50,7 @@ export class ChasseController {
     private readonly userChasseService: UserChasseService,
   ) {}
 
+  @ApiBearerAuth('access-token')
   @Get()
   @ApiQuery({ name: "partenaire", required: false })
   @ApiQuery({ name: "localisation", required: false })
